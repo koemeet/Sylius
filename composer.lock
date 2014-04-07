@@ -2815,6 +2815,52 @@
             "time": "2014-02-28 11:47:51"
         },
         {
+            "name": "midgard/createphp",
+            "version": "0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/flack/createphp.git",
+                "reference": "6778131d33b5591ac49aaf95084f7ec6c285f5e4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/flack/createphp/zipball/6778131d33b5591ac49aaf95084f7ec6c285f5e4",
+                "reference": "6778131d33b5591ac49aaf95084f7ec6c285f5e4",
+                "shasum": ""
+            },
+            "require-dev": {
+                "twig/twig": "~1.8"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.9-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Midgard\\CreatePHP": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL",
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andreas Flack",
+                    "email": "flack@contentcontrol-berlin.de",
+                    "homepage": "http://www.contentcontrol-berlin.de/"
+                }
+            ],
+            "description": "PHP adapter for Create.js",
+            "keywords": [
+                "rdfa"
+            ],
+            "time": "2013-10-03 15:31:10"
+        },
+        {
             "name": "monolog/monolog",
             "version": "1.10.0",
             "source": {
@@ -4162,18 +4208,68 @@
             "time": "2014-05-08 19:32:15"
         },
         {
-            "name": "symfony-cmf/menu-bundle",
-            "version": "1.1.1",
-            "target-dir": "Symfony/Cmf/Bundle/MenuBundle",
+            "name": "symfony-cmf/create-bundle",
+            "version": "1.0.2",
+            "target-dir": "Symfony/Cmf/Bundle/CreateBundle",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony-cmf/MenuBundle.git",
-                "reference": "9ab067ff1c5451d40f093f84ebc606de70437f08"
+                "url": "https://github.com/symfony-cmf/CreateBundle.git",
+                "reference": "ba192e536c3a11eb1820bded99ff9924eff650c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony-cmf/MenuBundle/zipball/9ab067ff1c5451d40f093f84ebc606de70437f08",
-                "reference": "9ab067ff1c5451d40f093f84ebc606de70437f08",
+                "url": "https://api.github.com/repos/symfony-cmf/CreateBundle/zipball/ba192e536c3a11eb1820bded99ff9924eff650c9",
+                "reference": "ba192e536c3a11eb1820bded99ff9924eff650c9",
+                "shasum": ""
+            },
+            "require": {
+                "friendsofsymfony/rest-bundle": "~1.0",
+                "jms/serializer-bundle": ">=0.12,<0.14",
+                "midgard/createphp": "0.9.*",
+                "php": ">=5.3.3",
+                "symfony/assetic-bundle": "~2.1",
+                "symfony/framework-bundle": "~2.1"
+            },
+            "suggest": {
+                "symfony-cmf/media-bundle": "When using the default image support, 1.0.*"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Cmf\\Bundle\\CreateBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Liip AG",
+                    "homepage": "http://www.liip.ch/"
+                },
+                {
+                    "name": "Symfony CMF Community",
+                    "homepage": "https://github.com/symfony-cmf/CreateBundle/contributors"
+                }
+            ],
+            "description": "Symfony Bundle for createphp and create.js. The easiest way to make any site editable and have semantic annotations with RDFa.",
+            "time": "2014-01-13 09:54:14"
+        },
+        {
+            "name": "symfony-cmf/menu-bundle",
+            "version": "1.1.1",
+                "reference": "befdef8a5463e8db78c8660f10c004472594200e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony-cmf/MenuBundle/zipball/befdef8a5463e8db78c8660f10c004472594200e",
+                "reference": "befdef8a5463e8db78c8660f10c004472594200e",
                 "shasum": ""
             },
             "require": {
