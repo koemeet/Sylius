@@ -37,22 +37,18 @@ class MoneyHelperSpec extends ObjectBehavior
 
     function it_formats_the_integer_amounts_into_string_representation($currencyContext)
     {
-        $currencyContext->getDefaultCurrency()->willReturn('EUR');
-
-        $this->formatMoney(15)->shouldReturn('€0.15');
-        $this->formatMoney(2500)->shouldReturn('€25.00');
-        $this->formatMoney(312)->shouldReturn('€3.12');
-        $this->formatMoney(500)->shouldReturn('€5.00');
+        $this->formatAmount(15)->shouldReturn('0.15 €');
+        $this->formatAmount(2500)->shouldReturn('25.00 €');
+        $this->formatAmount(312)->shouldReturn('3.12 €');
+        $this->formatAmount(500)->shouldReturn('5.00 €');
     }
 
     function it_allows_to_format_money_in_different_currencies($currencyContext)
     {
-        $currencyContext->getDefaultCurrency()->willReturn('EUR');
-
-        $this->formatMoney(15, 'USD')->shouldReturn('$0.15');
-        $this->formatMoney(2500, 'USD')->shouldReturn('$25.00');
-        $this->formatMoney(312, 'EUR')->shouldReturn('€3.12');
-        $this->formatMoney(500)->shouldReturn('€5.00');
+        $this->formatAmount(15, 'USD')->shouldReturn('0,15 $');
+        $this->formatAmount(2500, 'USD')->shouldReturn('25,00 $');
+        $this->formatAmount(312, 'EUR')->shouldReturn('€3.12');
+        $this->formatAmount(500)->shouldReturn('€5.00');
     }
 
     function it_allows_to_convert_prices_in_different_currencies($currencyContext, $converter)

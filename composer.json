@@ -18,12 +18,13 @@
             "homepage": "http://github.com/Sylius/Sylius/contributors"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
         "php":                                  ">=5.3.3",
 
         "doctrine/doctrine-bundle":             "~1.3@dev",
         "doctrine/doctrine-cache-bundle":       "~1.0",
-        "doctrine/orm":                         "<2.4.3",
+        "doctrine/orm":                         "dev-master",
         "doctrine/migrations":                  "dev-master",
         "doctrine/doctrine-migrations-bundle":  "dev-master",
         "friendsofsymfony/rest-bundle":         "~1.0",
