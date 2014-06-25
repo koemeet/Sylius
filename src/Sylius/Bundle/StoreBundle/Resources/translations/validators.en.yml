@@ -3,5 +3,9 @@ sylius:
         code:
             not_blank: Please choose currency.
             unique: The store code has to be unique.
+            min_length: The store code must be at least {{ limit }} characters in length
+            max_length: The store code cannot be longer than {{ limit }} characters in length
         name:
             not_blank: Please enter store name.
+        url:
+            not_blank: Please enter an url.

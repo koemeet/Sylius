@@ -28,9 +28,10 @@
                 <option name="groups">sylius</option>
             </constraint>
             <constraint name="Length">
-                <option name="min">3</option>
-                <option name="max">3</option>
-                <option name="exactMessage">sylius.store.code.exact_length</option>
+                <option name="min">2</option>
+                <option name="max">8</option>
+                <option name="minMessage">sylius.store.code.min_length</option>
+                <option name="maxMessage">sylius.store.code.max_length</option>
                 <option name="groups">sylius</option>
             </constraint>
         </property>
@@ -40,9 +41,9 @@
                 <option name="groups">sylius</option>
             </constraint>
         </property>
-        <property name="uri">
+        <property name="url">
             <constraint name="NotBlank">
-                <option name="message">sylius.store.uri.not_blank</option>
+                <option name="message">sylius.store.url.not_blank</option>
                 <option name="groups">sylius</option>
             </constraint>
         </property>

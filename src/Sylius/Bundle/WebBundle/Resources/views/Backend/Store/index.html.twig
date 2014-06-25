@@ -1,0 +1,51 @@
+{% extends 'SyliusWebBundle:Backend:layout.html.twig' %}
+
+{% import 'SyliusResourceBundle:Macros:buttons.html.twig' as buttons %}
+{% from 'SyliusWebBundle:Backend/Macros:misc.html.twig' import pagination %}
+
+{% block topbar %}
+    <ol class="breadcrumb">
+        <li>{{ 'sylius.breadcrumb.configuration'|trans }}</li>
+        <li>{{ 'sylius.breadcrumb.store.index'|trans }}</a></li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <div class="actions-menu">
+            {{ buttons.create(path('sylius_backend_store_create'), 'sylius.store.create'|trans) }}
+        </div>
+        <h1><i class="glyphicon glyphicon-cog"></i> {{ 'sylius.store.index_header'|trans|raw }}</h1>
+    </div>
+
+    {{ pagination(stores) }}
+    <table class="table">
+        <thead>
+        <tr>
+            <th>{{ sylius_resource_sort('code', 'sylius.store.code'|trans) }}</th>
+            <th>{{ sylius_resource_sort('name', 'sylius.store.name'|trans) }}</th>
+            <th>{{ sylius_resource_sort('url', 'sylius.store.url'|trans) }}</th>
+            <th>{{ sylius_resource_sort('updatedAt', 'sylius.store.updatedAt'|trans) }}</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for store in stores %}
+            <tr id="{{ store.id }}">
+                <td>{{ store.code }}</td>
+                <td>{{ store.name }}</td>
+                <td>{{ store.url }}</td>
+                <td>{{ store.updatedAt|date }}</td>
+                <td>
+                    <div class="pull-right">
+                        {{ buttons.edit(path('sylius_backend_store_update', {'id': store.id})) }}
+                        {{ buttons.delete(path('sylius_backend_store_delete', {'id': store.id})) }}
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ pagination(stores) }}
+
+{% endblock %}

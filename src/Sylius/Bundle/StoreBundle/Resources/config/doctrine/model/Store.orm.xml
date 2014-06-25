@@ -25,6 +25,8 @@
         <field name="code" type="string" />
         <field name="name" type="string" />
         <field name="url" type="string" />
+        <field name="description" type="string" />
+        <field name="default" column="default" type="boolean" />
 
         <field name="createdAt" column="created_at" type="datetime">
             <gedmo:timestampable on="create"/>

@@ -11,8 +11,6 @@
 
 namespace Sylius\Component\Store\Model;
 
-use Symfony\Component\Intl\Intl;
-
 class Store implements StoreInterface
 {
     /**

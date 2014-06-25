@@ -141,6 +141,8 @@ sylius:
             index: Shipping Categories
         shipping_method:
             index: Shipping Methods
+        store:
+            index: Stores
         tax_category:
             index: Tax Categories
         tax_rate:
@@ -619,6 +621,16 @@ sylius:
         on_hold: on hold
         sku: sku
         updated_at: last update
+    store:
+        index_header: Stores
+        update_header: Editing store
+        create_header: New store
+        name: Name
+        code: Code
+        url: Url
+        updatedAt: Updated at
+        create: Create store
+
     tax_category:
         create: Create tax category
         create_header: New tax category

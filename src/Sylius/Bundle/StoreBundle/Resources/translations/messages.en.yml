@@ -4,3 +4,4 @@ sylius:
             code: Code
             name: Name
             url: URL
+            description: Description
