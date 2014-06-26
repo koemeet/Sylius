@@ -26,3 +26,5 @@ bin/phpunit
 vendor/*
 
 composer.lock
+
+composer.lock
