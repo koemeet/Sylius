@@ -29,7 +29,7 @@ class LoadBlocksData extends DataFixture
         NodeHelper::createPath($session, $basepath);
 
         $parent = $manager->find(null, $basepath);
-        $repository = $this->container->get('sylius.repository.block');
+        $repository = $this->container->get('sylius.repository.simple_block');
 
         $contactBlock = $repository->createNew();
         $contactBlock->setParentDocument($parent);

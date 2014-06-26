@@ -35,10 +35,12 @@ class LoadPagesData extends DataFixture
         NodeHelper::createPath($session, $basepath);
 
         $parent = $manager->find(null, $basepath);
-        $repository = $this->container->get('sylius.repository.page');
+        $repository = $this->container->get('sylius.repository.static_content');
+        $routeRepository = $this->container->get('sylius.repository.route');
+
 
         // Terms of service.
-        $route = new Route();
+        $route = $routeRepository->createNew();
         $route->setPosition($routeRoot, 'terms-of-service');
         $manager->persist($route);
 
@@ -52,7 +54,7 @@ class LoadPagesData extends DataFixture
         $manager->persist($content);
 
         // Contact.
-        $route = new Route();
+        $route = $routeRepository->createNew();
         $route->setPosition($routeRoot, 'about');
         $manager->persist($route);
 
