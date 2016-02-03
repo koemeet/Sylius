@@ -1,0 +1,22 @@
+php:
+    build: etc/docker
+    volumes:
+        - .:/var/www/html
+
+nginx:
+    image: nginx
+    links:
+        - php
+    volumes:
+        - .:/var/www/sylius
+#        - ./etc/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    environment:
+        - VIRTUAL_HOST=sylius.dev
+
+mysql:
+    image: mariadb
+    environment:
+        MYSQL_ROOT_PASSWORD: root
+
+elasticsearch:
+    image: elasticsearch
