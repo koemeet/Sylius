@@ -7,6 +7,7 @@ sylius:
             main:
                 api_clients: API clients
                 archetypes: Product archetypes
+                association_types: Product association types
                 assortment: Assortment
                 attributes: Configure attributes
                 blocks: Blocks
@@ -48,14 +49,15 @@ sylius:
                 slideshow: Slideshow
                 stockables: Inventory levels
                 support: Support
-                taxation_settings: Taxation settings
-                taxonomies: Categorization
                 tax_categories: Taxation categories
                 tax_rates: Tax rates
+                taxation_settings: Taxation settings
+                taxons: Categorization
                 zones: Zones
             sidebar:
                 api_clients: API clients
                 archetypes: Product archetypes
+                association_types: Product association types
                 assortment: Assortment
                 attributes: Configure attributes
                 blocks: Blocks
@@ -76,20 +78,24 @@ sylius:
                 locales: Locales
                 marketing: Marketing
                 menus: Menus
+                metadata: Metadata
                 new_order: Add new order
                 new_promotion: Add new promotion
                 options: Manage options
                 orders: Current orders
                 pages: Pages
-                payments: Payments
                 payment_methods: Payment methods
+                payments: Payments
                 permissions: Permissions
+                product_review: Product reviews
                 products: Products
                 promotions: Promotions
                 redirects: Redirects
                 report: Reports
                 roles: Roles
                 routes: Routes
+                review: Reviews
+                attributes: Configure attributes
                 sales: Orders
                 security_settings: Security settings
                 shipments: Shipments
@@ -101,7 +107,7 @@ sylius:
                 tax_categories: Taxation categories
                 tax_rates: Tax rates
                 taxation_settings: Taxation settings
-                taxonomies: Categorization
+                taxons: Categorization
                 zones: Zones
     frontend:
         menu:

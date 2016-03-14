@@ -18,12 +18,13 @@
             <th>{{ sylius_resource_sort('shippingState', 'sylius.order.shipment_state'|trans, null, {'route_params' : router_paramters}) }}</th>
             <th>{{ sylius_resource_sort('customer.lastName', 'sylius.order.customer'|trans, null, {'route_params' : router_paramters}) }}</th>
             <th>{{ sylius_resource_sort('total', 'sylius.order.total'|trans, null, {'route_params' : router_paramters}) }}</th>
+            <th>{{ sylius_resource_sort('details', 'sylius.order.additional_information'|trans, null, {'route_params' : router_paramters}) }}</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         {% for order in orders %}
-        <tr id="{{ order.id }}" {% if order.deleted %} class="danger"{% endif %}>
+        <tr id="{{ order.id }}">
             <td class="center-text"><input type="checkbox" value="{{ order.id }}" /></td>
             <td>{{ order.createdAt|date }}</td>
             <td>
@@ -44,15 +45,14 @@
                 <p>{{ order.customer.fullName }} <br><a href="{{ path('sylius_backend_customer_show', {'id': order.customer.id}) }}">{{ order.customer.email }}</a></p>
             </td>
             <td>{{ order.total|sylius_price(order.currency) }}</td>
+            <td>{{ order.additionalInformation }}</td>
             <td>
                 <div class="pull-right">
                 {{ buttons.show(path('sylius_backend_order_show', {'id': order.id})) }}
-                {% if not order.deleted %}
-                    {% if not order.shippingState is constant('Sylius\\Component\\Shipping\\Model\\ShipmentInterface::STATE_SHIPPED') %}
-                        {{ buttons.edit(path('sylius_backend_order_update', {'id': order.id})) }}
-                    {% endif %}
-                    {{ buttons.delete(path('sylius_backend_order_delete', {'id': order.id})) }}
+                {% if not order.shippingState is constant('Sylius\\Component\\Shipping\\Model\\ShipmentInterface::STATE_SHIPPED') %}
+                    {{ buttons.edit(path('sylius_backend_order_update', {'id': order.id})) }}
                 {% endif %}
+                {{ buttons.delete(path('sylius_backend_order_delete', {'id': order.id})) }}
                 </div>
             </td>
         </tr>

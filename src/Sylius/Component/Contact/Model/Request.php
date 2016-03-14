@@ -11,15 +11,20 @@
 
 namespace Sylius\Component\Contact\Model;
 
+use Sylius\Component\Resource\Model\TimestampableTrait;
+use Sylius\Component\Resource\Model\ResourceInterface;
+
 /**
  * Default contact request representation.
  *
  * @author Michał Marcinkowski <michal.marcinkowski@lakion.com>
  */
-class Request implements RequestInterface
+class Request implements RequestInterface, ResourceInterface
 {
+    use TimestampableTrait;
+
     /**
-     * @var integer
+     * @var int
      */
     protected $id;
 
@@ -49,16 +54,6 @@ class Request implements RequestInterface
     protected $topic;
 
     /**
-     * @var \DateTime
-     */
-    protected $createdAt;
-
-    /**
-     * @var \DateTime
-     */
-    protected $updatedAt;
-
-    /**
      * Constructor
      */
     public function __construct()
@@ -77,8 +72,6 @@ class Request implements RequestInterface
     public function setFirstName($firstName)
     {
         $this->firstName = $firstName;
-
-        return $this;
     }
 
     /**
@@ -95,8 +88,6 @@ class Request implements RequestInterface
     public function setLastName($lastName)
     {
         $this->lastName = $lastName;
-
-        return $this;
     }
 
     /**
@@ -113,8 +104,6 @@ class Request implements RequestInterface
     public function setEmail($email)
     {
         $this->email = $email;
-
-        return $this;
     }
 
     /**
@@ -131,8 +120,6 @@ class Request implements RequestInterface
     public function setMessage($message)
     {
         $this->message = $message;
-
-        return $this;
     }
 
     /**
@@ -149,8 +136,6 @@ class Request implements RequestInterface
     public function setTopic(TopicInterface $topic = null)
     {
         $this->topic = $topic;
-
-        return $this;
     }
 
     /**
@@ -159,41 +144,5 @@ class Request implements RequestInterface
     public function getTopic()
     {
         return $this->topic;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setCreatedAt(\DateTime $createdAt)
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setUpdatedAt(\DateTime $updatedAt)
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
     }
 }

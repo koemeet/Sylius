@@ -13,12 +13,14 @@ namespace spec\Sylius\Component\Product\Model;
 
 use Doctrine\Common\Collections\Collection;
 use PhpSpec\ObjectBehavior;
-use Sylius\Component\Resource\Model\ToggleableInterface;
+use Sylius\Component\Association\Model\AssociableInterface;
 use Sylius\Component\Product\Model\ArchetypeInterface;
 use Sylius\Component\Product\Model\AttributeValueInterface;
 use Sylius\Component\Product\Model\OptionInterface;
+use Sylius\Component\Product\Model\ProductAssociationInterface;
 use Sylius\Component\Product\Model\ProductInterface;
 use Sylius\Component\Product\Model\VariantInterface;
+use Sylius\Component\Resource\Model\ToggleableInterface;
 
 /**
  * @author Paweł Jędrzejewski <pawel@sylius.org>
@@ -45,6 +47,11 @@ class ProductSpec extends ObjectBehavior
     function it_implements_toggleable_interface()
     {
         $this->shouldImplement(ToggleableInterface::class);
+    }
+
+    function it_is_associatable()
+    {
+        $this->shouldImplement(AssociableInterface::class);
     }
 
     function it_has_no_id_by_default()
@@ -169,10 +176,9 @@ class ProductSpec extends ObjectBehavior
     function it_should_not_add_master_variant_twice_to_collection(VariantInterface $variant)
     {
         $variant->isMaster()->willReturn(true);
-        $variant->isDeleted()->willReturn(false);
 
-        $variant->setProduct($this)->shouldBeCalled();
-        $variant->setMaster(true)->shouldBeCalled();
+        $variant->setProduct($this)->shouldBeCalledTimes(1);
+        $variant->setMaster(true)->shouldBeCalledTimes(2);
 
         $this->setMasterVariant($variant);
         $this->setMasterVariant($variant);
@@ -188,7 +194,6 @@ class ProductSpec extends ObjectBehavior
     function its_hasVariants_should_return_true_only_if_any_variants_defined(VariantInterface $variant)
     {
         $variant->isMaster()->willReturn(false);
-        $variant->isDeleted()->willReturn(false);
 
         $variant->setProduct($this)->shouldBeCalled();
 
@@ -307,5 +312,24 @@ class ProductSpec extends ObjectBehavior
 
         $this->enable();
         $this->shouldBeEnabled();
+    }
+
+    function it_adds_association(ProductAssociationInterface $association)
+    {
+        $association->setOwner($this)->shouldBeCalled();
+        $this->addAssociation($association);
+
+        $this->hasAssociation($association)->shouldReturn(true);
+    }
+
+    function it_allows_to_remove_association(ProductAssociationInterface $association)
+    {
+        $association->setOwner($this)->shouldBeCalled();
+        $association->setOwner(null)->shouldBeCalled();
+
+        $this->addAssociation($association);
+        $this->removeAssociation($association);
+
+        $this->hasAssociation($association)->shouldReturn(false);
     }
 }

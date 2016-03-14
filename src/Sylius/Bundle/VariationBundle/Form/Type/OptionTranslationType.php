@@ -42,9 +42,9 @@ class OptionTranslationType extends AbstractResourceType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('presentation', 'text', array(
-                'label' => 'sylius.form.option.presentation',
-            ))
+            ->add('name', 'text', [
+                'label' => 'sylius.form.option.name',
+            ])
         ;
     }
 

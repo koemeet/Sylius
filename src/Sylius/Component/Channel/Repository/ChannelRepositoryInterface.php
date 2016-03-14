@@ -11,28 +11,32 @@
 
 namespace Sylius\Component\Channel\Repository;
 
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Sylius\Component\Channel\Model\ChannelInterface;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 /**
- * Repository interface for channels.
- *
  * @author Paweł Jędrzejewski <pawel@sylius.org>
  */
-interface ChannelRepositoryInterface
+interface ChannelRepositoryInterface extends RepositoryInterface
 {
     /**
      * @param string $hostname
-     * @return mixed
-     * @throws NonUniqueResultException
+     *
+     * @return ChannelInterface|null
      */
-    public function findMatchingHostname($hostname);
+    public function findOneByHostname($hostname);
 
     /**
-     * @return ChannelInterface
-     * @throws NonUniqueResultException
-     * @throws NoResultException
+     * @param string $code
+     *
+     * @return ChannelInterface|null
      */
-    public function findDefault();
+    public function findOneByCode($code);
+
+    /**
+     * @param string $name
+     *
+     * @return ChannelInterface|null
+     */
+    public function findOneByName($name);
 }

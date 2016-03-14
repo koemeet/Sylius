@@ -3,7 +3,7 @@
 /*
  * This file is part of the Sylius package.
  *
- * (c); Paweł Jędrzejewski
+ * (c) Paweł Jędrzejewski
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,11 +13,12 @@ namespace Sylius\Component\Variation\Model;
 
 use Sylius\Component\Resource\Model\CodeAwareInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
+use Sylius\Component\Resource\Model\TranslatableInterface;
 
 /**
  * @author Paweł Jędrzejewski <pawel@sylius.org>
  */
-interface OptionValueInterface extends ResourceInterface, CodeAwareInterface
+interface OptionValueInterface extends ResourceInterface, CodeAwareInterface, TranslatableInterface
 {
     /**
      * @return OptionInterface
@@ -44,13 +45,11 @@ interface OptionValueInterface extends ResourceInterface, CodeAwareInterface
     public function setValue($value);
 
     /**
-     * Proxy method to access the name of real option object.
-     * Those methods are mostly useful in templates so you can easily
-     * display option name with their values.
+     * Proxy method to access the presentation of real option object.
      *
-     * @return string The name of option
+     * @return string The code of object
      */
-    public function getName();
+    public function getOptionCode();
 
     /**
      * Proxy method to access the presentation of real option object.

@@ -22,12 +22,12 @@ class DataFetcherChoiceTypeSpec extends ObjectBehavior
 {
     function let()
     {
-        $dataFetchers = array(
-            'user_registration' => 'User Registration',
-        );
+        $dataFetchers = [
+            'sylius_data_fetcher_user_registration' => 'User Registration',
+        ];
         $this->beConstructedWith($dataFetchers);
     }
-    
+
     function it_is_initializable()
     {
         $this->shouldHaveType('Sylius\Bundle\CoreBundle\Form\Type\DataFetcher\DataFetcherChoiceType');
@@ -50,11 +50,11 @@ class DataFetcherChoiceTypeSpec extends ObjectBehavior
 
     function it_defines_data_fetcher_choices(OptionsResolver $resolver)
     {
-        $dataFetchers = array(
-            'user_registration' => 'User Registration',
-        );
+        $dataFetchers = [
+            'sylius_data_fetcher_user_registration' => 'User Registration',
+        ];
 
-        $resolver->setDefaults(array('choices' => $dataFetchers))->shouldBeCalled();
+        $resolver->setDefaults(['choices' => $dataFetchers])->shouldBeCalled();
 
         $this->configureOptions($resolver);
     }

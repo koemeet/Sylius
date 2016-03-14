@@ -16,12 +16,10 @@ use PhpSpec\ObjectBehavior;
 use Sylius\Component\Addressing\Model\ZoneInterface;
 use Sylius\Component\Core\Model\Product;
 use Sylius\Component\Core\Model\ProductInterface;
+use Sylius\Component\Core\Model\ProductVariantInterface as VariantInterface;
 use Sylius\Component\Core\Model\TaxonInterface;
 use Sylius\Component\Product\Model\Product as SyliusProduct;
 use Sylius\Component\Shipping\Model\ShippingCategoryInterface;
-use Sylius\Component\Taxation\Model\TaxCategoryInterface;
-use Sylius\Component\Taxonomy\Model\TaxonomyInterface;
-use Sylius\Component\Core\Model\ProductVariantInterface as VariantInterface;
 
 /**
  * @author Paweł Jędrzejewski <pawel@sylius.org>
@@ -53,6 +51,11 @@ class ProductSpec extends ObjectBehavior
         $this->shouldHaveType(SyliusProduct::class);
     }
 
+    function it_has_metadata_class_identifier()
+    {
+        $this->getMetadataClassIdentifier()->shouldReturn('Product');
+    }
+
     function it_initializes_taxon_collection_by_default()
     {
         $this->getTaxons()->shouldHaveType(Collection::class);
@@ -62,29 +65,6 @@ class ProductSpec extends ObjectBehavior
     {
         $this->setTaxons($taxons);
         $this->getTaxons()->shouldReturn($taxons);
-    }
-
-    function it_can_get_taxons_from_specific_taxonomy(
-        TaxonInterface $taxon1,
-        TaxonInterface $taxon2,
-        TaxonInterface $taxon3,
-        TaxonomyInterface $taxonomy1,
-        TaxonomyInterface $taxonomy2
-    )
-    {
-        $taxon1->getTaxonomy()->willReturn($taxonomy1);
-        $taxon2->getTaxonomy()->willReturn($taxonomy1);
-        $taxon3->getTaxonomy()->willReturn($taxonomy2);
-
-        $taxonomy1->getName()->willReturn('Category');
-        $taxonomy2->getName()->willReturn('Brand');
-
-        $this->addTaxon($taxon1);
-        $this->addTaxon($taxon2);
-        $this->addTaxon($taxon3);
-
-        $this->getTaxons('category')->shouldHaveCount(2);
-        $this->getTaxons('brand')->shouldHaveCount(1);
     }
 
     function its_price_is_mutable(VariantInterface $masterVariant)
@@ -114,31 +94,6 @@ class ProductSpec extends ObjectBehavior
         ;
     }
 
-    function it_implements_Sylius_taxable_interface()
-    {
-        $this->shouldImplement('Sylius\Component\Taxation\Model\TaxableInterface');
-    }
-
-    function it_does_not_have_tax_category_by_default()
-    {
-        $this->getTaxCategory()->shouldReturn(null);
-    }
-
-    function it_allows_setting_the_tax_category(TaxCategoryInterface $taxCategory)
-    {
-        $this->setTaxCategory($taxCategory);
-        $this->getTaxCategory()->shouldReturn($taxCategory);
-    }
-
-    function it_allows_resetting_the_tax_category(TaxCategoryInterface $taxCategory)
-    {
-        $this->setTaxCategory($taxCategory);
-        $this->getTaxCategory()->shouldReturn($taxCategory);
-
-        $this->setTaxCategory(null);
-        $this->getTaxCategory()->shouldReturn(null);
-    }
-
     function it_has_no_shipping_category_by_default()
     {
         $this->getShippingCategory()->shouldReturn(null);
@@ -163,7 +118,7 @@ class ProductSpec extends ObjectBehavior
 
     function it_has_no_main_taxon_by_default()
     {
-      $this->getMainTaxon()->shouldReturn(null);
+        $this->getMainTaxon()->shouldReturn(null);
     }
 
     function it_sets_main_taxon(TaxonInterface $taxon)

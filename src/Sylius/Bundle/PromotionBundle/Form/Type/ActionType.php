@@ -18,8 +18,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Promotion action form type.
- *
  * @author Saša Stamenković <umpirsky@gmail.com>
  * @author Arnaud Langlade <arn0d.dev@gmail.com>
  */
@@ -28,31 +26,23 @@ class ActionType extends AbstractConfigurationType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options = array())
+    public function buildForm(FormBuilderInterface $builder, array $options = [])
     {
         $builder
-            ->add('type', 'sylius_promotion_action_choice', array(
+            ->add('type', 'sylius_promotion_action_choice', [
                 'label' => 'sylius.form.action.type',
-                'attr' => array(
+                'attr' => [
                     'data-form-collection' => 'update',
-                ),
-            ))
+                ],
+            ])
             ->addEventSubscriber(
-                new BuildActionFormSubscriber($this->registry, $builder->getFormFactory(), $options['configuration_type'])
+                new BuildActionFormSubscriber(
+                    $this->registry,
+                    $builder->getFormFactory(),
+                    (isset($options['configuration_type'])) ? $options['configuration_type'] : null
+                )
             )
         ;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-
-        $resolver->setDefaults(array(
-            'configuration_type' => ActionInterface::TYPE_FIXED_DISCOUNT,
-        ));
     }
 
     /**

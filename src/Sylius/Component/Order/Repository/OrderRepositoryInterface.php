@@ -16,14 +16,12 @@ use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Sylius\Component\Sequence\Repository\HashSubjectRepositoryInterface;
 
 /**
- * Order repository interface.
- *
  * @author Paweł Jędrzejewski <pawel@sylius.org>
  */
 interface OrderRepositoryInterface extends RepositoryInterface, HashSubjectRepositoryInterface
 {
     /**
-     * @param integer $amount
+     * @param int $amount
      *
      * @return OrderInterface[]
      */

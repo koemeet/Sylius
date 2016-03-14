@@ -18,8 +18,6 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Shipping extension.
- *
  * @author Paweł Jędrzejewski <pawel@sylius.org>
  */
 class SyliusShippingExtension extends AbstractResourceExtension
@@ -32,12 +30,14 @@ class SyliusShippingExtension extends AbstractResourceExtension
         $config = $this->processConfiguration(new Configuration(), $config);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
+        $loader->load(sprintf('driver/%s.xml', $config['driver']));
+
         $this->registerResources('sylius', $config['driver'], $config['resources'], $container);
         $this->mapFormValidationGroupsParameters($config, $container);
 
-        $configFiles = array(
+        $configFiles = [
             'services.xml',
-        );
+        ];
 
         foreach ($configFiles as $configFile) {
             $loader->load($configFile);

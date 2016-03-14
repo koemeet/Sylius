@@ -11,9 +11,9 @@
 
 namespace Sylius\Bundle\ResourceBundle\DependencyInjection;
 
+use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
 use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
 use Sylius\Component\Resource\Factory\Factory;
-use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -38,6 +38,16 @@ class Configuration implements ConfigurationInterface
 
         $this->addResourcesSection($rootNode);
         $this->addSettingsSection($rootNode);
+        $this->addTranslationsSection($rootNode);
+
+        $rootNode
+            ->children()
+                ->scalarNode('authorization_checker')
+                    ->defaultValue('sylius.resource_controller.authorization_checker.disabled')
+                    ->cannotBeEmpty()
+                ->end()
+            ->end()
+        ;
 
         return $treeBuilder;
     }
@@ -75,7 +85,7 @@ class Configuration implements ConfigurationInterface
                                 ->children()
                                     ->arrayNode('default')
                                         ->prototype('scalar')->end()
-                                        ->defaultValue(array())
+                                        ->defaultValue([])
                                     ->end()
                                 ->end()
                             ->end()
@@ -101,13 +111,13 @@ class Configuration implements ConfigurationInterface
                                         ->children()
                                             ->arrayNode('default')
                                                 ->prototype('scalar')->end()
-                                                ->defaultValue(array())
+                                                ->defaultValue([])
                                             ->end()
                                         ->end()
                                     ->end()
                                     ->arrayNode('fields')
                                         ->prototype('scalar')->end()
-                                        ->defaultValue(array())
+                                        ->defaultValue([])
                                     ->end()
                                 ->end()
                             ->end()
@@ -132,13 +142,31 @@ class Configuration implements ConfigurationInterface
                         ->variableNode('limit')->defaultNull()->end()
                         ->arrayNode('allowed_paginate')
                             ->prototype('integer')->end()
-                            ->defaultValue(array(10, 20, 30))
+                            ->defaultValue([10, 20, 30])
                         ->end()
                         ->integerNode('default_page_size')->defaultValue(10)->end()
                         ->booleanNode('sortable')->defaultFalse()->end()
                         ->variableNode('sorting')->defaultNull()->end()
                         ->booleanNode('filterable')->defaultFalse()->end()
                         ->variableNode('criteria')->defaultNull()->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+    /**
+     * @param ArrayNodeDefinition $node
+     */
+    private function addTranslationsSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('translation')
+                    ->canBeEnabled()
+                    ->children()
+                        ->scalarNode('default_locale')->cannotBeEmpty()->end()
+                        ->scalarNode('locale_provider')->defaultValue('sylius.translation.locale_provider.request')->cannotBeEmpty()->end()
                     ->end()
                 ->end()
             ->end()

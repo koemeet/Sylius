@@ -7,15 +7,15 @@
     "license": "MIT",
     "authors": [
         {
-            "name":     "Paweł Jędrzejewski",
+            "name": "Paweł Jędrzejewski",
             "homepage": "http://pjedrzejewski.com"
         },
         {
-            "name":     "Sylius project",
+            "name": "Sylius project",
             "homepage": "http://sylius.org"
         },
         {
-            "name":     "Community contributions",
+            "name": "Community contributions",
             "homepage": "http://github.com/Sylius/Sylius/contributors"
         }
     ],
@@ -23,14 +23,15 @@
         "php": "^5.5.9|^7.0",
 
         "doctrine/doctrine-cache-bundle": "~1.0",
-        "sylius/rbac": "0.16.*",
-        "sylius/resource-bundle": "0.16.*",
-        "symfony/framework-bundle": "^2.7.5"
+        "sylius/rbac": "^0.18",
+        "sylius/resource-bundle": "^0.18",
+        "symfony/framework-bundle": "^2.7.7"
     },
     "require-dev": {
         "phpspec/phpspec": "^2.4",
+        "doctrine/orm": "^2.4.8,<2.5",
         "symfony/form": "^2.7",
-        "twig/twig": "~1.0"
+        "twig/twig": "^1.0"
     },
     "config": {
         "bin-dir": "bin"
@@ -42,9 +43,16 @@
         "psr-4": { "Sylius\\Bundle\\RbacBundle\\spec\\": "spec/" }
     },
     "minimum-stability": "dev",
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../../*/*"
+        }
+    ],
     "extra": {
         "branch-alias": {
-            "dev-master": "0.16-dev"
+            "dev-master": "0.18-dev"
         }
     }
 }

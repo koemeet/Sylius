@@ -13,14 +13,21 @@ namespace Sylius\Component\Shipping\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Sylius\Component\Translation\Model\AbstractTranslatable;
+use Sylius\Component\Resource\Model\TimestampableTrait;
+use Sylius\Component\Resource\Model\ToggleableTrait;
+use Sylius\Component\Resource\Model\TranslatableTrait;
 
 /**
  * @author Paweł Jędrzejewski <pawel@sylius.org>
  * @author Gonzalo Vilaseca <gvilaseca@reiss.co.uk>
  */
-class ShippingMethod extends AbstractTranslatable implements ShippingMethodInterface
+class ShippingMethod implements ShippingMethodInterface
 {
+    use TimestampableTrait, ToggleableTrait;
+    use TranslatableTrait {
+        __construct as private initializeTranslationsCollection;
+    }
+
     /**
      * @var mixed
      */
@@ -44,11 +51,6 @@ class ShippingMethod extends AbstractTranslatable implements ShippingMethodInter
     protected $categoryRequirement = ShippingMethodInterface::CATEGORY_REQUIREMENT_MATCH_ANY;
 
     /**
-     * @var bool
-     */
-    protected $enabled = true;
-
-    /**
      * @var string
      */
     protected $calculator;
@@ -56,26 +58,16 @@ class ShippingMethod extends AbstractTranslatable implements ShippingMethodInter
     /**
      * @var array
      */
-    protected $configuration = array();
+    protected $configuration = [];
 
     /**
      * @var Collection|RuleInterface[]
      */
     protected $rules;
 
-    /**
-     * @var \DateTime
-     */
-    protected $createdAt;
-
-    /**
-     * @var \DateTime
-     */
-    protected $updatedAt;
-
     public function __construct()
     {
-        parent::__construct();
+        $this->initializeTranslationsCollection();
 
         $this->rules = new ArrayCollection();
         $this->createdAt = new \DateTime();
@@ -150,25 +142,7 @@ class ShippingMethod extends AbstractTranslatable implements ShippingMethodInter
      */
     public function getCategoryRequirementLabel()
     {
-        $labels = self::getCategoryRequirementLabels();
-
-        return $labels[$this->categoryRequirement];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isEnabled()
-    {
-        return $this->enabled;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setEnabled($enabled)
-    {
-        $this->enabled = (bool) $enabled;
+        return self::getCategoryRequirementLabels()[$this->categoryRequirement];
     }
 
     /**
@@ -256,47 +230,15 @@ class ShippingMethod extends AbstractTranslatable implements ShippingMethodInter
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setCreatedAt(\DateTime $createdAt)
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setUpdatedAt(\DateTime $updatedAt)
-    {
-        $this->updatedAt = $updatedAt;
-    }
-
-    /**
      * @return array
      */
     public static function getCategoryRequirementLabels()
     {
-        return array(
-            ShippingMethodInterface::CATEGORY_REQUIREMENT_MATCH_NONE => 'None of items have to match method category',
-            ShippingMethodInterface::CATEGORY_REQUIREMENT_MATCH_ANY  => 'At least 1 item have to match method category',
-            ShippingMethodInterface::CATEGORY_REQUIREMENT_MATCH_ALL  => 'All items have to match method category',
-        );
+        return [
+            ShippingMethodInterface::CATEGORY_REQUIREMENT_MATCH_NONE => 'None of the units have to match the method category',
+            ShippingMethodInterface::CATEGORY_REQUIREMENT_MATCH_ANY => 'At least 1 unit has to match the method category',
+            ShippingMethodInterface::CATEGORY_REQUIREMENT_MATCH_ALL => 'All units has to match the method category',
+        ];
     }
 
     public function enable()

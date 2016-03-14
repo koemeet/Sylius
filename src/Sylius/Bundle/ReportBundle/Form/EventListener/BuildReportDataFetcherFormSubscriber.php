@@ -1,12 +1,13 @@
 <?php
+
 /*
-* This file is part of the Sylius package.
-*
-* (c) Paweł Jędrzejewski
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
+ * This file is part of the Sylius package.
+ *
+ * (c) Paweł Jędrzejewski
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Sylius\Bundle\ReportBundle\Form\EventListener;
 
@@ -48,10 +49,10 @@ class BuildReportDataFetcherFormSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             FormEvents::PRE_SET_DATA => 'preSetData',
             FormEvents::PRE_SUBMIT => 'preBind',
-        );
+        ];
     }
 
     public function preSetData(FormEvent $event)
@@ -87,17 +88,17 @@ class BuildReportDataFetcherFormSubscriber implements EventSubscriberInterface
      * @param string        $dataFetcherType
      * @param array         $config
      */
-    protected function addConfigurationFields(FormInterface $form, $dataFetcherType, array $config = array())
+    protected function addConfigurationFields(FormInterface $form, $dataFetcherType, array $config = [])
     {
         $dataFetcher = $this->dataFecherRegistry->get($dataFetcherType);
-        $formType = sprintf('sylius_data_fetcher_%s', $dataFetcher->getType());
+        $formType = $dataFetcher->getType();
 
         try {
             $configurationField = $this->factory->createNamed(
                 'dataFetcherConfiguration',
                 $formType,
                 $config,
-                array('auto_initialize' => false)
+                ['auto_initialize' => false]
             );
         } catch (\InvalidArgumentException $e) {
             return;

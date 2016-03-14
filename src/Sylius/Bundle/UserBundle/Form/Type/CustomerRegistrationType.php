@@ -21,17 +21,20 @@ class CustomerRegistrationType extends CustomerSimpleRegistrationType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options = array())
+    public function buildForm(FormBuilderInterface $builder, array $options = [])
     {
         parent::buildForm($builder, $options);
 
         $builder
-            ->add('firstName', 'text', array(
+            ->add('firstName', 'text', [
                 'label' => 'sylius.form.customer.first_name',
-            ))
-            ->add('lastName', 'text', array(
+            ])
+            ->add('lastName', 'text', [
                 'label' => 'sylius.form.customer.last_name',
-            ))
+            ])
+            ->add('phoneNumber', 'text', [
+                'label' => 'sylius.form.customer.phone_number',
+            ])
         ;
     }
 

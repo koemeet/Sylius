@@ -13,10 +13,9 @@ namespace Sylius\Component\Archetype\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Sylius\Component\Attribute\Model\AttributeInterface as BaseAttributeInterface;
 use Sylius\Component\Attribute\Model\AttributeInterface;
-use Sylius\Component\Translation\Model\AbstractTranslatable;
-use Sylius\Component\Variation\Model\OptionInterface as BaseOptionInterface;
+use Sylius\Component\Resource\Model\TimestampableTrait;
+use Sylius\Component\Resource\Model\TranslatableTrait;
 use Sylius\Component\Variation\Model\OptionInterface;
 
 /**
@@ -26,8 +25,13 @@ use Sylius\Component\Variation\Model\OptionInterface;
  * @author Adam Elsodaney <adam.elso@gmail.com>
  * @author Gonzalo Vilaseca <gvilaseca@reiss.co.uk>
  */
-class Archetype extends AbstractTranslatable implements ArchetypeInterface
+class Archetype implements ArchetypeInterface
 {
+    use TimestampableTrait;
+    use TranslatableTrait {
+        __construct as private initializeTranslationsCollection;
+    }
+
     /**
      * @var mixed
      */
@@ -55,29 +59,18 @@ class Archetype extends AbstractTranslatable implements ArchetypeInterface
      */
     protected $parent;
 
-    /**
-     * Creation time.
-     *
-     * @var \DateTime
-     */
-    protected $createdAt;
-
-    /**
-     * Last update time.
-     *
-     * @var \DateTime
-     */
-    protected $updatedAt;
-
     public function __construct()
     {
+        $this->initializeTranslationsCollection();
+
         $this->attributes = new ArrayCollection();
         $this->options = new ArrayCollection();
         $this->createdAt = new \DateTime();
-
-        parent::__construct();
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->getName();
@@ -130,27 +123,23 @@ class Archetype extends AbstractTranslatable implements ArchetypeInterface
     /**
      * {@inheritdoc}
      */
-    public function addAttribute(BaseAttributeInterface $attribute)
+    public function addAttribute(AttributeInterface $attribute)
     {
         $this->attributes->add($attribute);
-
-        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function removeAttribute(BaseAttributeInterface $attribute)
+    public function removeAttribute(AttributeInterface $attribute)
     {
         $this->attributes->removeElement($attribute);
-
-        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function hasAttribute(BaseAttributeInterface $attribute)
+    public function hasAttribute(AttributeInterface $attribute)
     {
         return $this->attributes->contains($attribute);
     }
@@ -178,27 +167,23 @@ class Archetype extends AbstractTranslatable implements ArchetypeInterface
     /**
      * {@inheritdoc}
      */
-    public function addOption(BaseOptionInterface $option)
+    public function addOption(OptionInterface $option)
     {
         $this->options->add($option);
-
-        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function removeOption(BaseOptionInterface $option)
+    public function removeOption(OptionInterface $option)
     {
         $this->options->removeElement($option);
-
-        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function hasOption(BaseOptionInterface $option)
+    public function hasOption(OptionInterface $option)
     {
         return $this->options->contains($option);
     }
@@ -225,38 +210,6 @@ class Archetype extends AbstractTranslatable implements ArchetypeInterface
     public function getParent()
     {
         return $this->parent;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setCreatedAt(\DateTime $createdAt)
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setUpdatedAt(\DateTime $updatedAt)
-    {
-        $this->updatedAt = $updatedAt;
     }
 
     /**

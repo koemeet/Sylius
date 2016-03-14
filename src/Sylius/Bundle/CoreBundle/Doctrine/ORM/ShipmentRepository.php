@@ -11,25 +11,37 @@
 
 namespace Sylius\Bundle\CoreBundle\Doctrine\ORM;
 
-use Pagerfanta\Pagerfanta;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
+use Sylius\Component\Core\Repository\ShipmentRepositoryInterface;
 
-class ShipmentRepository extends EntityRepository
+class ShipmentRepository extends EntityRepository implements ShipmentRepositoryInterface
 {
     /**
-     * @param array $criteria
-     * @param array $sorting
-     *
-     * @return Pagerfanta
+     * {@inheritdoc}
      */
-    public function createFilterPaginator($criteria = array(), $sorting = array())
+    public function findOneByName($name)
+    {
+        return $this->createQueryBuilder('o')
+            ->addSelect('translation')
+            ->leftJoin('o.translations', 'translation')
+            ->where('translation.name = :name')
+            ->setParameter('name', $name)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createFilterPaginator(array $criteria = null, array $sorting = null)
     {
         $this->_em->getFilters()->disable('softdeleteable');
 
-        $queryBuilder = $this->getCollectionQueryBuilder();
+        $queryBuilder = $this->createQueryBuilder('o');
 
         $queryBuilder
-            ->innerJoin($this->getAlias().'.order', 'shipmentOrder')
+            ->innerJoin('o.order', 'shipmentOrder')
             ->innerJoin('shipmentOrder.shippingAddress', 'address')
             ->addSelect('shipmentOrder')
             ->addSelect('address')
@@ -55,20 +67,20 @@ class ShipmentRepository extends EntityRepository
         }
         if (!empty($criteria['createdAtFrom'])) {
             $queryBuilder
-                ->andWhere($queryBuilder->expr()->gte($this->getAlias().'.createdAt', ':createdAtFrom'))
+                ->andWhere($queryBuilder->expr()->gte('o.createdAt', ':createdAtFrom'))
                 ->setParameter('createdAtFrom', date('Y-m-d 00:00:00', strtotime($criteria['createdAtFrom'])))
             ;
         }
         if (!empty($criteria['createdAtTo'])) {
             $queryBuilder
-                ->andWhere($queryBuilder->expr()->lte($this->getAlias().'.createdAt', ':createdAtTo'))
+                ->andWhere($queryBuilder->expr()->lte('o.createdAt', ':createdAtTo'))
                 ->setParameter('createdAtTo', date('Y-m-d 23:59:59', strtotime($criteria['createdAtTo'])))
             ;
         }
 
         if (empty($sorting)) {
             if (!is_array($sorting)) {
-                $sorting = array();
+                $sorting = [];
             }
             $sorting['updatedAt'] = 'desc';
         }
@@ -76,13 +88,5 @@ class ShipmentRepository extends EntityRepository
         $this->applySorting($queryBuilder, $sorting);
 
         return $this->getPaginator($queryBuilder);
-    }
-
-    /**
-     * @return string
-     */
-    protected function getAlias()
-    {
-        return 's';
     }
 }

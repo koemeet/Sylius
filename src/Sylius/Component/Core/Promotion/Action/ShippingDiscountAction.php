@@ -24,6 +24,8 @@ use Sylius\Component\Resource\Exception\UnexpectedTypeException;
  */
 class ShippingDiscountAction extends DiscountAction
 {
+    const TYPE = 'shipping_discount';
+
     /**
      * {@inheritdoc}
      */
@@ -35,7 +37,7 @@ class ShippingDiscountAction extends DiscountAction
 
         $adjustment = $this->createAdjustment($promotion);
         $adjustmentAmount = (int) round($subject->getAdjustmentsTotal(AdjustmentInterface::SHIPPING_ADJUSTMENT) * $configuration['percentage']);
-        $adjustment->setAmount(- $adjustmentAmount);
+        $adjustment->setAmount(-$adjustmentAmount);
 
         $subject->addAdjustment($adjustment);
     }

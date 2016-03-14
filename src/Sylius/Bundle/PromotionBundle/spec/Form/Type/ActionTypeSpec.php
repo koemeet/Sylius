@@ -57,25 +57,9 @@ class ActionTypeSpec extends ObjectBehavior
             Argument::type(BuildActionFormSubscriber::class)
         )->shouldBeCalled();
 
-        $this->buildForm($builder, array(
-            'configuration_type' => 'configuration_form_type'
-        ));
-    }
-
-    function it_should_define_assigned_data_class(OptionsResolver $resolver)
-    {
-        $resolver
-            ->setDefaults(array(
-                'data_class' => 'Action',
-                'validation_groups' => array('Default'),
-            ))
-            ->shouldBeCalled()
-        ;
-
-        $resolver->setDefined(array('configuration_type'))->shouldBeCalled();
-        $resolver->setDefaults(array('configuration_type' => ActionInterface::TYPE_FIXED_DISCOUNT))->shouldBeCalled();
-
-        $this->configureOptions($resolver);
+        $this->buildForm($builder, [
+            'configuration_type' => 'configuration_form_type',
+        ]);
     }
 
     function it_has_a_name()

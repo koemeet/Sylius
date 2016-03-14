@@ -13,16 +13,15 @@ namespace Sylius\Component\Core\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Sylius\Bundle\ThemeBundle\Model\ThemeInterface;
 use Sylius\Component\Channel\Model\Channel as BaseChannel;
 use Sylius\Component\Currency\Model\CurrencyInterface;
 use Sylius\Component\Locale\Model\LocaleInterface;
 use Sylius\Component\Payment\Model\PaymentMethodInterface;
 use Sylius\Component\Shipping\Model\ShippingMethodInterface as BaseShippingMethodInterface;
-use Sylius\Component\Taxonomy\Model\TaxonomyInterface as BaseTaxonomyInterface;
+use Sylius\Component\Taxonomy\Model\TaxonInterface as BaseTaxonInterface;
 
 /**
- * Core channel model.
- *
  * @author Paweł Jędrzejewski <pawel@sylius.org>
  */
 class Channel extends BaseChannel implements ChannelInterface
@@ -58,13 +57,15 @@ class Channel extends BaseChannel implements ChannelInterface
     protected $shippingMethods;
 
     /**
-     * @var BaseTaxonomyInterface[]|Collection
+     * @var BaseTaxonInterface[]|Collection
      */
-    protected $taxonomies;
+    protected $taxons;
 
     /**
-     * Constructor.
+     * @var ThemeInterface
      */
+    protected $theme;
+
     public function __construct()
     {
         parent::__construct();
@@ -73,7 +74,23 @@ class Channel extends BaseChannel implements ChannelInterface
         $this->locales = new ArrayCollection();
         $this->paymentMethods = new ArrayCollection();
         $this->shippingMethods = new ArrayCollection();
-        $this->taxonomies = new ArrayCollection();
+        $this->taxons = new ArrayCollection();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTheme()
+    {
+        return $this->theme;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setTheme(ThemeInterface $theme = null)
+    {
+        $this->theme = $theme;
     }
 
     /**
@@ -275,17 +292,17 @@ class Channel extends BaseChannel implements ChannelInterface
     /**
      * {@inheritdoc}
      */
-    public function getTaxonomies()
+    public function getTaxons()
     {
-        return $this->taxonomies;
+        return $this->taxons;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setTaxonomies(Collection $taxonomies)
+    public function setTaxons(Collection $taxons)
     {
-        $this->taxonomies = $taxonomies;
+        $this->taxons = $taxons;
 
         return $this;
     }
@@ -293,28 +310,28 @@ class Channel extends BaseChannel implements ChannelInterface
     /**
      * {@inheritdoc}
      */
-    public function addTaxonomy(BaseTaxonomyInterface $taxonomy)
+    public function addTaxon(BaseTaxonInterface $taxon)
     {
-        if (!$this->hasTaxonomy($taxonomy)) {
-            $this->taxonomies->add($taxonomy);
+        if (!$this->hasTaxon($taxon)) {
+            $this->taxons->add($taxon);
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function removeTaxonomy(BaseTaxonomyInterface $taxonomy)
+    public function removeTaxon(BaseTaxonInterface $taxon)
     {
-        if ($this->hasTaxonomy($taxonomy)) {
-            $this->taxonomies->removeElement($taxonomy);
+        if ($this->hasTaxon($taxon)) {
+            $this->taxons->removeElement($taxon);
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function hasTaxonomy(BaseTaxonomyInterface $taxonomy)
+    public function hasTaxon(BaseTaxonInterface $taxon)
     {
-        return $this->taxonomies->contains($taxonomy);
+        return $this->taxons->contains($taxon);
     }
 }

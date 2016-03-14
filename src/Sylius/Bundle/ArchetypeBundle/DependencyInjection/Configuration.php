@@ -11,19 +11,18 @@
 
 namespace Sylius\Bundle\ArchetypeBundle\DependencyInjection;
 
+use Sylius\Bundle\ArchetypeBundle\Form\Type\ArchetypeTranslationType;
+use Sylius\Bundle\ArchetypeBundle\Form\Type\ArchetypeType;
+use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
+use Sylius\Bundle\ResourceBundle\Form\Type\ResourceChoiceType;
+use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
 use Sylius\Component\Archetype\Model\Archetype;
 use Sylius\Component\Archetype\Model\ArchetypeInterface;
 use Sylius\Component\Archetype\Model\ArchetypeTranslation;
 use Sylius\Component\Attribute\Model\Attribute;
-use Sylius\Component\Variation\Model\Option;
-use Sylius\Bundle\ArchetypeBundle\Form\Type\ArchetypeType;
-use Sylius\Bundle\ArchetypeBundle\Form\Type\ArchetypeTranslationType;
-use Sylius\Bundle\TranslationBundle\Doctrine\ORM\TranslatableResourceRepository;
-use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
 use Sylius\Component\Resource\Factory\Factory;
-use Sylius\Component\Translation\Factory\TranslatableFactory;
-use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
-use Sylius\Bundle\ResourceBundle\Form\Type\ResourceChoiceType;
+use Sylius\Component\Resource\Factory\TranslatableFactory;
+use Sylius\Component\Variation\Model\Option;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -82,7 +81,7 @@ class Configuration implements ConfigurationInterface
                                             ->scalarNode('model')->defaultValue(Archetype::class)->cannotBeEmpty()->end()
                                             ->scalarNode('interface')->defaultValue(ArchetypeInterface::class)->cannotBeEmpty()->end()
                                             ->scalarNode('controller')->defaultValue(ResourceController::class)->cannotBeEmpty()->end()
-                                            ->scalarNode('repository')->defaultValue(TranslatableResourceRepository::class)->cannotBeEmpty()->end()
+                                            ->scalarNode('repository')->cannotBeEmpty()->end()
                                             ->scalarNode('factory')->defaultValue(TranslatableFactory::class)->end()
                                             ->arrayNode('form')
                                                 ->addDefaultsIfNotSet()
@@ -98,7 +97,7 @@ class Configuration implements ConfigurationInterface
                                         ->children()
                                             ->arrayNode('default')
                                                 ->prototype('scalar')->end()
-                                                ->defaultValue(array('sylius'))
+                                                ->defaultValue(['sylius'])
                                             ->end()
                                         ->end()
                                     ->end()
@@ -126,13 +125,9 @@ class Configuration implements ConfigurationInterface
                                                 ->children()
                                                     ->arrayNode('default')
                                                         ->prototype('scalar')->end()
-                                                        ->defaultValue(array('sylius'))
+                                                        ->defaultValue(['sylius'])
                                                     ->end()
                                                 ->end()
-                                            ->end()
-                                            ->arrayNode('fields')
-                                                ->prototype('scalar')->end()
-                                                ->defaultValue(array('name'))
                                             ->end()
                                         ->end()
                                     ->end()

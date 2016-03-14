@@ -14,6 +14,7 @@ namespace Sylius\Bundle\CoreBundle\Routing;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\Common\Util\ClassUtils;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\DoctrineProvider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,7 +45,7 @@ class RouteProvider extends DoctrineProvider implements RouteProviderInterface
      *
      * @var ObjectRepository[]
      */
-    protected $classRepositories = array();
+    protected $classRepositories = [];
 
     /**
      * @param ContainerInterface $container
@@ -55,15 +56,15 @@ class RouteProvider extends DoctrineProvider implements RouteProviderInterface
     {
         $this->container = $container;
         $this->routeConfigs = $routeConfigs;
-        $this->classRepositories = array();
+        $this->classRepositories = [];
 
         parent::__construct($managerRegistry);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function getRouteByName($name, $parameters = array())
+    public function getRouteByName($name, $parameters = [])
     {
         if (is_object($name)) {
             $className = ClassUtils::getClass($name);
@@ -73,7 +74,7 @@ class RouteProvider extends DoctrineProvider implements RouteProviderInterface
         }
 
         foreach ($this->getRepositories() as $className => $repository) {
-            $entity = $repository->findOneBy(array($this->routeConfigs[$className]['field'] => $name));
+            $entity = $this->tryToFindEntity($name, $repository, $className);
             if ($entity) {
                 return $this->createRouteFromEntity($entity);
             }
@@ -83,18 +84,18 @@ class RouteProvider extends DoctrineProvider implements RouteProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRoutesByNames($names = null)
     {
         if (null === $names) {
             if (0 === $this->routeCollectionLimit) {
-                return array();
+                return [];
             }
 
             $collection = new RouteCollection();
             foreach ($this->getRepositories() as $className => $repository) {
-                $entities = $repository->findBy(array(), null, $this->routeCollectionLimit ?: null);
+                $entities = $repository->findBy([], null, $this->routeCollectionLimit ?: null);
                 foreach ($entities as $entity) {
                     $name = $this->getFieldValue($entity, $this->routeConfigs[$className]['field']);
                     $collection->add($name, $this->createRouteFromEntity($entity));
@@ -104,7 +105,7 @@ class RouteProvider extends DoctrineProvider implements RouteProviderInterface
             return $collection;
         }
 
-        $routes = array();
+        $routes = [];
         foreach ($names as $name) {
             try {
                 $routes[] = $this->getRouteByName($name);
@@ -117,7 +118,7 @@ class RouteProvider extends DoctrineProvider implements RouteProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRouteCollectionForRequest(Request $request)
     {
@@ -134,12 +135,13 @@ class RouteProvider extends DoctrineProvider implements RouteProviderInterface
             ) {
                 $value = substr($path, strlen($this->routeConfigs[$className]['prefix']));
                 $value = trim($value, '/');
+                $value = urldecode($value);
 
                 if (empty($value)) {
                     continue;
                 }
 
-                $entity = $repository->findOneBy(array($this->routeConfigs[$className]['field'] => $value));
+                $entity = $this->tryToFindEntity($value, $repository, $className);
 
                 if (null === $entity) {
                     continue;
@@ -179,7 +181,7 @@ class RouteProvider extends DoctrineProvider implements RouteProviderInterface
      */
     private function getRepositories()
     {
-        $repositories = array();
+        $repositories = [];
 
         foreach ($this->classRepositories as $class => $id) {
             $repositories[$class] = $this->container->get($id);
@@ -218,8 +220,30 @@ class RouteProvider extends DoctrineProvider implements RouteProviderInterface
         if (null === $value) {
             $value = $this->getFieldValue($entity, $fieldName);
         }
-        $defaults = array('_sylius_entity' => $entity, $fieldName => $value);
+        $defaults = ['_sylius_entity' => $entity, $fieldName => $value];
 
         return new Route($this->routeConfigs[$className]['prefix'].'/'.$value, $defaults);
+    }
+
+    /**
+     * @param string $identifier
+     * @param RepositoryInterface $repository
+     * @param string $className
+     *
+     * @return object|null
+     */
+    private function tryToFindEntity($identifier, RepositoryInterface $repository, $className)
+    {
+        if ('slug' === $this->routeConfigs[$className]['field']) {
+            return $repository->findOneBySlug($identifier);
+        }
+        if ('name' === $this->routeConfigs[$className]['field']) {
+            return $repository->findOneByName($identifier);
+        }
+        if ('permalink' === $this->routeConfigs[$className]['field']) {
+            return $repository->findOneByPermalink($identifier);
+        }
+
+        return $repository->findOneBy([$this->routeConfigs[$className]['field'] => $identifier]);
     }
 }

@@ -11,11 +11,17 @@
 
 namespace Sylius\Component\Variation\Model;
 
+use Sylius\Component\Resource\Model\TranslatableTrait;
+
 /**
  * @author Paweł Jędrzejewski <pawel@sylius.org>
  */
 class OptionValue implements OptionValueInterface
 {
+    use TranslatableTrait {
+        __construct as private initializeTranslationCollection;
+    }
+
     /**
      * @var mixed
      */
@@ -36,12 +42,17 @@ class OptionValue implements OptionValueInterface
      */
     protected $option;
 
+    public function __construct()
+    {
+        $this->initializeTranslationCollection();
+    }
+
     /**
      * {@inheritdoc}
      */
     public function __toString()
     {
-        return $this->value;
+        return $this->getValue();
     }
 
     /**
@@ -71,22 +82,6 @@ class OptionValue implements OptionValueInterface
     /**
      * {@inheritdoc}
      */
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setValue($value)
-    {
-        $this->value = $value;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getOption()
     {
         return $this->option;
@@ -103,13 +98,29 @@ class OptionValue implements OptionValueInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getValue()
+    {
+        return $this->translate()->getValue();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setValue($value)
+    {
+        $this->translate()->setValue($value);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOptionCode()
     {
         if (null === $this->option) {
             throw new \BadMethodCallException('The option have not been created yet so you cannot access proxy methods.');
         }
 
-        return $this->option->getName();
+        return $this->option->getCode();
     }
 
     /**
@@ -121,6 +132,6 @@ class OptionValue implements OptionValueInterface
             throw new \BadMethodCallException('The option have not been created yet so you cannot access proxy methods.');
         }
 
-        return $this->option->getPresentation();
+        return $this->option->getName();
     }
 }

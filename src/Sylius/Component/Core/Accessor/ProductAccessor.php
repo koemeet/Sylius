@@ -34,7 +34,7 @@ class ProductAccessor extends PropertyAccessor
         try {
             return parent::getValue($product, $propertyPath);
         } catch (Exception\NoSuchPropertyException $e) {
-            $tags = array();
+            $tags = [];
             if (!$product instanceof ProductInterface) {
                 return $tags;
             }
@@ -42,7 +42,7 @@ class ProductAccessor extends PropertyAccessor
             $propertyPath = strtolower((string) $propertyPath);
             foreach ($product->getAvailableVariants() as $variant) {
                 foreach ($variant->getOptions() as $option) {
-                    if ($propertyPath === strtolower($option->getPresentation())) {
+                    if ($propertyPath === strtolower($option->getOptionCode())) {
                         $tags[] = $option->getValue();
                     }
                 }

@@ -34,7 +34,7 @@ class BuildActionFormSubscriberSpec extends ObjectBehavior
         FormFactoryInterface $factory
     ) {
         $action->getConfigurationFormType()->willReturn('sylius_promotion_action_fixed_discount_configuration');
-        $registry->get(ActionInterface::TYPE_FIXED_DISCOUNT)->willReturn($action);
+        $registry->get('test_action')->willReturn($action);
 
         $this->beConstructedWith($registry, $factory);
     }
@@ -51,11 +51,11 @@ class BuildActionFormSubscriberSpec extends ObjectBehavior
 
     function it_subscribes_evetns()
     {
-        $this::getSubscribedEvents()->shouldReturn(array(
+        $this::getSubscribedEvents()->shouldReturn([
             FormEvents::PRE_SET_DATA => 'preSetData',
             FormEvents::POST_SET_DATA => 'postSetData',
             FormEvents::PRE_SUBMIT => 'preSubmit',
-        ));
+        ]);
     }
 
     function it_adds_configuration_fields_in_pre_set_data(
@@ -67,8 +67,8 @@ class BuildActionFormSubscriberSpec extends ObjectBehavior
     ) {
         $event->getData()->willReturn($action);
         $event->getForm()->willReturn($form);
-        $action->getType()->willReturn(ActionInterface::TYPE_FIXED_DISCOUNT);
-        $action->getConfiguration()->willReturn(array());
+        $action->getType()->willReturn('test_action');
+        $action->getConfiguration()->willReturn([]);
 
         $factory->createNamed(
             'configuration',
@@ -89,8 +89,7 @@ class BuildActionFormSubscriberSpec extends ObjectBehavior
         Form $field
     ) {
         $event->getForm()->willReturn($form);
-        $event->getData()->willReturn(array('type' =>ActionInterface::TYPE_FIXED_DISCOUNT));
-
+        $event->getData()->willReturn(['type' => 'test_action']);
 
         $factory->createNamed(
             'configuration',
@@ -110,10 +109,10 @@ class BuildActionFormSubscriberSpec extends ObjectBehavior
     ) {
         $event->getData()->willReturn($action);
         $event->getForm()->willReturn($form);
-        $action->getType()->willReturn(ActionInterface::TYPE_FIXED_DISCOUNT);
+        $action->getType()->willReturn('test_action');
 
         $form->get('type')->willReturn($form);
-        $form->setData(ActionInterface::TYPE_FIXED_DISCOUNT)->shouldBeCalled();
+        $form->setData('test_action')->shouldBeCalled();
 
         $this->postSetData($event);
     }

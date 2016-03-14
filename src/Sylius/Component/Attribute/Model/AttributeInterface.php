@@ -3,7 +3,7 @@
 /*
  * This file is part of the Sylius package.
  *
- * (c); Paweł Jędrzejewski
+ * (c) Paweł Jędrzejewski
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,13 +13,18 @@ namespace Sylius\Component\Attribute\Model;
 
 use Sylius\Component\Resource\Model\CodeAwareInterface;
 use Sylius\Component\Resource\Model\TimestampableInterface;
+use Sylius\Component\Resource\Model\TranslatableInterface;
 
 /**
  * @author Paweł Jędrzejewski <pawel@sylius.org>
  * @author Gonzalo Vilaseca <gvilaseca@reiss.co.uk>
  * @author Mateusz Zalewski <mateusz.zalewski@lakion.com>
  */
-interface AttributeInterface extends CodeAwareInterface, TimestampableInterface, AttributeTranslationInterface
+interface AttributeInterface extends
+    CodeAwareInterface,
+    TimestampableInterface,
+    AttributeTranslationInterface,
+    TranslatableInterface
 {
     /**
      * @return string

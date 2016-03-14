@@ -11,7 +11,9 @@
 
 namespace Sylius\Bundle\ArchetypeBundle\DependencyInjection;
 
+use Sylius\Bundle\ArchetypeBundle\Doctrine\ORM\ArchetypeRepository;
 use Sylius\Bundle\ResourceBundle\DependencyInjection\Extension\AbstractResourceExtension;
+use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
 use Sylius\Component\Archetype\Builder\ArchetypeBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -34,6 +36,10 @@ class SyliusArchetypeExtension extends AbstractResourceExtension
         $config = $this->processConfiguration(new Configuration(), $config);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
+        if (SyliusResourceBundle::DRIVER_DOCTRINE_ORM === $config['driver']) {
+            $config = $this->defineDefaultOrmRepository($config);
+        }
+
         $this->registerResources('sylius', $config['driver'], $this->resolveResources($config['resources'], $container), $container);
 
         foreach ($config['resources'] as $subjectName => $subjectConfig) {
@@ -52,9 +58,9 @@ class SyliusArchetypeExtension extends AbstractResourceExtension
             }
         }
 
-        $configFiles = array(
+        $configFiles = [
             'services.xml',
-        );
+        ];
 
         foreach ($configFiles as $configFile) {
             $loader->load($configFile);
@@ -71,7 +77,7 @@ class SyliusArchetypeExtension extends AbstractResourceExtension
      */
     private function resolveResources(array $resources, ContainerBuilder $container)
     {
-        $subjects = array();
+        $subjects = [];
 
         foreach ($resources as $subject => $parameters) {
             $subjects[$subject] = $parameters;
@@ -79,7 +85,7 @@ class SyliusArchetypeExtension extends AbstractResourceExtension
 
         $container->setParameter('sylius.archetype.subjects', $subjects);
 
-        $resolvedResources = array();
+        $resolvedResources = [];
 
         foreach ($resources as $subjectName => $subjectConfig) {
             $this->createPrototypeBuilder($container, $subjectName);
@@ -94,7 +100,6 @@ class SyliusArchetypeExtension extends AbstractResourceExtension
         return $resolvedResources;
     }
 
-
     /**
      * Create prototype builder for subject.
      *
@@ -103,11 +108,27 @@ class SyliusArchetypeExtension extends AbstractResourceExtension
      */
     private function createPrototypeBuilder(ContainerBuilder $container, $subjectName)
     {
-        $builderDefintion = new Definition(ArchetypeBuilder::class);
-        $builderDefintion
-            ->setArguments(array(new Reference(sprintf('sylius.factory.%s_attribute_value', $subjectName))))
+        $builderDefinition = new Definition(ArchetypeBuilder::class);
+        $builderDefinition
+            ->setArguments([new Reference(sprintf('sylius.factory.%s_attribute_value', $subjectName))])
         ;
 
-        $container->setDefinition('sylius.builder.' . $subjectName . '_archetype', $builderDefintion);
+        $container->setDefinition('sylius.builder.'.$subjectName.'_archetype', $builderDefinition);
+    }
+
+    /**
+     * @param array $config
+     *
+     * @return array
+     */
+    private function defineDefaultOrmRepository(array $config)
+    {
+        foreach ($config['resources'] as $subjectName => $subjectConfig) {
+            if (!isset($subjectConfig['archetype']['classes']['repository'])) {
+                $config['resources'][$subjectName]['archetype']['classes']['repository'] = ArchetypeRepository::class;
+            }
+        }
+
+        return $config;
     }
 }

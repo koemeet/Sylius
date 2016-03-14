@@ -1,0 +1,20 @@
+sylius_admin_root:
+    path: /
+    defaults:
+        _controller: FrameworkBundle:Redirect:redirect
+        route: sylius_admin_dashboard
+        permanent: true
+
+sylius_admin_dashboard:
+    path: /dashboard
+    defaults:
+        _controller: sylius.controller.admin.dashboard:indexAction
+
+sylius_admin_security:
+    resource: @SyliusAdminBundle/Resources/config/routing/security.yml
+
+sylius_admin_tax_category:
+    resource: @SyliusAdminBundle/Resources/config/routing/tax_category.yml
+
+sylius_admin_country:
+    resource: @SyliusAdminBundle/Resources/config/routing/country.yml

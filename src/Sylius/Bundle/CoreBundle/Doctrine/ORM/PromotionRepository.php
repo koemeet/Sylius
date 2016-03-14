@@ -13,13 +13,12 @@ namespace Sylius\Bundle\CoreBundle\Doctrine\ORM;
 
 use Sylius\Bundle\PromotionBundle\Doctrine\ORM\PromotionRepository as BasePromotionRepository;
 use Sylius\Component\Channel\Model\ChannelInterface;
+use Sylius\Component\Core\Repository\PromotionRepositoryInterface;
 
 /**
- * Promotion repository.
- *
  * @author Kristian Loevstroem <kristian@loevstroem.dk>
  */
-class PromotionRepository extends BasePromotionRepository
+class PromotionRepository extends BasePromotionRepository implements PromotionRepositoryInterface
 {
     /**
      * {@inheritdoc}
@@ -27,7 +26,7 @@ class PromotionRepository extends BasePromotionRepository
     public function findActiveByChannel(ChannelInterface $channel)
     {
         $queryBuilder = $this
-            ->getCollectionQueryBuilder()
+            ->createQueryBuilder('o')
             ->orderBy($this->getPropertyName('priority'), 'DESC')
         ;
 

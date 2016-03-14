@@ -12,8 +12,9 @@
 namespace Sylius\Bundle\ResourceBundle\DependencyInjection\Driver;
 
 use Sylius\Component\Resource\Factory\Factory;
+use Sylius\Component\Resource\Factory\TranslatableFactoryInterface;
+use Sylius\Component\Resource\Metadata\Metadata;
 use Sylius\Component\Resource\Metadata\MetadataInterface;
-use Sylius\Component\Translation\Factory\TranslatableFactoryInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Parameter;
@@ -75,7 +76,7 @@ abstract class AbstractDriver implements DriverInterface
 
         foreach ($validationGroups as $formName => $groups) {
             $suffix = 'default' === $formName ? '' : sprintf('_%s', $formName);
-            $container->setParameter(sprintf('%s.validation_groups.%s%s', $metadata->getApplicationName(), $metadata->getName(), $suffix), array_merge(array('Default'), $groups));
+            $container->setParameter(sprintf('%s.validation_groups.%s%s', $metadata->getApplicationName(), $metadata->getName(), $suffix), array_merge(['Default'], $groups));
         }
     }
 
@@ -85,18 +86,25 @@ abstract class AbstractDriver implements DriverInterface
      */
     protected function addController(ContainerBuilder $container, MetadataInterface $metadata)
     {
-        // @todo: Remove when ResourceController is reworked.
-        $configurationDefinition = new Definition(new Parameter('sylius.controller.configuration.class'));
-        $configurationDefinition
-            ->setFactory(array(new Reference('sylius.controller.configuration_factory'), 'createConfiguration'))
-            ->setArguments(array($metadata->getApplicationName(), $metadata->getName(), $metadata->getTemplatesNamespace()))
-            ->setPublic(false)
-        ;
-
         $definition = new Definition($metadata->getClass('controller'));
         $definition
-            ->setArguments(array($configurationDefinition))
-            ->addMethodCall('setContainer', array(new Reference('service_container')))
+            ->setArguments([
+                $this->getMetdataDefinition($metadata),
+                new Reference('sylius.resource_controller.request_configuration_factory'),
+                new Reference('sylius.resource_controller.view_handler'),
+                new Reference($metadata->getServiceId('repository')),
+                new Reference($metadata->getServiceId('factory')),
+                new Reference('sylius.resource_controller.new_resource_factory'),
+                new Reference($metadata->getServiceId('manager')),
+                new Reference('sylius.resource_controller.single_resource_provider'),
+                new Reference('sylius.resource_controller.resources_collection_provider'),
+                new Reference('sylius.resource_controller.form_factory'),
+                new Reference('sylius.resource_controller.redirect_handler'),
+                new Reference('sylius.resource_controller.flash_helper'),
+                new Reference('sylius.resource_controller.authorization_checker'),
+                new Reference('sylius.resource_controller.event_dispatcher'),
+            ])
+            ->addMethodCall('setContainer', [new Reference('service_container')])
         ;
 
         $container->setDefinition($metadata->getServiceId('controller'), $definition);
@@ -108,26 +116,23 @@ abstract class AbstractDriver implements DriverInterface
      */
     protected function addFactory(ContainerBuilder $container, MetadataInterface $metadata)
     {
-        $translatableFactoryInterface = TranslatableFactoryInterface::class;
-
         $factoryClass = $metadata->getClass('factory');
         $modelClass = $metadata->getClass('model');
 
-        $reflection = new \ReflectionClass($factoryClass);
         $definition = new Definition($factoryClass);
 
-        if (interface_exists($translatableFactoryInterface) && $reflection->implementsInterface($translatableFactoryInterface)) {
+        if (in_array(TranslatableFactoryInterface::class, class_implements($factoryClass))) {
             $decoratedDefinition = new Definition(Factory::class);
-            $decoratedDefinition->setArguments(array($modelClass));
+            $decoratedDefinition->setArguments([$modelClass]);
 
-            $definition->setArguments(array($decoratedDefinition, new Reference('sylius.translation.locale_provider')));
+            $definition->setArguments([$decoratedDefinition, new Reference('sylius.translation.locale_provider')]);
 
             $container->setDefinition($metadata->getServiceId('factory'), $definition);
 
             return;
         }
 
-        $definition->setArguments(array($modelClass));
+        $definition->setArguments([$modelClass]);
 
         $container->setDefinition($metadata->getServiceId('factory'), $definition);
     }
@@ -146,11 +151,11 @@ abstract class AbstractDriver implements DriverInterface
 
             switch ($formName) {
                 case 'choice':
-                    $definition->setArguments(array(
+                    $definition->setArguments([
                         $metadata->getClass('model'),
                         $metadata->getDriver(),
                         $alias,
-                    ));
+                    ]);
                 break;
 
                 default:
@@ -158,26 +163,51 @@ abstract class AbstractDriver implements DriverInterface
                     $validationGroups = new Parameter($validationGroupsParameterName);
 
                     if (!$container->hasParameter($validationGroupsParameterName)) {
-                        $validationGroups = array('Default');
+                        $validationGroups = ['Default'];
                     }
 
-                    $definition->setArguments(array(
+                    $definition->setArguments([
                         $metadata->getClass('model'),
-                        $validationGroups
-                    ));
+                        $validationGroups,
+                    ]);
                 break;
             }
 
-            $definition->addTag('form.type', array('alias' => $alias));
+            $definition->addTag('form.type', ['alias' => $alias]);
 
             $container->setParameter(sprintf('%s.form.type.%s%s.class', $metadata->getApplicationName(), $metadata->getName(), $suffix), $formClass);
             $container->setDefinition(
                 sprintf('%s.form.type.%s%s', $metadata->getApplicationName(), $metadata->getName(), $suffix),
                 $definition
             );
+        }
 
+        if (!$container->hasDefinition(sprintf('%s.form.type.%s', $metadata->getApplicationName(), $metadata->getName()))) {
+            $this->addDefaultForm($container, $metadata);
         }
     }
+
+    /**
+     * @param MetadataInterface $metadata
+     *
+     * @return Definition
+     */
+    protected function getMetdataDefinition(MetadataInterface $metadata)
+    {
+        $definition = new Definition(Metadata::class);
+        $definition
+            ->setFactory([new Reference('sylius.resource_registry'), 'get'])
+            ->setArguments([$metadata->getAlias()])
+        ;
+
+        return $definition;
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param MetadataInterface $metadata
+     */
+    abstract protected function addDefaultForm(ContainerBuilder $container, MetadataInterface $metadata);
 
     /**
      * @param ContainerBuilder $container

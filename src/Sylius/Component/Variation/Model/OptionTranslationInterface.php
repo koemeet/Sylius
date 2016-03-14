@@ -3,7 +3,7 @@
 /*
  * This file is part of the Sylius package.
  *
- * (c); Paweł Jędrzejewski
+ * (c) Paweł Jędrzejewski
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -23,12 +23,10 @@ interface OptionTranslationInterface extends ResourceInterface
      *
      * @return string
      */
-    public function getPresentation();
+    public function getName();
 
     /**
-     * Set presentation.
-     *
-     * @param string $presentation
+     * @param string $name
      */
-    public function setPresentation($presentation);
+    public function setName($name);
 }

@@ -1,11 +1,10 @@
 sylius:
-  form:
-    variant:
-        presentation: Presentation
-    option:
-        name: Internal name
-        presentation: Presentation
-        values: Possible values
-    option_value:
-        add_value: Add value
-        value: Value
+    form:
+        variant:
+            presentation: Presentation
+        option:
+            name: Name
+            values: Possible values
+        option_value:
+            add_value: Add value
+            value: Value

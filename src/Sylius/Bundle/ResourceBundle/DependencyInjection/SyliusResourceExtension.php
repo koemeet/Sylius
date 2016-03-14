@@ -12,12 +12,12 @@
 namespace Sylius\Bundle\ResourceBundle\DependencyInjection;
 
 use Sylius\Bundle\ResourceBundle\DependencyInjection\Driver\DriverProvider;
-use Sylius\Bundle\TranslationBundle\SyliusTranslationBundle;
 use Sylius\Component\Resource\Metadata\Metadata;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 /**
@@ -35,32 +35,45 @@ class SyliusResourceExtension extends Extension
         $config = $processor->processConfiguration(new Configuration(), $config);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $configFiles = array(
+        $configFiles = [
             'services.xml',
+            'controller.xml',
             'storage.xml',
             'routing.xml',
-            'twig.xml'
-        );
+            'twig.xml',
+        ];
 
         foreach ($configFiles as $configFile) {
             $loader->load($configFile);
         }
 
+        $bundles = $container->getParameter('kernel.bundles');
+        if (array_key_exists('SyliusGridBundle', $bundles)) {
+            $loader->load('grid.xml');
+        }
+
+        if ($config['translation']['enabled']) {
+            $loader->load('translation.xml');
+
+            $container->setParameter('sylius.translation.default_locale', $config['translation']['default_locale']);
+            $container->setAlias('sylius.translation.locale_provider', $config['translation']['locale_provider']);
+        }
+
         foreach ($config['resources'] as $alias => $resourceConfig) {
             $metadata = Metadata::fromAliasAndConfiguration($alias, $resourceConfig);
 
-            $resources = $container->hasParameter('sylius.resources') ? $container->getParameter('sylius.resources') : array();
-            $resources = array_merge($resources, array($alias => $resourceConfig));
+            $resources = $container->hasParameter('sylius.resources') ? $container->getParameter('sylius.resources') : [];
+            $resources = array_merge($resources, [$alias => $resourceConfig]);
             $container->setParameter('sylius.resources', $resources);
 
             DriverProvider::get($metadata)->load($container, $metadata);
 
-            if ($metadata->hasParameter('translation') && class_exists(SyliusTranslationBundle::class)) {
+            if ($metadata->hasParameter('translation')) {
                 $alias = $alias.'_translation';
-                $resourceConfig = array_merge(array('driver' => $resourceConfig['driver']), $resourceConfig['translation']);
+                $resourceConfig = array_merge(['driver' => $resourceConfig['driver']], $resourceConfig['translation']);
 
-                $resources = $container->hasParameter('sylius.resources') ? $container->getParameter('sylius.resources') : array();
-                $resources = array_merge($resources, array($alias => $resourceConfig));
+                $resources = $container->hasParameter('sylius.resources') ? $container->getParameter('sylius.resources') : [];
+                $resources = array_merge($resources, [$alias => $resourceConfig]);
                 $container->setParameter('sylius.resources', $resources);
 
                 $metadata = Metadata::fromAliasAndConfiguration($alias, $resourceConfig);
@@ -70,5 +83,6 @@ class SyliusResourceExtension extends Extension
         }
 
         $container->setParameter('sylius.resource.settings', $config['settings']);
+        $container->setAlias('sylius.resource_controller.authorization_checker', $config['authorization_checker']);
     }
 }

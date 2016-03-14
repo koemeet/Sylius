@@ -28,10 +28,7 @@ class LoadChannelData extends DataFixture
     public function load(ObjectManager $manager)
     {
         $url = $this->container->getParameter('router.request_context.host');
-        $manager->persist($this->createChannel('WEB-UK', 'UK Webstore', $url, array('en_GB'), array('GBP'), array('Category', 'Brand'), array('DHL', 'UPS Ground'), array('Offline', 'StripeCheckout')));
-        $manager->persist($this->createChannel('WEB-DE', 'Germany Webstore', null, array('de_DE'), array('EUR'), array('Category', 'Brand'), array('DHL', 'UPS Ground'), array('Offline', 'StripeCheckout')));
-        $manager->persist($this->createChannel('WEB-US', 'United States Webstore', null, array('en_US'), array('USD'), array('Category', 'Brand'), array('FedEx', 'FedEx World Shipping'), array('Offline', 'StripeCheckout')));
-        $manager->persist($this->createChannel('MOBILE', 'Mobile Store', null, array('en_GB', 'de_DE'), array('GBP', 'USD', 'EUR'), array('Category', 'Brand'), array('DHL', 'UPS Ground', 'FedEx'), array('Offline', 'StripeCheckout')));
+        $manager->persist($this->createChannel('DEFAULT', 'Default', $url, ['en_US'], ['USD'], ['Category', 'Brand'], ['FedEx', 'FedEx World Shipping'], ['Offline']));
 
         $manager->flush();
     }
@@ -50,20 +47,20 @@ class LoadChannelData extends DataFixture
      * @param string $url
      * @param array  $locales
      * @param array  $currencies
-     * @param array  $taxonomies
+     * @param array  $taxons
      * @param array  $shippingMethods
      * @param array  $paymentMethods
      *
      * @return ChannelInterface
      */
-    protected function createChannel($code, $name, $url, array $locales = array(), array $currencies = array(), array $taxonomies = array(), array $shippingMethods = array(), array $paymentMethods = array())
+    protected function createChannel($code, $name, $url, array $locales = [], array $currencies = [], array $taxons = [], array $shippingMethods = [], array $paymentMethods = [])
     {
         /** @var ChannelInterface $channel */
         $channel = $this->getChannelFactory()->createNew();
-        $channel->setUrl($url);
+        $channel->setHostname($url);
         $channel->setCode($code);
         $channel->setName($name);
-        $channel->setColor($this->faker->randomElement(array('Red', 'Green', 'Blue', 'Orange', 'Pink')));
+        $channel->setColor($this->faker->randomElement(['Red', 'Green', 'Blue', 'Orange', 'Pink']));
 
         $this->setReference('Sylius.Channel.'.$code, $channel);
 
@@ -73,8 +70,8 @@ class LoadChannelData extends DataFixture
         foreach ($currencies as $currency) {
             $channel->addCurrency($this->getReference('Sylius.Currency.'.$currency));
         }
-        foreach ($taxonomies as $taxonomy) {
-            $channel->addTaxonomy($this->getReference('Sylius.Taxonomy.'.$taxonomy));
+        foreach ($taxons as $taxon) {
+            $channel->addTaxon($this->getReference('Sylius.Taxon.'.$taxon));
         }
         foreach ($shippingMethods as $shippingMethod) {
             $channel->addShippingMethod($this->getReference('Sylius.ShippingMethod.'.$shippingMethod));

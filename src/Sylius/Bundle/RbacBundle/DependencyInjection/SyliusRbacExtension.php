@@ -34,11 +34,11 @@ class SyliusRbacExtension extends AbstractResourceExtension implements PrependEx
 
         $this->registerResources('sylius', $config['driver'], $config['resources'], $container);
 
-        $configFiles = array(
+        $configFiles = [
             'services.xml',
             'templating.xml',
             'twig.xml',
-        );
+        ];
 
         foreach ($configFiles as $configFile) {
             $loader->load($configFile);
@@ -62,14 +62,39 @@ class SyliusRbacExtension extends AbstractResourceExtension implements PrependEx
      */
     public function prepend(ContainerBuilder $container)
     {
+        $this->prependDoctrineCache($container);
+        $this->prependSyliusResource($container);
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     */
+    private function prependDoctrineCache(ContainerBuilder $container)
+    {
         if (!$container->hasExtension('doctrine_cache')) {
             throw new \RuntimeException('DoctrineCacheBundle must be registered!');
         }
 
-        $container->prependExtensionConfig('doctrine_cache', array(
-            'providers' => array(
+        $container->prependExtensionConfig('doctrine_cache', [
+            'providers' => [
                 'sylius_rbac' => '%sylius.cache%',
-            ),
-        ));
+            ],
+        ]);
+    }
+    /**
+     * @param ContainerBuilder $container
+     */
+    private function prependSyliusResource(ContainerBuilder $container)
+    {
+        if (!$container->hasExtension('sylius_resource')) {
+            return;
+        }
+
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('resource_integration.xml');
+
+        $container->prependExtensionConfig('sylius_resource', [
+            'authorization_checker' => 'sylius.resource_controller.authorization_checker.rbac',
+        ]);
     }
 }

@@ -60,7 +60,7 @@ abstract class DiscountAction implements PromotionActionInterface
             );
         }
 
-        foreach ($subject->getAdjustments(AdjustmentInterface::PROMOTION_ADJUSTMENT) as $adjustment) {
+        foreach ($subject->getAdjustments(AdjustmentInterface::ORDER_PROMOTION_ADJUSTMENT) as $adjustment) {
             if ($promotion === $this->originator->getOrigin($adjustment)) {
                 $subject->removeAdjustment($adjustment);
             }
@@ -69,14 +69,15 @@ abstract class DiscountAction implements PromotionActionInterface
 
     /**
      * @param PromotionInterface $promotion
+     * @param string $type
      *
      * @return AdjustmentInterface
      */
-    protected function createAdjustment(PromotionInterface $promotion)
+    protected function createAdjustment(PromotionInterface $promotion, $type = AdjustmentInterface::ORDER_PROMOTION_ADJUSTMENT)
     {
         $adjustment = $this->adjustmentFactory->createNew();
-        $adjustment->setType(AdjustmentInterface::PROMOTION_ADJUSTMENT);
-        $adjustment->setDescription($promotion->getDescription());
+        $adjustment->setType($type);
+        $adjustment->setLabel($promotion->getDescription());
 
         $this->originator->setOrigin($adjustment, $promotion);
 

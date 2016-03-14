@@ -28,7 +28,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 class Configuration implements ConfigurationInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getConfigTreeBuilder()
     {
@@ -68,12 +68,13 @@ class Configuration implements ConfigurationInterface
         $node
             ->children()
                 ->arrayNode('filters')
+                    ->performNoDeepMerging()
                     ->isRequired()
                     ->children()
                         ->arrayNode('pre_search_filter')
                             ->isRequired()
                             ->children()
-                                ->scalarNode('taxonomy')
+                                ->scalarNode('taxon')
                                     ->isRequired()
                                     ->cannotBeEmpty()
                                 ->end()
@@ -179,6 +180,7 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('class')
                             ->end()
                             ->arrayNode('mappings')
+                            ->performNoDeepMerging()
                                 ->prototype('array')
                                 ->end()
                             ->end()

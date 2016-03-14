@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+### v0.18.0
+
+* Merged Translation component.
+
 ### v0.16.0
 
 * Introduce Factory and FactoryInterface for creating new resources.
@@ -10,3 +14,4 @@ CHANGELOG
 * Extended RepositoryInterface by ``add`` and ``remove`` methods.
 * Introduce Metadata class for easier handling of resource configurations.
 * Add Registry to hold all resources in the system.
+* [BC BREAK] Introduced 3 new traits: `SoftDeletableTrait`, `TimestampableTrait`, `ToggleableTrait`

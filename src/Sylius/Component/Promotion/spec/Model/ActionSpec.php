@@ -42,19 +42,19 @@ class ActionSpec extends ObjectBehavior
 
     function its_type_should_be_mutable()
     {
-        $this->setType(ActionInterface::TYPE_FIXED_DISCOUNT);
-        $this->getType()->shouldReturn(ActionInterface::TYPE_FIXED_DISCOUNT);
+        $this->setType('test_action');
+        $this->getType()->shouldReturn('test_action');
     }
 
     function it_should_initialize_array_for_configuration_by_default()
     {
-        $this->getConfiguration()->shouldReturn(array());
+        $this->getConfiguration()->shouldReturn([]);
     }
 
     function its_configuration_should_be_mutable()
     {
-        $this->setConfiguration(array('value' => 500));
-        $this->getConfiguration()->shouldReturn(array('value' => 500));
+        $this->setConfiguration(['value' => 500]);
+        $this->getConfiguration()->shouldReturn(['value' => 500]);
     }
 
     function it_should_not_have_promotion_by_default()

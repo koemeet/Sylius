@@ -40,7 +40,7 @@ class BuildReportDataFetcherFormSubscriberSpec extends ObjectBehavior
     function let(ServiceRegistryInterface $dataFecherRegistry, FormFactoryInterface $factory, DataFetcherInterface $dataFetcher)
     {
         $dataFecherRegistry->get('test_data_fetcher')->willReturn($dataFetcher);
-        $dataFetcher->getType()->willReturn('test_type');
+        $dataFetcher->getType()->willReturn('sylius_data_fetcher_test_type');
 
         $this->beConstructedWith($dataFecherRegistry, $factory);
     }
@@ -53,7 +53,7 @@ class BuildReportDataFetcherFormSubscriberSpec extends ObjectBehavior
         Form $field)
     {
         $report->getDataFetcher()->willReturn('test_data_fetcher');
-        $report->getDataFetcherConfiguration()->willReturn(array());
+        $report->getDataFetcherConfiguration()->willReturn([]);
 
         $event->getData()->willReturn($report);
         $event->getForm()->willReturn($form);
@@ -75,7 +75,7 @@ class BuildReportDataFetcherFormSubscriberSpec extends ObjectBehavior
         Form $form,
         Form $field)
     {
-        $data = array('dataFetcher' => 'test_data_fetcher');
+        $data = ['dataFetcher' => 'test_data_fetcher'];
 
         $event->getData()->willReturn($data);
         $event->getForm()->willReturn($form);

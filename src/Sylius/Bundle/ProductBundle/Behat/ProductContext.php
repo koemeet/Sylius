@@ -13,8 +13,8 @@ namespace Sylius\Bundle\ProductBundle\Behat;
 
 use Behat\Gherkin\Node\TableNode;
 use Doctrine\Common\Collections\ArrayCollection;
-use Sylius\Component\Attribute\AttributeType\CheckboxAttributeType;
 use Sylius\Bundle\ResourceBundle\Behat\DefaultContext;
+use Sylius\Component\Attribute\AttributeType\CheckboxAttributeType;
 use Sylius\Component\Core\Model\ProductInterface;
 
 class ProductContext extends DefaultContext
@@ -34,12 +34,11 @@ class ProductContext extends DefaultContext
 
             $product->setCurrentLocale($this->getContainer()->getParameter('sylius.locale'));
             $product->setName(trim($data['name']));
-            $product->setDescription('...');
             $product->getMasterVariant()->setPrice((int) round($data['price'] * 100));
 
             if (!empty($data['options'])) {
                 foreach (explode(',', $data['options']) as $option) {
-                    $option = $this->findOneByName('product_option', trim($option));
+                    $option = $this->findOneBy('product_option', ['code' => trim($option)]);
                     $product->addOption($option);
                 }
             }
@@ -48,7 +47,7 @@ class ProductContext extends DefaultContext
                 $attribute = explode(':', $data['attributes']);
 
                 $productAttribute = $this->findOneByName('product_attribute', trim($attribute[0]));
-                $attributeValue =  $this->getFactory('product_attribute_value')->createNew();
+                $attributeValue = $this->getFactory('product_attribute_value')->createNew();
 
                 $attributeValue->setAttribute($productAttribute);
                 $attributeValue->setValue($attribute[1]);
@@ -73,7 +72,7 @@ class ProductContext extends DefaultContext
             }
 
             if (isset($data['tax category'])) {
-                $product->setTaxCategory($this->findOneByName('tax_category', trim($data['tax category'])));
+                $product->getMasterVariant()->setTaxCategory($this->findOneByName('tax_category', trim($data['tax category'])));
             }
 
             if (isset($data['taxons'])) {
@@ -114,7 +113,8 @@ class ProductContext extends DefaultContext
         $archetype->setCode($data['code']);
 
         foreach (explode(',', $data['options']) as $optionName) {
-            $archetype->addOption($this->findOneByName('product_option', trim($optionName)));
+            $option = $this->findOneBy('product_option', ['code' => trim($optionName)]);
+            $archetype->addOption($option);
         }
 
         foreach (explode(',', $data['attributes']) as $attributeName) {
@@ -133,7 +133,7 @@ class ProductContext extends DefaultContext
         $archetype = $this->findOneByName('product_archetype_translation', $archetypeName);
 
         if (!$archetype->getLocale() === $locale) {
-            throw new \Exception('There is no translation for product archetype'. $archetypeName . ' in '.$locale . 'locale');
+            throw new \Exception('There is no translation for product archetype'.$archetypeName.' in '.$locale.'locale');
         }
     }
 
@@ -144,7 +144,7 @@ class ProductContext extends DefaultContext
     public function thereAreOptions(TableNode $table)
     {
         foreach ($table->getHash() as $data) {
-            $this->thereIsOption($data['name'], $data['values'], $data['code'], $data['presentation'], false);
+            $this->thereIsOption($data['name'], $data['values'], $data['code'], false);
         }
 
         $this->getEntityManager()->flush();
@@ -153,19 +153,19 @@ class ProductContext extends DefaultContext
     /**
      * @Given /^I created option "([^""]*)" with values "([^""]*)" and option code "([^""]*)"$/
      */
-    public function thereIsOption($name, $values, $optionCode, $presentation = null, $flush = true)
+    public function thereIsOption($name, $values, $optionCode, $flush = true)
     {
         $optionValueFactory = $this->getFactory('product_option_value');
 
         $option = $this->getFactory('product_option')->createNew();
         $option->setCode($optionCode);
-        $option->setName($name);
-        $option->setPresentation($presentation ?: $name);
+        $option->setName($name ?: $optionCode );
 
-        foreach(explode(',', $values) as $valueData) {
-
-            $valueData = preg_split("[\\[|\\]]", $valueData, -1, PREG_SPLIT_NO_EMPTY);
+        foreach (explode(',', $values) as $valueData) {
+            $valueData = preg_split('[\\[|\\]]', $valueData, -1, PREG_SPLIT_NO_EMPTY);
             $optionValue = $optionValueFactory->createNew();
+            $optionValue->setFallbackLocale($this->getContainer()->getParameter('sylius.locale'));
+            $optionValue->setCurrentLocale($this->getContainer()->getParameter('sylius.locale'));
             $optionValue->setValue(trim($valueData[0]));
             $optionValue->setCode(trim($valueData[1]));
 
@@ -238,7 +238,6 @@ class ProductContext extends DefaultContext
             $product = $productTranslation->getTranslatable();
             $product->setCurrentLocale($data['locale']);
             $product->setFallbackLocale($data['locale']);
-
             $product->setName($data['name']);
             $product->setDescription('...');
         }
@@ -254,7 +253,7 @@ class ProductContext extends DefaultContext
         $product = $this->findOneByName('product_translation', $productName);
 
         if (!$product->getLocale() === $locale) {
-            throw new \Exception('There is no translation for product'. $productName . ' in '.$locale . 'locale');
+            throw new \Exception('There is no translation for product'.$productName.' in '.$locale.'locale');
         }
     }
 
@@ -269,7 +268,6 @@ class ProductContext extends DefaultContext
             $attribute = $this->findOneByName('product_attribute', $data['attribute']);
             $attribute->setCurrentLocale($data['locale']);
             $attribute->setFallbackLocale($data['locale']);
-
             $attribute->setName($data['name']);
         }
 
@@ -284,11 +282,10 @@ class ProductContext extends DefaultContext
         $manager = $this->getEntityManager();
 
         foreach ($table->getHash() as $data) {
-            $option = $this->findOneByName('product_option', $data['option']);
+            $option = $this->findOneBy('product_option', ['code' => $data['option']]);
             $option->setCurrentLocale($data['locale']);
             $option->setFallbackLocale($data['locale']);
-
-            $option->setPresentation($data['presentation']);
+            $option->setName($data['presentation']);
         }
 
         $manager->flush();
@@ -318,13 +315,13 @@ class ProductContext extends DefaultContext
     {
         $calculatorConfiguration = $this->getConfiguration($data['calculator configuration']);
 
-        $finalCalculatorConfiguration = array();
+        $finalCalculatorConfiguration = [];
         $channelRepository = $this->getRepository('channel');
 
         foreach ($calculatorConfiguration as $channelCode => $price) {
-            $channel = $channelRepository->findOneBy(array('code' => $channelCode));
+            $channel = $channelRepository->findOneBy(['code' => $channelCode]);
 
-            $finalCalculatorConfiguration[$channel->getId()] = (int)round($price * 100);
+            $finalCalculatorConfiguration[$channel->getId()] = (int) round($price * 100);
         }
 
         return $finalCalculatorConfiguration;
@@ -358,7 +355,7 @@ class ProductContext extends DefaultContext
      */
     public function iShouldBeOnTheProductAttributeCreationPageForType($type)
     {
-        $this->assertSession()->addressEquals($this->generatePageUrl('product attribute creation', array('type' => $type)));
+        $this->assertSession()->addressEquals($this->generatePageUrl('product attribute creation', ['type' => $type]));
     }
 
     /**
@@ -366,7 +363,7 @@ class ProductContext extends DefaultContext
      */
     public function thereIsProduct($enabled, $name)
     {
-        $product = $this->getRepository('product')->findOneBy(array('name' => $name));
+        $product = $this->getRepository('product')->findOneByName($name);
 
         if (null === $product) {
             $product = $this->getRepository('product')->createNew();
@@ -380,5 +377,26 @@ class ProductContext extends DefaultContext
         $manager = $this->getEntityManager();
         $manager->persist($product);
         $manager->flush();
+    }
+
+    /**
+     * @Given /^product "([^"]*)" has been deleted$/
+     */
+    public function productHasBeenDeleted($productName)
+    {
+        $this->getSession()->visit($this->generatePageUrl('sylius_backend_product_index'));
+
+        $tr = $this->assertSession()->elementExists('css', sprintf('table tbody tr:contains("%s")', $productName));
+        $locator = 'button:contains("Delete")';
+        $tr->find('css', $locator)->press();
+    }
+
+    /**
+     * @When /^I click "([^"]*)" near "([^"]*)" in variant$/
+     */
+    public function iClickNearInVariant($button, $value)
+    {
+        $tr = $this->assertSession()->elementExists('css', sprintf('table#variants tbody tr:contains("%s")', $value));
+        $tr->clickLink($button);
     }
 }
