@@ -2,9 +2,26 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  form:
-    login:
-      username: Nume de utilizator
-      password: Parolă
-  ui:
-    dashboard: Panou de administrare
+    form:
+        login:
+            username: Nume de utilizator
+            password: Parolă
+    ui:
+        actions: Acțiuni
+        cancel: Anulează
+        countries: Țări
+        create: Creează
+        dashboard: Panou de administrare
+        delete: Șterge
+        description: Descriere
+        edit: Editare
+        enabled: Activat
+        filter: Filtrează
+        locales: Setări regionale
+        new: Nouă
+        new_country: Țară nouă
+        new_tax_category: Categorie de taxă nouă
+        "no": false
+        save_changes: Salvează modificările
+        success: Succes
+        "yes": true

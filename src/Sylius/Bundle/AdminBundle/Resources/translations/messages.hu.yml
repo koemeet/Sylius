@@ -2,8 +2,12 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  menu:
-    admin:
-      main:
-        configuration:
-          header: Konfiguráció
+    menu:
+        admin:
+            main:
+                configuration:
+                    header: Konfiguráció
+                    tax_categories: Adó kategóriák
+                    countries: Országok
+                    locales: Területi beállítások
+                    tax_rates: Adókulcsok

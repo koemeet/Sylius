@@ -2,10 +2,29 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  form:
-    login:
-      username: Gebruikersnaam
-      password: Wachtwoord
-      remember_me: Onthoud mijn gegevens
-  ui:
-    dashboard: Dashboard
+    form:
+        login:
+            username: Gebruikersnaam
+            password: Wachtwoord
+            remember_me: Onthoud mijn gegevens
+    ui:
+        actions: Acties
+        cancel: Annuleren
+        countries: Landen
+        create: Creëer
+        dashboard: Dashboard
+        delete: Verwijderen
+        description: Omschrijving
+        edit: Bewerken
+        empty: Leeg
+        enabled: Toegestaan
+        filter: Filter
+        locales: "Talen/Regio's"
+        new: Nieuw
+        new_country: NIeuw land toevoegen
+        new_tax_category: Nieuwe belastingcategorie toevoegen
+        "no": false
+        save_changes: Aanpassingen opslaan
+        status: Status
+        success: Succes
+        "yes": true

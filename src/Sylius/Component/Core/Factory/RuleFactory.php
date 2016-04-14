@@ -11,6 +11,10 @@
 
 namespace Sylius\Component\Core\Factory;
 
+use Sylius\Component\Core\Promotion\Checker\NthOrderRuleChecker;
+use Sylius\Component\Core\Promotion\Checker\TotalOfItemsFromTaxonRuleChecker;
+use Sylius\Component\Core\Promotion\Checker\ContainsTaxonRuleChecker;
+use Sylius\Component\Core\Promotion\Checker\TaxonRuleChecker;
 use Sylius\Component\Promotion\Model\RuleInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 
@@ -62,6 +66,58 @@ class RuleFactory implements RuleFactoryInterface
         $rule = $this->createNew();
         $rule->setType(RuleInterface::TYPE_ITEM_TOTAL);
         $rule->setConfiguration(['amount' => $amount]);
+
+        return $rule;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createTaxon(array $taxons)
+    {
+        /** @var RuleInterface $rule */
+        $rule = $this->createNew();
+        $rule->setType(TaxonRuleChecker::TYPE);
+        $rule->setConfiguration(['taxons' => $taxons]);
+
+        return $rule;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createItemsFromTaxonTotal($taxon, $amount)
+    {
+        /** @var RuleInterface $rule */
+        $rule = $this->createNew();
+        $rule->setType(TotalOfItemsFromTaxonRuleChecker::TYPE);
+        $rule->setConfiguration(['taxon' => $taxon, 'amount' => $amount]);
+
+        return $rule;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createContainsTaxon($taxon, $count)
+    {
+        /** @var RuleInterface $rule */
+        $rule = $this->createNew();
+        $rule->setType(ContainsTaxonRuleChecker::TYPE);
+        $rule->setConfiguration(['taxon' => $taxon, 'count' => $count]);
+
+        return $rule;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createNthOrder($nth)
+    {
+        /** @var RuleInterface $rule */
+        $rule = $this->createNew();
+        $rule->setType(NthOrderRuleChecker::TYPE);
+        $rule->setConfiguration(['nth' => $nth]);
 
         return $rule;
     }

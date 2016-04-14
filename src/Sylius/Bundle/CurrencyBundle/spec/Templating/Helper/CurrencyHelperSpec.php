@@ -12,12 +12,17 @@
 namespace spec\Sylius\Bundle\CurrencyBundle\Templating\Helper;
 
 use PhpSpec\ObjectBehavior;
-use Sylius\Bundle\CurrencyBundle\Templating\Helper\MoneyHelper;
+use Sylius\Bundle\CurrencyBundle\Templating\Helper\CurrencyHelper;
+use Sylius\Bundle\MoneyBundle\Templating\Helper\MoneyHelperInterface;
 use Sylius\Component\Currency\Context\CurrencyContextInterface;
 use Sylius\Component\Currency\Converter\CurrencyConverterInterface;
+use Sylius\Component\Currency\Model\CurrencyInterface;
+use Sylius\Component\Currency\Provider\CurrencyProviderInterface;
 use Symfony\Component\Templating\Helper\Helper;
 
 /**
+ * @mixin CurrencyHelper
+ * 
  * @author Paweł Jędrzejewski <pjedrzejewski@diweb.pl>
  */
 class CurrencyHelperSpec extends ObjectBehavior
@@ -25,9 +30,10 @@ class CurrencyHelperSpec extends ObjectBehavior
     function let(
         CurrencyContextInterface $currencyContext,
         CurrencyConverterInterface $converter,
-        MoneyHelper $moneyHelper
+        MoneyHelperInterface $moneyHelper,
+        CurrencyProviderInterface $currencyProvider
     ) {
-        $this->beConstructedWith($currencyContext, $converter, $moneyHelper);
+        $this->beConstructedWith($currencyContext, $converter, $moneyHelper, $currencyProvider);
     }
 
     function it_is_initializable()
@@ -55,5 +61,13 @@ class CurrencyHelperSpec extends ObjectBehavior
         $this->convertAmount(2500, 'USD')->shouldReturn(1913);
         $this->convertAmount(312, 'PLN')->shouldReturn(407);
         $this->convertAmount(500)->shouldReturn(653);
+    }
+
+    function it_provides_current_currency(CurrencyProviderInterface $currencyProvider, CurrencyInterface $currency)
+    {
+        $currencyProvider->getBaseCurrency()->willReturn($currency);
+        $currency->getCode()->willReturn('PLN');
+
+        $this->getBaseCurrencySymbol()->shouldReturn('PLN');
     }
 }

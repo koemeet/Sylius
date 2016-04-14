@@ -3,12 +3,12 @@ sylius_admin_country:
         alias: sylius.country
         section: admin
         templates: SyliusAdminBundle:Crud
-        except: ['show', 'update', 'delete']
-        redirect: index
+        except: ['show', 'delete']
+        redirect: update
         grid: sylius_admin_country
         vars:
             all:
-                subheader: sylius.ui.manage_country
+                subheader: sylius.ui.manage_shipping_destinations
                 templates:
                     form: SyliusAdminBundle:Country:_form.html.twig
             index:

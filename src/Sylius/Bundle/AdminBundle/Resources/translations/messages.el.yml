@@ -2,8 +2,10 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  menu:
-    admin:
-      main:
-        configuration:
-          header: Παραμετροποίηση
+    menu:
+        admin:
+            main:
+                configuration:
+                    header: Παραμετροποίηση
+                    countries: Χώρες
+                    tax_rates: Φορολογικοί συντελεστές

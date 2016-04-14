@@ -2,8 +2,12 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  menu:
-    admin:
-      main:
-        configuration:
-          header: Einstellung
+    menu:
+        admin:
+            main:
+                configuration:
+                    header: Einstellung
+                    tax_categories: Steuerkategorien
+                    countries: Länder
+                    locales: Gebietsschemata
+                    tax_rates: Steuersätze

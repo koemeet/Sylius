@@ -2,13 +2,56 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  form:
-    login:
-      username: Nome utente
-      password: Password
-      remember_me: Ricordami
-  ui:
-    sign_in: Accedi
-    sign_out: Esci
-    dashboard: Pannello amministrazione
-    powered_by: Promosso da
+    form:
+        login:
+            username: Nome utente
+            password: Password
+            remember_me: Ricordami
+    ui:
+        actions: Azioni
+        administration_panel_login: Login del pannello di amministrazione
+        an_error_occurred: Si è verificato un errore
+        are_your_sure_you_want_to_perform_this_action: Sei sicuro di voler eseguire questa azione?
+        cancel: Annulla
+        clear_filters: Cancella filtri
+        confirm_your_action: "Confermare l'azione"
+        contains: Contiene
+        countries: Paesi
+        create: Crea
+        dashboard: Pannello amministrazione
+        delete: Cancella
+        description: Descrizione
+        disabled: Disattivato
+        edit: Modifica
+        edit_tax_category: Modificare la categoria fiscale
+        empty: Vuoto
+        enabled: Abilitato
+        ends_with: Finisce con
+        equal: Uguale
+        filter: Filtri
+        in: In
+        info: Info
+        last_updated: Ultimo aggiornamento
+        locales: Localizzazioni
+        manage_country: Gestisci paese
+        manage_locale: Gestisci locale
+        manage_taxation_of_your_products: Gestire la tassazione dei vostri prodotti
+        new: Nuovo
+        new_country: Nuovo paese
+        new_locale: Nuovo locale
+        new_tax_category: Nuova categoria fiscale
+        "no": false
+        no_results_to_display: Non ci sono risultati da visualizzare
+        not_contains: Non contiene
+        not_empty: Non è vuoto
+        not_in: Non in
+        powered_by: Promosso da
+        save_changes: Salva cambiamenti
+        show: Mostra
+        sign_in: Accedi
+        sign_out: Esci
+        starts_with: Inizia con
+        status: Stato
+        success: Successo
+        tax_categories: Categorie di tassazione
+        "yes": true

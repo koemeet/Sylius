@@ -63,9 +63,9 @@ final class ZoneContext implements Context
     }
 
     /**
-     * @Given /^there is "EU" zone containing all members of European Union$/
+     * @Given /^there is a zone "EU" containing all members of the European Union$/
      */
-    public function thereIsEUZoneContainingAllMembersOfEuropeanUnion()
+    public function thereIsAZoneEUContainingAllMembersOfEuropeanUnion()
     {
         $zone = $this->zoneFactory->createWithMembers($this->euMembers);
         $zone->setType(ZoneInterface::TYPE_COUNTRY);
@@ -76,9 +76,9 @@ final class ZoneContext implements Context
     }
 
     /**
-     * @Given /^there is rest of the world zone containing all other countries$/
+     * @Given /^there is a zone "The Rest of the World" containing all other countries$/
      */
-    public function thereIsRestOfTheWorldZoneContainingAllOtherCountries()
+    public function thereIsAZoneTheRestOfTheWorldContainingAllOtherCountries()
     {
         $restOfWorldCountries = array_diff(
             array_keys(Intl::getRegionBundle()->getCountryNames('en')),
@@ -88,7 +88,7 @@ final class ZoneContext implements Context
         $zone = $this->zoneFactory->createWithMembers($restOfWorldCountries);
         $zone->setType(ZoneInterface::TYPE_COUNTRY);
         $zone->setCode('RoW');
-        $zone->setName('Rest of the World');
+        $zone->setName('The Rest of the World');
 
         $this->zoneRepository->add($zone);
     }
@@ -98,8 +98,20 @@ final class ZoneContext implements Context
      */
     public function defaultTaxZoneIs(ZoneInterface $zone)
     {
-        $settings = $this->settingsManager->loadSettings('sylius_taxation');
+        $settings = $this->settingsManager->load('sylius_taxation');
         $settings->set('default_tax_zone', $zone);
-        $this->settingsManager->saveSettings('sylius_taxation', $settings);
+        $this->settingsManager->save($settings);
+    }
+
+    /**
+     * @Given the store does not have any zones defined
+     */
+    public function theStoreDoesNotHaveAnyZonesDefined()
+    {
+        $zones = $this->zoneRepository->findAll();
+
+        foreach ($zones as $zone) {
+            $this->zoneRepository->remove($zone);
+        }
     }
 }

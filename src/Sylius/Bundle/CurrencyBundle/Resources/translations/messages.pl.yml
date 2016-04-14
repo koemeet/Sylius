@@ -2,7 +2,8 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  form:
-    currency:
-      exchange_rate: Kurs wymiany
-      enabled: Włączone
+    form:
+        currency:
+            exchange_rate: Kurs wymiany
+            enabled: Włączone
+            base: Waluta podstawowa

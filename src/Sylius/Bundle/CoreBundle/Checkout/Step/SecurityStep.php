@@ -16,6 +16,7 @@ use Sylius\Bundle\FlowBundle\Process\Step\ActionResult;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\UserInterface;
+use Sylius\Component\Core\OrderCheckoutStates;
 use Sylius\Component\Core\OrderCheckoutTransitions;
 use Sylius\Component\Core\SyliusCheckoutEvents;
 use Sylius\Component\Resource\Event\ResourceEvent;
@@ -23,10 +24,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Security step.
- *
- * If user is not logged in, displays login & registration form.
- *
  * @author Paweł Jędrzejewski <pawel@sylius.org>
  */
 class SecurityStep extends CheckoutStep
@@ -37,7 +34,6 @@ class SecurityStep extends CheckoutStep
     public function displayAction(ProcessContextInterface $context)
     {
         $order = $this->getCurrentCart();
-        $this->applyTransition(OrderCheckoutTransitions::TRANSITION_START, $order);
 
         // If user is already logged in, transparently jump to next step.
         if ($this->isUserLoggedIn()) {
@@ -143,6 +139,7 @@ class SecurityStep extends CheckoutStep
         $order->setCustomer($customer);
         $this->dispatchCheckoutEvent(SyliusCheckoutEvents::SECURITY_PRE_COMPLETE, $order);
         $this->saveResource($order);
+        $this->get('session')->set('sylius_customer_guest_id', $customer->getId());
 
         return $this->complete();
     }

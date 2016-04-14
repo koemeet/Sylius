@@ -12,6 +12,7 @@
 namespace Sylius\Bundle\CoreBundle\Form\Type\Rule;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
@@ -20,17 +21,29 @@ use Symfony\Component\Form\FormBuilderInterface;
 class TaxonConfigurationType extends AbstractType
 {
     /**
+     * @var DataTransformerInterface
+     */
+    private $taxonsToCodesTransformer;
+
+    /**
+     * @param DataTransformerInterface $taxonsToCodesTransformer
+     */
+    public function __construct(DataTransformerInterface $taxonsToCodesTransformer)
+    {
+        $this->taxonsToCodesTransformer = $taxonsToCodesTransformer;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('taxons', 'sylius_taxon_choice', [
-                'label' => 'sylius.form.rule.taxon_configuration.taxons',
+                'label' => 'sylius.form.promotion_rule.taxon.taxons',
+                'multiple' => true,
             ])
-            ->add('exclude', 'checkbox', [
-                'label' => 'sylius.form.rule.taxonomy_configuration.exclude',
-            ])
+            ->addModelTransformer($this->taxonsToCodesTransformer)
         ;
     }
 

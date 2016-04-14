@@ -13,7 +13,6 @@ namespace Sylius\Behat\Context\Transform;
 
 use Behat\Behat\Context\Context;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
-use Sylius\Component\Core\Repository\ProductVariantRepositoryInterface;
 
 /**
  * @author Łukasz Chruściel <lukasz.chrusciel@lakion.com>
@@ -26,18 +25,11 @@ final class ProductContext implements Context
     private $productRepository;
 
     /**
-     * @var ProductVariantRepositoryInterface
-     */
-    private $productVariantRepository;
-
-    /**
      * @param ProductRepositoryInterface $productRepository
-     * @param ProductVariantRepositoryInterface $productVariantRepository
      */
-    public function __construct(ProductRepositoryInterface $productRepository, ProductVariantRepositoryInterface $productVariantRepository)
+    public function __construct(ProductRepositoryInterface $productRepository)
     {
         $this->productRepository = $productRepository;
-        $this->productVariantRepository = $productVariantRepository;
     }
 
     /**
@@ -56,17 +48,20 @@ final class ProductContext implements Context
     }
 
     /**
-     * @Transform /^"([^"]+)" variant of product "([^"]+)"$/
+     * @Transform /^products "([^"]+)" and "([^"]+)"$/
+     * @Transform /^products "([^"]+)", "([^"]+)" and "([^"]+)"$/
      */
-    public function getProductVariantByNameAndProduct($variantName, $productName)
+    public function getProductsByNames($firstProductName, $secondProductName, $thirdProductName = null)
     {
-        $product = $this->getProductByName($productName);
+        $products = [
+            $this->getProductByName($firstProductName),
+            $this->getProductByName($secondProductName),
+        ];
 
-        $productVariant = $this->productVariantRepository->findOneBy(['presentation' => $variantName, 'object' => $product]);
-        if (null === $productVariant) {
-            throw new \InvalidArgumentException(sprintf('Product variant with name "%s" of product "%s" does not exist', $variantName, $productName));
+        if (null !== $thirdProductName) {
+            $products[] = $this->getProductByName($thirdProductName);
         }
 
-        return $productVariant;
+        return $products;
     }
 }

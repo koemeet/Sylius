@@ -31,7 +31,6 @@
     ;
 
     $('.ui.checkbox').checkbox();
-    $('select').dropdown();
 
     $('.form button').on('click', function() {
       return $(this).closest('form').addClass('loading');
@@ -40,6 +39,6 @@
       return $(this).closest('.message').transition('fade');
     });
 
-    $('[data-requires-confirmation').requireConfirmation();
+    $('[data-requires-confirmation]').requireConfirmation();
   });
 })(jQuery);

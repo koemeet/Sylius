@@ -2,8 +2,11 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  menu:
-    admin:
-      main:
-        configuration:
-          header: Configurare
+    menu:
+        admin:
+            main:
+                configuration:
+                    header: Configurare
+                    countries: Țări
+                    locales: Setări regionale
+                    tax_rates: Taxe

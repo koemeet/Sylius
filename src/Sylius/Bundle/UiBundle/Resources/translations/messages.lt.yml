@@ -2,13 +2,31 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  form:
-    login:
-      username: Vartotojo vardas
-      password: Slaptažodis
-      remember_me: Prisiminti mane
-  ui:
-    sign_in: Prisijungti
-    sign_out: Atsijungti
-    dashboard: Skydelis
-    powered_by: Sukurta
+    form:
+        login:
+            username: Vartotojo vardas
+            password: Slaptažodis
+            remember_me: Prisiminti mane
+    ui:
+        actions: Veiksmai
+        cancel: Atšaukti
+        countries: Šalys
+        create: Sukurti
+        dashboard: Skydelis
+        delete: Šalinti
+        description: Aprašymas
+        edit: Redaguoti
+        empty: Išvalyti
+        enabled: Įjungta
+        filter: Filtruoti
+        locales: Lokalės
+        new: Naujas
+        new_country: Naujas šalis
+        new_tax_category: Nauja mokesčių kategorija
+        "no": false
+        powered_by: Sukurta
+        save_changes: Išsaugoti pakeitimus
+        sign_in: Prisijungti
+        sign_out: Atsijungti
+        success: Pavyko
+        "yes": true

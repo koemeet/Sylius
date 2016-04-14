@@ -13,6 +13,10 @@ namespace Sylius\Behat\Context\Setup;
 
 use Behat\Behat\Context\Context;
 use Doctrine\Common\Persistence\ObjectManager;
+use Sylius\Component\Core\Model\ChannelInterface;
+use Sylius\Component\Core\Model\CouponInterface;
+use Sylius\Component\Core\OrderProcessing\OrderRecalculatorInterface;
+use Sylius\Component\Currency\Model\CurrencyInterface;
 use Sylius\Component\Order\Modifier\OrderItemQuantityModifierInterface;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\OrderInterface;
@@ -21,13 +25,14 @@ use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Core\Model\ShippingMethodInterface;
 use Sylius\Component\Core\OrderProcessing\OrderShipmentProcessorInterface;
-use Sylius\Component\Core\OrderProcessing\ShippingChargesProcessorInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\Component\Core\Test\Services\SharedStorageInterface;
 use Sylius\Component\Payment\Factory\PaymentFactoryInterface;
+use Sylius\Component\Payment\Model\PaymentInterface;
 use Sylius\Component\Payment\Model\PaymentMethodInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\User\Model\CustomerInterface;
+use Sylius\Component\User\Model\UserInterface;
 
 /**
  * @author Łukasz Chruściel <lukasz.chrusciel@lakion.com>
@@ -70,9 +75,9 @@ final class OrderContext implements Context
     private $itemQuantityModifier;
 
     /**
-     * @var ShippingChargesProcessorInterface
+     * @var OrderRecalculatorInterface
      */
-    private $shippingChargesProcessor;
+    private $orderRecalculator;
 
     /**
      * @var ObjectManager
@@ -87,7 +92,8 @@ final class OrderContext implements Context
      * @param PaymentFactoryInterface $paymentFactory
      * @param FactoryInterface $orderItemFactory
      * @param OrderItemQuantityModifierInterface $itemQuantityModifier
-     * @param ShippingChargesProcessorInterface $shippingChargesProcessor
+     * @param SharedStorageInterface $sharedStorage
+     * @param OrderRecalculatorInterface $orderRecalculator
      * @param ObjectManager $objectManager
      */
     public function __construct(
@@ -98,7 +104,7 @@ final class OrderContext implements Context
         PaymentFactoryInterface $paymentFactory,
         FactoryInterface $orderItemFactory,
         OrderItemQuantityModifierInterface $itemQuantityModifier,
-        ShippingChargesProcessorInterface $shippingChargesProcessor,
+        OrderRecalculatorInterface $orderRecalculator,
         ObjectManager $objectManager
     ) {
         $this->sharedStorage = $sharedStorage;
@@ -108,7 +114,7 @@ final class OrderContext implements Context
         $this->paymentFactory = $paymentFactory;
         $this->orderItemFactory = $orderItemFactory;
         $this->itemQuantityModifier = $itemQuantityModifier;
-        $this->shippingChargesProcessor = $shippingChargesProcessor;
+        $this->orderRecalculator = $orderRecalculator;
         $this->objectManager = $objectManager;
     }
 
@@ -117,13 +123,7 @@ final class OrderContext implements Context
      */
     public function theCustomerPlacedAnOrder(CustomerInterface $customer, $orderNumber)
     {
-        /** @var OrderInterface $order */
-        $order = $this->orderFactory->createNew();
-
-        $order->setCustomer($customer);
-        $order->setNumber($orderNumber);
-        $order->setChannel($this->sharedStorage->get('channel'));
-        $order->setCurrency($this->sharedStorage->get('currency'));
+        $order = $this->createOrder($customer, $orderNumber);
 
         $this->sharedStorage->set('order', $order);
 
@@ -144,7 +144,7 @@ final class OrderContext implements Context
         $this->orderShipmentFactory->processOrderShipment($order);
         $order->getShipments()->first()->setMethod($shippingMethod);
 
-        $this->shippingChargesProcessor->applyShippingCharges($order);
+        $this->orderRecalculator->recalculate($order);
 
         $payment = $this->paymentFactory->createWithAmountAndCurrency($order->getTotal(), $order->getCurrency());
         $payment->setMethod($paymentMethod);
@@ -163,6 +163,8 @@ final class OrderContext implements Context
     public function theCustomerBoughtSingleProduct(ProductInterface $product)
     {
         $this->addSingleProductVariantToOrder($product->getMasterVariant(), $product->getPrice());
+
+        $this->objectManager->flush();
     }
 
     /**
@@ -171,15 +173,46 @@ final class OrderContext implements Context
     public function theCustomerBoughtSingleProductVariant(ProductVariantInterface $productVariant)
     {
         $this->addSingleProductVariantToOrder($productVariant, $productVariant->getPrice());
+
+        $this->objectManager->flush();
+    }
+
+    /**
+     * @Given the customer bought single :product using :coupon coupon
+     */
+    public function theCustomerBoughtSingleUsing(ProductInterface $product, CouponInterface $coupon)
+    {
+        $order = $this->addSingleProductVariantToOrder($product->getMasterVariant(), $product->getPrice());
+        $order->setPromotionCoupon($coupon);
+
+        $this->orderRecalculator->recalculate($order);
+
+        $this->objectManager->flush();
+    }
+
+    /**
+     * @Given /^(I) have already placed an order (\d+) times$/
+     */
+    public function iHaveAlreadyPlacedOrderNthTimes(UserInterface $user, $numberOfOrders)
+    {
+        $customer = $user->getCustomer();
+        for ($i = 0; $i < $numberOfOrders; $i++) {
+            $order = $this->createOrder($customer, '#00000'.$i);
+            $order->setPaymentState(PaymentInterface::STATE_COMPLETED);
+            $order->setCompletedAt(new \DateTime());
+
+            $this->orderRepository->add($order);
+        }
     }
 
     /**
      * @param ProductVariantInterface $productVariant
      * @param int $price
+     *
+     * @return OrderInterface
      */
     private function addSingleProductVariantToOrder(ProductVariantInterface $productVariant, $price)
     {
-        /** @var OrderInterface $order */
         $order = $this->sharedStorage->get('order');
 
         /** @var OrderItemInterface $item */
@@ -191,6 +224,32 @@ final class OrderContext implements Context
 
         $order->addItem($item);
 
-        $this->objectManager->flush();
+        $this->orderRecalculator->recalculate($order);
+
+        return $order;
+    }
+
+    /**
+     * @param CustomerInterface $customer
+     * @param string $number
+     * @param ChannelInterface|null $channel
+     * @param CurrencyInterface|null $currency
+     *
+     * @return OrderInterface
+     */
+    private function createOrder(
+        CustomerInterface $customer,
+        $number,
+        ChannelInterface $channel = null,
+        CurrencyInterface $currency = null
+    ) {
+        $order = $this->orderFactory->createNew();
+
+        $order->setCustomer($customer);
+        $order->setNumber($number);
+        $order->setChannel((null !== $channel) ? $channel : $this->sharedStorage->get('channel'));
+        $order->setCurrency((null !== $currency) ? $currency : $this->sharedStorage->get('currency'));
+
+        return $order;
     }
 }

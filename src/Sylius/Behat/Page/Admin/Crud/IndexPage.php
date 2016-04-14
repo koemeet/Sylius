@@ -11,10 +11,10 @@
 
 namespace Sylius\Behat\Page\Admin\Crud;
 
+use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Session;
-use Sylius\Behat\Page\ElementNotFoundException;
 use Sylius\Behat\Page\SymfonyPage;
-use Sylius\Behat\TableManipulatorInterface;
+use Sylius\Behat\Service\Accessor\TableAccessorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -23,18 +23,9 @@ use Symfony\Component\Routing\RouterInterface;
 class IndexPage extends SymfonyPage implements IndexPageInterface
 {
     /**
-     * @var array
+     * @var TableAccessorInterface
      */
-    protected $elements = [
-        'message' => '.message',
-        'messageContent' => '.message > .content',
-        'table' => '.table',
-    ];
-
-    /**
-     * @var TableManipulatorInterface
-     */
-    private $tableManipulator;
+    private $tableAccessor;
 
     /**
      * @var string
@@ -45,56 +36,20 @@ class IndexPage extends SymfonyPage implements IndexPageInterface
      * @param Session $session
      * @param array $parameters
      * @param RouterInterface $router
-     * @param TableManipulatorInterface $tableManipulator
+     * @param TableAccessorInterface $tableAccessor
      * @param string $resourceName
      */
     public function __construct(
         Session $session,
         array $parameters,
         RouterInterface $router,
-        TableManipulatorInterface $tableManipulator,
+        TableAccessorInterface $tableAccessor,
         $resourceName
     ) {
         parent::__construct($session, $parameters, $router);
 
-        $this->tableManipulator = $tableManipulator;
+        $this->tableAccessor = $tableAccessor;
         $this->resourceName = strtolower($resourceName);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasSuccessMessage()
-    {
-        try {
-            return $this->getElement('message')->hasClass('positive');
-        } catch (ElementNotFoundException $exception) {
-            return false;
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isSuccessfullyCreated()
-    {
-        return $this->hasMessage(sprintf('Success %s has been successfully created.', ucfirst($this->resourceName)));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isSuccessfullyUpdated()
-    {
-        return $this->hasMessage(sprintf('Success %s has been successfully updated.', ucfirst($this->resourceName)));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isSuccessfullyDeleted()
-    {
-        return $this->hasMessage(sprintf('Success %s has been successfully deleted.', ucfirst($this->resourceName)));
     }
 
     /**
@@ -103,7 +58,7 @@ class IndexPage extends SymfonyPage implements IndexPageInterface
     public function isResourceOnPage(array $parameters)
     {
         try {
-            $rows = $this->tableManipulator->getRowsWithFields($this->getElement('table'), $parameters);
+            $rows = $this->tableAccessor->getRowsWithFields($this->getElement('table'), $parameters);
 
             return 1 === count($rows);
         } catch (\InvalidArgumentException $exception) {
@@ -114,15 +69,25 @@ class IndexPage extends SymfonyPage implements IndexPageInterface
     }
 
     /**
+     * @return int
+     */
+    public function countItems()
+    {
+        return $this->getTableAccessor()->countTableBodyRows($this->getElement('table'));
+    }
+
+    /**
      * {@inheritdoc}
      */
-    public function hasMessage($message)
+    public function deleteResourceOnPage(array $parameters)
     {
-        try {
-            return $message === $this->getElement('messageContent')->getText();
-        } catch (ElementNotFoundException $exception) {
-            return false;
-        }
+        $tableAccessor = $this->getTableAccessor();
+        $table = $this->getElement('table');
+
+        $deletedRow = $tableAccessor->getRowWithFields($table, $parameters);
+        $actionButtons = $tableAccessor->getFieldFromRow($table, $deletedRow, 'Actions');
+
+        $actionButtons->pressButton('Delete');
     }
 
     /**
@@ -142,10 +107,20 @@ class IndexPage extends SymfonyPage implements IndexPageInterface
     }
 
     /**
-     * @return TableManipulatorInterface
+     * @return TableAccessorInterface
      */
-    protected function getTableManipulator()
+    protected function getTableAccessor()
     {
-        return $this->tableManipulator;
+        return $this->tableAccessor;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getDefinedElements()
+    {
+        return array_merge(parent::getDefinedElements(), [
+            'table' => '.table',
+        ]);
     }
 }

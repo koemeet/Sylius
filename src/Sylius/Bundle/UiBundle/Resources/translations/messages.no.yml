@@ -2,9 +2,26 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  form:
-    login:
-      username: Brukernavn
-      password: Passord
-  ui:
-    dashboard: Panel
+    form:
+        login:
+            username: Brukernavn
+            password: Passord
+    ui:
+        actions: Handlinger
+        cancel: Avbryt
+        countries: Land
+        create: Opprett
+        dashboard: Panel
+        delete: Slett
+        description: Beskrivelse
+        edit: Rediger
+        enabled: Aktivert
+        filter: Filtrer
+        locales: Nasjonale innstillinger
+        new: Ny
+        new_country: Nytt land
+        new_tax_category: Ny momskategori
+        "no": false
+        save_changes: Lagre endringer
+        success: Suksess
+        "yes": true

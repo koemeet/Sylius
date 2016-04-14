@@ -12,9 +12,9 @@
 namespace Sylius\Behat\Context\Ui;
 
 use Behat\Behat\Context\Context;
-use Sylius\Behat\Page\Cart\CartSummaryPageInterface;
-use Sylius\Behat\Page\ElementNotFoundException;
-use Sylius\Behat\Page\Product\ProductShowPageInterface;
+use Behat\Mink\Exception\ElementNotFoundException;
+use Sylius\Behat\Page\Shop\Cart\CartSummaryPageInterface;
+use Sylius\Behat\Page\Shop\Product\ShowPageInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Test\Services\SharedStorageInterface;
 
@@ -34,19 +34,19 @@ final class CartContext implements Context
     private $cartSummaryPage;
 
     /**
-     * @var ProductShowPageInterface
+     * @var ShowPageInterface
      */
     private $productShowPage;
 
     /**
      * @param SharedStorageInterface $sharedStorage
      * @param CartSummaryPageInterface $cartSummaryPage
-     * @param ProductShowPageInterface $productShowPage
+     * @param ShowPageInterface $productShowPage
      */
     public function __construct(
         SharedStorageInterface $sharedStorage,
         CartSummaryPageInterface $cartSummaryPage,
-        ProductShowPageInterface $productShowPage
+        ShowPageInterface $productShowPage
     ) {
         $this->sharedStorage = $sharedStorage;
         $this->cartSummaryPage = $cartSummaryPage;
@@ -64,6 +64,19 @@ final class CartContext implements Context
         $this->productShowPage->addToCart();
 
         $this->sharedStorage->set('product', $product);
+    }
+
+    /**
+     * @Given /^I added (products "([^"]+)" and "([^"]+)") to the cart$/
+     * @When /^I add (products "([^"]+)" and "([^"]+)") to the cart$/
+     * @Given /^I added (products "([^"]+)", "([^"]+)" and "([^"]+)") to the cart$/
+     * @When /^I add (products "([^"]+)", "([^"]+)" and "([^"]+)") to the cart$/
+     */
+    public function iAddMultipleProductsToTheCart(array $products)
+    {
+        foreach ($products as $product) {
+            $this->iAddProductToTheCart($product);
+        }
     }
 
     /**

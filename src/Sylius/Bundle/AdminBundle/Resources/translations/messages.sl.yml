@@ -2,8 +2,11 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  menu:
-    admin:
-      main:
-        configuration:
-          header: Konfiguracija
+    menu:
+        admin:
+            main:
+                configuration:
+                    header: Konfiguracija
+                    countries: Države
+                    locales: Področne nastavitve
+                    tax_rates: Davčne stopnje

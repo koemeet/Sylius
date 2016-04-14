@@ -2,8 +2,12 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  menu:
-    admin:
-      main:
-        configuration:
-          header: تنظیمات
+    menu:
+        admin:
+            main:
+                configuration:
+                    header: تنظیمات
+                    tax_categories: رده های مالیات
+                    countries: كشور‌ها
+                    locales: زبان ها
+                    tax_rates: نرخ های مالیات

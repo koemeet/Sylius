@@ -2,8 +2,11 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  menu:
-    admin:
-      main:
-        configuration:
-          header: Konfiguration
+    menu:
+        admin:
+            main:
+                configuration:
+                    header: Konfiguration
+                    countries: Lande
+                    locales: Landekoder
+                    tax_rates: Momssatser

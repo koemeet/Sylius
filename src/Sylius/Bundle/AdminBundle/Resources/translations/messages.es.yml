@@ -2,8 +2,12 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  menu:
-    admin:
-      main:
-        configuration:
-          header: Configuración
+    menu:
+        admin:
+            main:
+                configuration:
+                    header: Configuración
+                    tax_categories: Categorías de Impuestos
+                    countries: Países
+                    locales: Idiomas
+                    tax_rates: Tasas de impuestos

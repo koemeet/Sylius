@@ -2,10 +2,27 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  form:
-    login:
-      username: Login
-      password: Senha
-      remember_me: Lembrar
-  ui:
-    dashboard: Painel
+    form:
+        login:
+            username: Login
+            password: Senha
+            remember_me: Lembrar
+    ui:
+        actions: Ações
+        cancel: Cancelar
+        countries: Países
+        create: Criar
+        dashboard: Painel
+        delete: Excluir
+        description: Descrição
+        edit: Editar
+        enabled: Ativado
+        filter: Filtrar
+        locales: Localidades
+        new: Novo
+        new_country: Novo país
+        new_tax_category: Nova categoria de imposto
+        "no": false
+        save_changes: Salvar alterações
+        success: Sucesso
+        "yes": true

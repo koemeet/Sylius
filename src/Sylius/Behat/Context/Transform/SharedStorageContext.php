@@ -45,6 +45,6 @@ final class SharedStorageContext implements Context
      */
     public function getResource($resource)
     {
-        return $this->sharedStorage->get($resource);
+        return $this->sharedStorage->get(str_replace(' ', '_', $resource));
     }
 }

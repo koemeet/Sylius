@@ -2,7 +2,20 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  form:
-    login:
-      username: Όνομα χρήστη
-      password: Κωδικός πρόσβασης
+    form:
+        login:
+            username: Όνομα χρήστη
+            password: Κωδικός πρόσβασης
+    ui:
+        actions: Ενέργειες
+        cancel: Άκυρο
+        countries: Χώρες
+        create: Δημιουργία
+        description: Περιγραφή
+        enabled: Ενεργοποιημένο
+        filter: Φίλτρο
+        new_country: Νέα χώρα
+        "no": false
+        save_changes: Αποθήκευση αλλαγών
+        success: Επιτυχία
+        "yes": true

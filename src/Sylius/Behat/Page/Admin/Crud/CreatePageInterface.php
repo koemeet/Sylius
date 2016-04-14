@@ -17,7 +17,7 @@ use Sylius\Behat\Page\PageInterface;
 /**
  * @author Arkadiusz Krakowiak <arkadiusz.krakowiak@lakion.com>
  */
-interface CreatePageInterface extends PageInterface
+interface CreatePageInterface extends PageInterface, PageWithFormInterface
 {
     /**
      * @throws ElementNotFoundException

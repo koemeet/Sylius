@@ -4,75 +4,9 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ad226aefe9335182f5ea02cd222697bf",
-    "content-hash": "3c8ea86d828ddefea603976d90a0a4d0",
+    "hash": "13655a87f6ac366d8b0c5a8b047c502e",
+    "content-hash": "9bcc0f73b9432b6245ca378dbd9726d2",
     "packages": [
-        {
-            "name": "a2lix/translation-form-bundle",
-            "version": "2.0.4",
-            "target-dir": "A2lix/TranslationFormBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/a2lix/TranslationFormBundle.git",
-                "reference": "390e32745ddcce5308e672e8d188b6963c41de21"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/a2lix/TranslationFormBundle/zipball/390e32745ddcce5308e672e8d188b6963c41de21",
-                "reference": "390e32745ddcce5308e672e8d188b6963c41de21",
-                "shasum": ""
-            },
-            "require": {
-                "symfony/symfony": ">=2.3"
-            },
-            "require-dev": {
-                "doctrine/common": "~2.3",
-                "gedmo/doctrine-extensions": "dev-wip-v2.4.0",
-                "knplabs/doctrine-behaviors": "1.0.x-dev",
-                "phpunit/phpunit": "~4.1"
-            },
-            "suggest": {
-                "a2lix/i18n-doctrine-bundle": "For A2lix strategy",
-                "gedmo/doctrine-extensions": "For Gedmo strategy",
-                "knplabs/doctrine-behaviors": "For Knp strategy",
-                "prezent/doctrine-translatable-bundle": "For Prezent strategy"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "A2lix\\TranslationFormBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "David ALLIX",
-                    "homepage": "http://a2lix.fr"
-                }
-            ],
-            "description": "Translate your doctrine objects easily with some helps",
-            "homepage": "https://github.com/a2lix/TranslationFormBundle",
-            "keywords": [
-                "Symfony2",
-                "doctrine2",
-                "form",
-                "gedmo",
-                "i18n",
-                "internationalization",
-                "knplabs",
-                "translatable",
-                "translation"
-            ],
-            "time": "2014-12-02 12:51:30"
-        },
         {
             "name": "behat/transliterator",
             "version": "v1.1.0",
@@ -2018,6 +1952,51 @@
             "time": "2015-11-03 01:34:55"
         },
         {
+            "name": "hamcrest/hamcrest-php",
+            "version": "v1.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hamcrest/hamcrest-php.git",
+                "reference": "b37020aa976fa52d3de9aa904aa2522dc518f79c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hamcrest/hamcrest-php/zipball/b37020aa976fa52d3de9aa904aa2522dc518f79c",
+                "reference": "b37020aa976fa52d3de9aa904aa2522dc518f79c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "replace": {
+                "cordoval/hamcrest-php": "*",
+                "davedevelopment/hamcrest-php": "*",
+                "kodova/hamcrest-php": "*"
+            },
+            "require-dev": {
+                "phpunit/php-file-iterator": "1.3.3",
+                "satooshi/php-coveralls": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "hamcrest"
+                ],
+                "files": [
+                    "hamcrest/Hamcrest.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD"
+            ],
+            "description": "This is the PHP port of Hamcrest Matchers",
+            "keywords": [
+                "test"
+            ],
+            "time": "2015-05-11 14:41:42"
+        },
+        {
             "name": "hwi/oauth-bundle",
             "version": "0.3.9",
             "target-dir": "HWI/Bundle/OAuthBundle",
@@ -2640,45 +2619,41 @@
         },
         {
             "name": "jms/translation-bundle",
-            "version": "1.1.0",
+            "version": "1.2.2",
             "target-dir": "JMS/TranslationBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/schmittjoh/JMSTranslationBundle.git",
-                "reference": "6f03035a38badaf8c48767c7664c3196df1eebdf"
+                "reference": "b025251eaf65b73a775fa22ec277e771cdba35d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/JMSTranslationBundle/zipball/6f03035a38badaf8c48767c7664c3196df1eebdf",
-                "reference": "6f03035a38badaf8c48767c7664c3196df1eebdf",
+                "url": "https://api.github.com/repos/schmittjoh/JMSTranslationBundle/zipball/b025251eaf65b73a775fa22ec277e771cdba35d8",
+                "reference": "b025251eaf65b73a775fa22ec277e771cdba35d8",
                 "shasum": ""
             },
             "require": {
-                "nikic/php-parser": "0.9.1",
-                "symfony/console": "*",
-                "symfony/framework-bundle": "~2.1"
+                "nikic/php-parser": "^1.4|^2.0",
+                "php": "^5.3.3|^7.0",
+                "symfony/console": "^2.3|^3.0",
+                "symfony/framework-bundle": "^2.3|^3.0"
             },
             "conflict": {
-                "twig/twig": "1.10.2"
+                "twig/twig": "<1.12"
             },
             "require-dev": {
-                "jms/di-extra-bundle": ">=1.1",
-                "sensio/framework-extra-bundle": "*",
-                "symfony/browser-kit": "*",
-                "symfony/class-loader": "*",
-                "symfony/css-selector": "*",
-                "symfony/finder": "*",
-                "symfony/form": "*",
-                "symfony/process": "*",
-                "symfony/security": "*",
-                "symfony/twig-bundle": "*",
-                "symfony/validator": "*",
-                "symfony/yaml": "*"
+                "jms/di-extra-bundle": "^1.1",
+                "matthiasnoback/symfony-dependency-injection-test": "^0.7.6",
+                "psr/log": "^1.0",
+                "sensio/framework-extra-bundle": "^2.3|^3.0",
+                "symfony/expression-language": "~2.6|~3.0",
+                "symfony/symfony": "^2.3|^3.0",
+                "twig/twig": "^1.12"
             },
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1-dev"
+                    "dev-master": "1.3-dev"
                 }
             },
             "autoload": {
@@ -2693,12 +2668,10 @@
             "authors": [
                 {
                     "name": "Johannes M. Schmitt",
-                    "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
-                    "role": "Developer of wrapped JMSSerializerBundle"
+                    "email": "schmittjoh@gmail.com"
                 }
             ],
-            "description": "Puts the Symfony2 Translation Component on steroids",
+            "description": "Puts the Symfony Translation Component on steroids",
             "homepage": "http://jmsyst.com/bundles/JMSTranslationBundle",
             "keywords": [
                 "extract",
@@ -2710,7 +2683,7 @@
                 "ui",
                 "webinterface"
             ],
-            "time": "2013-06-08 14:08:19"
+            "time": "2016-04-03 16:16:17"
         },
         {
             "name": "knplabs/gaufrette",
@@ -3391,6 +3364,71 @@
             "time": "2015-07-03 13:41:50"
         },
         {
+            "name": "mockery/mockery",
+            "version": "0.9.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/padraic/mockery.git",
+                "reference": "70bba85e4aabc9449626651f48b9018ede04f86b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/70bba85e4aabc9449626651f48b9018ede04f86b",
+                "reference": "70bba85e4aabc9449626651f48b9018ede04f86b",
+                "shasum": ""
+            },
+            "require": {
+                "hamcrest/hamcrest-php": "~1.1",
+                "lib-pcre": ">=7.0",
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.9.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Mockery": "library/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Pádraic Brady",
+                    "email": "padraic.brady@gmail.com",
+                    "homepage": "http://blog.astrumfutura.com"
+                },
+                {
+                    "name": "Dave Marshall",
+                    "email": "dave.marshall@atstsolutions.co.uk",
+                    "homepage": "http://davedevelopment.co.uk"
+                }
+            ],
+            "description": "Mockery is a simple yet flexible PHP mock object framework for use in unit testing with PHPUnit, PHPSpec or any other testing framework. Its core goal is to offer a test double framework with a succinct API capable of clearly defining all possible object operations and interactions using a human readable Domain Specific Language (DSL). Designed as a drop in alternative to PHPUnit's phpunit-mock-objects library, Mockery is easy to integrate with PHPUnit and can operate alongside phpunit-mock-objects without the World ending.",
+            "homepage": "http://github.com/padraic/mockery",
+            "keywords": [
+                "BDD",
+                "TDD",
+                "library",
+                "mock",
+                "mock objects",
+                "mockery",
+                "stub",
+                "test",
+                "test double",
+                "testing"
+            ],
+            "time": "2015-04-02 19:54:00"
+        },
+        {
             "name": "monolog/monolog",
             "version": "1.17.2",
             "source": {
@@ -3469,30 +3507,42 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v0.9.1",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "b1cc9ce676b4350b23d0fafc8244d08eee2fe287"
+                "reference": "ce5be709d59b32dd8a88c80259028759991a4206"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/b1cc9ce676b4350b23d0fafc8244d08eee2fe287",
-                "reference": "b1cc9ce676b4350b23d0fafc8244d08eee2fe287",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/ce5be709d59b32dd8a88c80259028759991a4206",
+                "reference": "ce5be709d59b32dd8a88c80259028759991a4206",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.2"
+                "ext-tokenizer": "*",
+                "php": ">=5.4"
             },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "bin": [
+                "bin/php-parse"
+            ],
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
             "autoload": {
-                "psr-0": {
-                    "PHPParser": "lib/"
+                "psr-4": {
+                    "PhpParser\\": "lib/PhpParser"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD"
+                "BSD-3-Clause"
             ],
             "authors": [
                 {
@@ -3504,7 +3554,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2012-04-23 22:52:11"
+            "time": "2016-02-28 19:48:28"
         },
         {
             "name": "ocramius/proxy-manager",
@@ -5883,6 +5933,58 @@
                 "type"
             ],
             "time": "2015-07-25 16:39:46"
+        },
+        {
+            "name": "polishsymfonycommunity/symfony-mocker-container",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PolishSymfonyCommunity/SymfonyMockerContainer.git",
+                "reference": "111537c17f32f1bda5ed0253e723b57915c08ff4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PolishSymfonyCommunity/SymfonyMockerContainer/zipball/111537c17f32f1bda5ed0253e723b57915c08ff4",
+                "reference": "111537c17f32f1bda5ed0253e723b57915c08ff4",
+                "shasum": ""
+            },
+            "require": {
+                "mockery/mockery": ">=0.7.0",
+                "php": ">=5.3.2",
+                "symfony/dependency-injection": ">=2.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PSS\\SymfonyMockerContainer": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Polish Symfony Community",
+                    "homepage": "http://symfonylab.pl"
+                },
+                {
+                    "name": "Jakub Zalas",
+                    "email": "jakub@zalas.pl",
+                    "homepage": "http://www.zalas.eu"
+                }
+            ],
+            "description": "Provides base Symfony dependency injection container enabling service mocking.",
+            "homepage": "http://symfonylab.pl",
+            "keywords": [
+                "BDD",
+                "Behat",
+                "TDD",
+                "mock",
+                "mockery",
+                "test"
+            ],
+            "time": "2016-03-04 08:53:43"
         },
         {
             "name": "psr/http-message",
@@ -8714,23 +8816,23 @@
         },
         {
             "name": "coduo/php-matcher",
-            "version": "dev-master",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/coduo/php-matcher.git",
-                "reference": "c4917b16314900eb186de2422f81191afb7125a3"
+                "reference": "fddefee866d44f673f68d2bc7716b7fa824b6942"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/coduo/php-matcher/zipball/5fc8221869aa54200bba709310f3383c3d6f404c",
-                "reference": "c4917b16314900eb186de2422f81191afb7125a3",
+                "url": "https://api.github.com/repos/coduo/php-matcher/zipball/fddefee866d44f673f68d2bc7716b7fa824b6942",
+                "reference": "fddefee866d44f673f68d2bc7716b7fa824b6942",
                 "shasum": ""
             },
             "require": {
                 "coduo/php-to-string": "^2",
                 "doctrine/lexer": "1.0.*",
                 "ext-filter": "*",
-                "openlss/lib-array2xml": "0.0.10",
+                "openlss/lib-array2xml": "~0.0.9",
                 "php": ">=5.3.0",
                 "symfony/expression-language": "^2.3|^3.0",
                 "symfony/property-access": "^2.3|^3.0"
@@ -8745,9 +8847,8 @@
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Coduo\\PHPMatcher": "src/",
-                    "Coduo\\PHPMatcher\\Tests": "tests/"
+                "psr-4": {
+                    "Coduo\\PHPMatcher\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -8764,30 +8865,31 @@
                     "email": "dabrowski@brillante.pl"
                 }
             ],
+            "description": "PHP Matcher enables you to match values with patterns",
             "keywords": [
+                "Match",
                 "json",
                 "matcher",
                 "tests"
             ],
-            "time": "2015-12-14 11:10:29"
+            "time": "2016-03-18 09:28:02"
         },
         {
             "name": "coduo/php-to-string",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/coduo/php-to-string.git",
-                "reference": "5a55f3bd3af772175b458ce48648a36a1d15b54a"
+                "reference": "4c1d7e2e76017719edc70e944ace0ec570748a78"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/coduo/php-to-string/zipball/5a55f3bd3af772175b458ce48648a36a1d15b54a",
-                "reference": "5a55f3bd3af772175b458ce48648a36a1d15b54a",
+                "url": "https://api.github.com/repos/coduo/php-to-string/zipball/4c1d7e2e76017719edc70e944ace0ec570748a78",
+                "reference": "4c1d7e2e76017719edc70e944ace0ec570748a78",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0",
-                "symfony/intl": "~2.5"
+                "php": ">=5.3.0"
             },
             "require-dev": {
                 "coduo/phpspec-data-provider-extension": "^1",
@@ -8824,7 +8926,7 @@
                 "to",
                 "to string"
             ],
-            "time": "2015-12-13 13:15:40"
+            "time": "2016-01-20 18:29:02"
         },
         {
             "name": "fabpot/php-cs-fixer",
@@ -8879,51 +8981,6 @@
             ],
             "description": "A tool to automatically fix PHP code style",
             "time": "2016-01-20 19:00:28"
-        },
-        {
-            "name": "hamcrest/hamcrest-php",
-            "version": "v1.2.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hamcrest/hamcrest-php.git",
-                "reference": "b37020aa976fa52d3de9aa904aa2522dc518f79c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hamcrest/hamcrest-php/zipball/b37020aa976fa52d3de9aa904aa2522dc518f79c",
-                "reference": "b37020aa976fa52d3de9aa904aa2522dc518f79c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.2"
-            },
-            "replace": {
-                "cordoval/hamcrest-php": "*",
-                "davedevelopment/hamcrest-php": "*",
-                "kodova/hamcrest-php": "*"
-            },
-            "require-dev": {
-                "phpunit/php-file-iterator": "1.3.3",
-                "satooshi/php-coveralls": "dev-master"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "hamcrest"
-                ],
-                "files": [
-                    "hamcrest/Hamcrest.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD"
-            ],
-            "description": "This is the PHP port of Hamcrest Matchers",
-            "keywords": [
-                "test"
-            ],
-            "time": "2015-05-11 14:41:42"
         },
         {
             "name": "instaclick/php-webdriver",
@@ -8989,22 +9046,23 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Lakion/ApiTestCase.git",
-                "reference": "466bd22a228c96a2dba971045ac8c0b0400df6d1"
+                "reference": "c4d37eccbaa49f06a317d22198649517627ed599"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Lakion/ApiTestCase/zipball/441618f9e447ec55a17dfe10a5b72f0b990e6efa",
-                "reference": "466bd22a228c96a2dba971045ac8c0b0400df6d1",
+                "url": "https://api.github.com/repos/Lakion/ApiTestCase/zipball/c4d37eccbaa49f06a317d22198649517627ed599",
+                "reference": "c4d37eccbaa49f06a317d22198649517627ed599",
                 "shasum": ""
             },
             "require": {
-                "coduo/php-matcher": "^2.1@dev",
+                "coduo/php-matcher": "^2.0",
                 "doctrine/data-fixtures": "^1.1",
                 "doctrine/doctrine-bundle": "^1.6",
                 "doctrine/orm": "^2.4.8",
-                "nelmio/alice": "@dev",
+                "nelmio/alice": "^2.1.4",
+                "php": "^5.5.9|^7.0",
                 "phpspec/php-diff": "^1.0",
-                "phpunit/phpunit": "^4.8",
+                "phpunit/phpunit": "^4.8|^5.0",
                 "polishsymfonycommunity/symfony-mocker-container": "^1.0",
                 "symfony/browser-kit": "^2.3|^3.0",
                 "symfony/console": "^2.3|^3.0",
@@ -9058,7 +9116,7 @@
                 "testcase",
                 "xml"
             ],
-            "time": "2015-12-23 11:45:48"
+            "time": "2016-03-26 13:06:40"
         },
         {
             "name": "lakion/mink-debug-extension",
@@ -9270,82 +9328,17 @@
             "time": "2015-11-12 15:32:36"
         },
         {
-            "name": "mockery/mockery",
-            "version": "0.9.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/padraic/mockery.git",
-                "reference": "70bba85e4aabc9449626651f48b9018ede04f86b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/70bba85e4aabc9449626651f48b9018ede04f86b",
-                "reference": "70bba85e4aabc9449626651f48b9018ede04f86b",
-                "shasum": ""
-            },
-            "require": {
-                "hamcrest/hamcrest-php": "~1.1",
-                "lib-pcre": ">=7.0",
-                "php": ">=5.3.2"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.9.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Mockery": "library/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Pádraic Brady",
-                    "email": "padraic.brady@gmail.com",
-                    "homepage": "http://blog.astrumfutura.com"
-                },
-                {
-                    "name": "Dave Marshall",
-                    "email": "dave.marshall@atstsolutions.co.uk",
-                    "homepage": "http://davedevelopment.co.uk"
-                }
-            ],
-            "description": "Mockery is a simple yet flexible PHP mock object framework for use in unit testing with PHPUnit, PHPSpec or any other testing framework. Its core goal is to offer a test double framework with a succinct API capable of clearly defining all possible object operations and interactions using a human readable Domain Specific Language (DSL). Designed as a drop in alternative to PHPUnit's phpunit-mock-objects library, Mockery is easy to integrate with PHPUnit and can operate alongside phpunit-mock-objects without the World ending.",
-            "homepage": "http://github.com/padraic/mockery",
-            "keywords": [
-                "BDD",
-                "TDD",
-                "library",
-                "mock",
-                "mock objects",
-                "mockery",
-                "stub",
-                "test",
-                "test double",
-                "testing"
-            ],
-            "time": "2015-04-02 19:54:00"
-        },
-        {
             "name": "nelmio/alice",
-            "version": "2.1.2",
+            "version": "2.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nelmio/alice.git",
-                "reference": "f9afb65c8511967d672b6bc451d7156ea437d796"
+                "reference": "c8cb3413ab5d1fa76ee84296dafe356b0c703014"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nelmio/alice/zipball/f9afb65c8511967d672b6bc451d7156ea437d796",
-                "reference": "f9afb65c8511967d672b6bc451d7156ea437d796",
+                "url": "https://api.github.com/repos/nelmio/alice/zipball/c8cb3413ab5d1fa76ee84296dafe356b0c703014",
+                "reference": "c8cb3413ab5d1fa76ee84296dafe356b0c703014",
                 "shasum": ""
             },
             "require": {
@@ -9390,7 +9383,7 @@
                 "orm",
                 "test"
             ],
-            "time": "2015-12-10 10:03:17"
+            "time": "2016-01-07 14:44:47"
         },
         {
             "name": "openlss/lib-array2xml",
@@ -10030,58 +10023,6 @@
             "time": "2015-10-02 06:51:40"
         },
         {
-            "name": "polishsymfonycommunity/symfony-mocker-container",
-            "version": "v1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PolishSymfonyCommunity/SymfonyMockerContainer.git",
-                "reference": "392a4d28baa6279dd0ecc2c3e4da7a7feac7e6b7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PolishSymfonyCommunity/SymfonyMockerContainer/zipball/392a4d28baa6279dd0ecc2c3e4da7a7feac7e6b7",
-                "reference": "392a4d28baa6279dd0ecc2c3e4da7a7feac7e6b7",
-                "shasum": ""
-            },
-            "require": {
-                "mockery/mockery": ">=0.7.0",
-                "php": ">=5.3.2",
-                "symfony/dependency-injection": ">=2.0.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "PSS\\SymfonyMockerContainer": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jakub Zalas",
-                    "email": "jakub@zalas.pl",
-                    "homepage": "http://www.zalas.eu/"
-                },
-                {
-                    "name": "Polish Symfony Community",
-                    "homepage": "http://symfonylab.pl"
-                }
-            ],
-            "description": "Provides base Symfony dependency injection container enabling service mocking.",
-            "homepage": "http://symfonylab.pl",
-            "keywords": [
-                "BDD",
-                "Behat",
-                "TDD",
-                "mock",
-                "mockery",
-                "test"
-            ],
-            "time": "2013-01-19 23:12:22"
-        },
-        {
             "name": "se/selenium-server-standalone",
             "version": "v2.52.0",
             "source": {
@@ -10496,7 +10437,6 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "symfony-cmf/routing-bundle": 5,
-        "coduo/php-matcher": 20,
         "lakion/api-test-case": 20
     },
     "prefer-stable": false,

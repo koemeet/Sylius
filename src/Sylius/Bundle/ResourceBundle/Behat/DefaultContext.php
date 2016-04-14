@@ -200,7 +200,7 @@ abstract class DefaultContext extends RawMinkContext implements Context, KernelA
                     break;
 
                 case 'taxons':
-                    $configuration[$key] = new ArrayCollection([$this->getRepository('taxon')->findOneByName(trim($value))->getId()]);
+                    $configuration[$key] = [$this->getRepository('taxon')->findOneByName(trim($value))->getCode()];
                     break;
 
                 case 'variant':
@@ -208,6 +208,10 @@ abstract class DefaultContext extends RawMinkContext implements Context, KernelA
                     break;
 
                 case 'amount':
+                    $configuration[$key] = (int) $value;
+                    break;
+
+                case 'nth':
                     $configuration[$key] = (int) $value;
                     break;
 
@@ -549,16 +553,9 @@ abstract class DefaultContext extends RawMinkContext implements Context, KernelA
      */
     protected function getLocaleCodeByEnglishLocaleName($name)
     {
-        $names = Intl::getLocaleBundle()->getLocaleNames('en');
-        $code = array_search(trim($name), $names);
+        $localeNameConverter = $this->getService('sylius.converter.locale_name');
 
-        if (null === $code) {
-            throw new \InvalidArgumentException(sprintf(
-                'Locale "%s" not found! Available names: %s.', $name, implode(', ', $names)
-            ));
-        }
-
-        return $code;
+        return $localeNameConverter->convertToCode($name);
     }
 
     /**

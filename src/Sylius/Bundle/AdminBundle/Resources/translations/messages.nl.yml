@@ -2,8 +2,11 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  menu:
-    admin:
-      main:
-        configuration:
-          header: Configuratie
+    menu:
+        admin:
+            main:
+                configuration:
+                    header: Configuratie
+                    countries: Landen
+                    locales: "Talen/Regio's"
+                    tax_rates: BTW-tarieven

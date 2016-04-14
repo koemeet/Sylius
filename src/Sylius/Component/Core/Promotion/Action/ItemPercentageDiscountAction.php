@@ -12,11 +12,9 @@
 namespace Sylius\Component\Core\Promotion\Action;
 
 use Sylius\Component\Core\Distributor\IntegerDistributorInterface;
-use Sylius\Component\Core\Model\AdjustmentInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\OrderItemInterface;
-use Sylius\Component\Core\Model\OrderItemUnitInterface;
-use Sylius\Component\Core\Promotion\Filter\TaxonFilterInterface;
+use Sylius\Component\Core\Promotion\Filter\FilterInterface;
 use Sylius\Component\Originator\Originator\OriginatorInterface;
 use Sylius\Component\Promotion\Model\PromotionInterface;
 use Sylius\Component\Promotion\Model\PromotionSubjectInterface;
@@ -26,7 +24,7 @@ use Sylius\Component\Resource\Factory\FactoryInterface;
 /**
  * @author Mateusz Zalewski <mateusz.zalewski@lakion.com>
  */
-class ItemPercentageDiscountAction extends DiscountAction
+class ItemPercentageDiscountAction extends ItemDiscountAction
 {
     const TYPE = 'item_percentage_discount';
 
@@ -36,7 +34,12 @@ class ItemPercentageDiscountAction extends DiscountAction
     private $distributor;
 
     /**
-     * @var TaxonFilterInterface
+     * @var FilterInterface
+     */
+    private $priceRangeFilter;
+
+    /**
+     * @var FilterInterface
      */
     private $taxonFilter;
 
@@ -44,17 +47,20 @@ class ItemPercentageDiscountAction extends DiscountAction
      * @param FactoryInterface $adjustmentFactory
      * @param OriginatorInterface $originator
      * @param IntegerDistributorInterface $distributor
-     * @param TaxonFilterInterface $taxonFilter
+     * @param FilterInterface $priceRangeFilter
+     * @param FilterInterface $taxonFilter
      */
     public function __construct(
         FactoryInterface $adjustmentFactory,
         OriginatorInterface $originator,
         IntegerDistributorInterface $distributor,
-        TaxonFilterInterface $taxonFilter
+        FilterInterface $priceRangeFilter,
+        FilterInterface $taxonFilter
     ) {
         parent::__construct($adjustmentFactory, $originator);
 
         $this->distributor = $distributor;
+        $this->priceRangeFilter = $priceRangeFilter;
         $this->taxonFilter = $taxonFilter;
     }
 
@@ -67,27 +73,14 @@ class ItemPercentageDiscountAction extends DiscountAction
             throw new UnexpectedTypeException($subject, OrderInterface::class);
         }
 
-        $filteredItems = $this->taxonFilter->filter($subject->getItems()->toArray(), $configuration);
+        $filteredItems = $this->priceRangeFilter->filter($subject->getItems()->toArray(), $configuration);
+        $filteredItems = $this->taxonFilter->filter($filteredItems, $configuration);
 
         foreach ($filteredItems as $item) {
             $promotionAmount = (int) round($item->getTotal() * $configuration['percentage']);
             $distributedAmounts = $this->distributor->distribute($promotionAmount, $item->getQuantity());
 
             $this->setUnitsAdjustments($item, $distributedAmounts, $promotion);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function revert(PromotionSubjectInterface $subject, array $configuration, PromotionInterface $promotion)
-    {
-        if (!$subject instanceof OrderInterface) {
-            throw new UnexpectedTypeException($subject, OrderInterface::class);
-        }
-
-        foreach ($subject->getItems() as $item) {
-            $this->removeUnitsAdjustment($item, $promotion);
         }
     }
 
@@ -114,43 +107,6 @@ class ItemPercentageDiscountAction extends DiscountAction
 
             $this->addAdjustmentToUnit($unit, $distributedAmounts[$i], $promotion);
             $i++;
-        }
-    }
-
-    /**
-     * @param OrderItemUnitInterface $unit
-     * @param int $amount
-     * @param PromotionInterface $promotion
-     */
-    private function addAdjustmentToUnit(OrderItemUnitInterface $unit, $amount, PromotionInterface $promotion)
-    {
-        $adjustment = $this->createAdjustment($promotion, AdjustmentInterface::ORDER_ITEM_PROMOTION_ADJUSTMENT);
-        $adjustment->setAmount(-$amount);
-
-        $unit->addAdjustment($adjustment);
-    }
-
-    /**
-     * @param OrderItemInterface $item
-     * @param PromotionInterface $promotion
-     */
-    private function removeUnitsAdjustment(OrderItemInterface $item, PromotionInterface $promotion)
-    {
-        foreach ($item->getUnits() as $unit) {
-            $this->removeUnitOrderItemAdjustments($unit, $promotion);
-        }
-    }
-
-    /**
-     * @param OrderItemUnitInterface $unit
-     * @param PromotionInterface $promotion
-     */
-    private function removeUnitOrderItemAdjustments(OrderItemUnitInterface $unit, PromotionInterface $promotion)
-    {
-        foreach ($unit->getAdjustments(AdjustmentInterface::ORDER_ITEM_PROMOTION_ADJUSTMENT) as $adjustment) {
-            if ($promotion === $this->originator->getOrigin($adjustment)) {
-                $unit->removeAdjustment($adjustment);
-            }
         }
     }
 }

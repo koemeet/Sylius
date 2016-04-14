@@ -2,8 +2,11 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  menu:
-    admin:
-      main:
-        configuration:
-          header: Konfigurasjon
+    menu:
+        admin:
+            main:
+                configuration:
+                    header: Konfigurasjon
+                    countries: Land
+                    locales: Nasjonale innstillinger
+                    tax_rates: Skattesatser

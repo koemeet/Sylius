@@ -13,6 +13,10 @@ namespace spec\Sylius\Component\Core\Factory;
 
 use PhpSpec\ObjectBehavior;
 use Sylius\Component\Core\Factory\RuleFactoryInterface;
+use Sylius\Component\Core\Promotion\Checker\NthOrderRuleChecker;
+use Sylius\Component\Core\Promotion\Checker\TotalOfItemsFromTaxonRuleChecker;
+use Sylius\Component\Core\Promotion\Checker\ContainsTaxonRuleChecker;
+use Sylius\Component\Core\Promotion\Checker\TaxonRuleChecker;
 use Sylius\Component\Promotion\Model\RuleInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 
@@ -59,5 +63,41 @@ class RuleFactorySpec extends ObjectBehavior
         $rule->setConfiguration(['amount' => 1000])->shouldBeCalled();
 
         $this->createItemTotal(1000)->shouldReturn($rule);
+    }
+
+    function it_creates_taxon_rule($decoratedFactory, RuleInterface $rule)
+    {
+        $decoratedFactory->createNew()->willReturn($rule);
+        $rule->setType(TaxonRuleChecker::TYPE)->shouldBeCalled();
+        $rule->setConfiguration(['taxons' => [1, 6]])->shouldBeCalled();
+
+        $this->createTaxon([1, 6])->shouldReturn($rule);
+    }
+
+    function it_creates_total_of_items_from_taxon_rule($decoratedFactory, RuleInterface $rule)
+    {
+        $decoratedFactory->createNew()->willReturn($rule);
+        $rule->setType(TotalOfItemsFromTaxonRuleChecker::TYPE)->shouldBeCalled();
+        $rule->setConfiguration(['taxon' => 'spears', 'amount' => 1000])->shouldBeCalled();
+
+        $this->createItemsFromTaxonTotal('spears', 1000)->shouldReturn($rule);
+    }
+
+    function it_creates_a_contains_taxon_rule($decoratedFactory, RuleInterface $rule)
+    {
+        $decoratedFactory->createNew()->willReturn($rule);
+        $rule->setType(ContainsTaxonRuleChecker::TYPE)->shouldBeCalled();
+        $rule->setConfiguration(['taxon' => 'bows', 'count' => 10])->shouldBeCalled();
+
+        $this->createContainsTaxon('bows', 10)->shouldReturn($rule);
+    }
+
+    function it_creates_a_nth_order_rule($decoratedFactory, RuleInterface $rule)
+    {
+        $decoratedFactory->createNew()->willReturn($rule);
+        $rule->setType(NthOrderRuleChecker::TYPE)->shouldBeCalled();
+        $rule->setConfiguration(['nth' => 10])->shouldBeCalled();
+
+        $this->createNthOrder(10)->shouldReturn($rule);
     }
 }

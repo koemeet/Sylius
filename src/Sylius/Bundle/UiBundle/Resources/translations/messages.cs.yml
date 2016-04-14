@@ -2,10 +2,28 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  form:
-    login:
-      username: Uživatelské jméno
-      password: Heslo
-      remember_me: Pamatuj si mě
-  ui:
-    dashboard: Nástěnka
+    form:
+        login:
+            username: Uživatelské jméno
+            password: Heslo
+            remember_me: Pamatuj si mě
+    ui:
+        actions: Akce
+        cancel: Zrušit
+        countries: Země
+        create: Vytvořit
+        dashboard: Nástěnka
+        delete: Odstranit
+        description: Popis
+        edit: Úpravy
+        empty: Prázdné
+        enabled: Povoleno
+        filter: Filtr
+        locales: Lokalizace
+        new: Nový
+        new_country: Nové země
+        new_tax_category: Nová kategorie daně
+        "no": false
+        save_changes: Uložit změny
+        success: Úspěch
+        "yes": true

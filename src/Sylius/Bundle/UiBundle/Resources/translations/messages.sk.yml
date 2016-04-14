@@ -2,13 +2,56 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  form:
-    login:
-      username: Používateľské meno
-      password: Heslo
-      remember_me: Zapamätať si ma
-  ui:
-    sign_in: Prihlásiť
-    sign_out: Odhlásiť
-    dashboard: Administračný panel
-    powered_by: Vytvorené v systéme
+    form:
+        login:
+            username: Používateľské meno
+            password: Heslo
+            remember_me: Zapamätať si ma
+    ui:
+        actions: Akcie
+        administration_panel_login: Prihásenie do administračného rozhrania
+        an_error_occurred: Vyskytla sa chyba
+        are_your_sure_you_want_to_perform_this_action: Ste si istý, že chcete vykonať túto akciu?
+        cancel: Zrušiť
+        clear_filters: Vymazať filter
+        confirm_your_action: Potvrďte vašu akciu
+        contains: Obsahuje
+        countries: Krajiny
+        create: Vytvoriť
+        dashboard: Administračný panel
+        delete: Odstrániť
+        description: Popis
+        disabled: Vypnuté
+        edit: Upraviť
+        edit_tax_category: Úprava daňovej kategórie
+        empty: Prázdne
+        enabled: Zapnuté
+        ends_with: Končí na
+        equal: Rovná sa
+        filter: Filter
+        in: V
+        info: Info
+        last_updated: Posledná aktualizácia
+        locales: Jazyky
+        manage_country: Spravovať krajiny
+        manage_locale: Spravovať jazyky
+        manage_taxation_of_your_products: Spravovať zdaňovanie vašich produktov
+        new: Nová
+        new_country: Nová krajina
+        new_locale: Nový jazyk
+        new_tax_category: Nová daňová kategoria
+        "no": false
+        no_results_to_display: Neexistujú žiadne vysledky na zobrazenie
+        not_contains: Neobsahuje
+        not_empty: Nie je prázdny
+        not_in: Nie je v
+        powered_by: Vytvorené v systéme
+        save_changes: Uložiť zmeny
+        show: Zobraziť
+        sign_in: Prihlásiť
+        sign_out: Odhlásiť
+        starts_with: Začína na
+        status: Stav
+        success: Úspech
+        tax_categories: Daňové kategórie
+        "yes": true

@@ -2,10 +2,28 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  form:
-    login:
-      username: Kullanıcı adı
-      password: Şifre
-      remember_me: Beni hatırla
-  ui:
-    dashboard: Kontrol Paneli
+    form:
+        login:
+            username: Kullanıcı adı
+            password: Şifre
+            remember_me: Beni hatırla
+    ui:
+        actions: Eylemler
+        cancel: İptal
+        countries: Ülkeler
+        create: Oluştur
+        dashboard: Kontrol Paneli
+        delete: Sil
+        description: Açıklama
+        edit: Düzenle
+        empty: Boş
+        enabled: Etkin
+        filter: Filtrele
+        locales: Diller
+        new: Yeni
+        new_country: Yeni ülke
+        new_tax_category: Yeni vergi kategorisi
+        "no": false
+        save_changes: Değişiklikleri kaydet
+        success: Başarılı
+        "yes": true

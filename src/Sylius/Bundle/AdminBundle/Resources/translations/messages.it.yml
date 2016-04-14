@@ -2,8 +2,12 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  menu:
-    admin:
-      main:
-        configuration:
-          header: Configurazione
+    menu:
+        admin:
+            main:
+                configuration:
+                    header: Configurazione
+                    tax_categories: Categorie di tassazione
+                    countries: Paesi
+                    locales: Localizzazioni
+                    tax_rates: Aliquote fiscali

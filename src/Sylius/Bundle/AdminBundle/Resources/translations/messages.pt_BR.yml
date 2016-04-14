@@ -2,8 +2,11 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  menu:
-    admin:
-      main:
-        configuration:
-          header: Configuração
+    menu:
+        admin:
+            main:
+                configuration:
+                    header: Configuração
+                    countries: Países
+                    locales: Localidades
+                    tax_rates: Impostos

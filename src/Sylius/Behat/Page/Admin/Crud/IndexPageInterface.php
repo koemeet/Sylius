@@ -19,26 +19,6 @@ use Sylius\Behat\Page\PageInterface;
 interface IndexPageInterface extends PageInterface
 {
     /**
-     * @return bool
-     */
-    public function hasSuccessMessage();
-
-    /**
-     * @return bool
-     */
-    public function isSuccessfullyCreated();
-
-    /**
-     * @return bool
-     */
-    public function isSuccessfullyUpdated();
-
-    /**
-     * @return bool
-     */
-    public function isSuccessfullyDeleted();
-
-    /**
      * @param array $parameters
      *
      * @return bool
@@ -46,9 +26,14 @@ interface IndexPageInterface extends PageInterface
     public function isResourceOnPage(array $parameters);
 
     /**
-     * @param string $message
+     * @param array $parameters
      *
      * @return bool
      */
-    public function hasMessage($message);
+    public function deleteResourceOnPage(array $parameters);
+
+    /**
+     * @return int
+     */
+    public function countItems();
 }

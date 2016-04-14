@@ -2,8 +2,20 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  form:
-    login:
-      username: Кросницко име
-  ui:
-    dashboard: Командна Табла
+    form:
+        login:
+            username: Кросницко име
+    ui:
+        cancel: Откажи
+        countries: Земље
+        create: Креирај
+        dashboard: Командна Табла
+        delete: Обриши
+        edit: Измени
+        filter: Филтер
+        new_country: Нова земља
+        new_tax_category: Нова категорија пореза
+        "no": false
+        save_changes: Сачувај измене
+        success: Успех
+        "yes": true

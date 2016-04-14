@@ -11,6 +11,7 @@
 
 namespace Sylius\Behat\Page\Admin\Crud;
 
+use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Session;
 use Sylius\Behat\Page\SymfonyPage;
 use Symfony\Component\Routing\RouterInterface;
@@ -48,6 +49,21 @@ class CreatePage extends SymfonyPage implements CreatePageInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws ElementNotFoundException
+     */
+    public function checkValidationMessageFor($element, $message)
+    {
+        $foundedElement = $this->getFieldElement($element);
+        if (null === $foundedElement) {
+            throw new ElementNotFoundException($this->getSession(), 'Validation message', 'css', '.pointing');
+        }
+
+        return $message === $foundedElement->find('css', '.pointing')->getText();
+    }
+
+    /**
+     * {@inheritdoc}
      */
     protected function getRouteName()
     {
@@ -60,5 +76,22 @@ class CreatePage extends SymfonyPage implements CreatePageInterface
     protected function getResourceName()
     {
         return $this->resourceName;
+    }
+
+    /**
+     * @param string $element
+     *
+     * @return \Behat\Mink\Element\NodeElement|null
+     *
+     * @throws ElementNotFoundException
+     */
+    private function getFieldElement($element)
+    {
+        $element = $this->getElement($element);
+        while (null !== $element && !($element->hasClass('field'))) {
+            $element = $element->getParent();
+        }
+
+        return $element;
     }
 }

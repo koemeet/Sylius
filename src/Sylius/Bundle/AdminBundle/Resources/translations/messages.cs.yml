@@ -2,8 +2,11 @@
 # (c) Paweł Jędrzejewski
 
 sylius:
-  menu:
-    admin:
-      main:
-        configuration:
-          header: Konfigurace
+    menu:
+        admin:
+            main:
+                configuration:
+                    header: Konfigurace
+                    countries: Země
+                    locales: Lokalizace
+                    tax_rates: Daňové sazby
