@@ -21,7 +21,7 @@ sylius:
             payment_method: Способ оплаты
             shipping_method: Способ доставки
         promotion:
-            channels: Канал
+            channels: Каналы
         coupon:
             per_customer_usage_limit: Лимит использования на клиента
         group:
@@ -60,7 +60,7 @@ sylius:
             main_taxon: Основной таксон
         product_filter:
             name: Название
-            sku: Идентификатор товарной позиции
+            code: Код
         product_variant:
             tax_category: Категория налогов
         settings:

@@ -40,7 +40,7 @@
             <argument type="service" id="form.factory" />
         </service>
 
-        <service id="sylius.settings.manager" class="%sylius.settings.manager.class%" lazy="true">
+        <service id="sylius.settings.manager" class="%sylius.settings.manager.class%">
             <argument type="service" id="sylius.registry.settings_schema" />
             <argument type="service" id="sylius.registry.settings_resolver" />
             <argument type="service" id="sylius.manager.settings" />
@@ -48,12 +48,18 @@
             <argument type="service" id="event_dispatcher" />
         </service>
 
-        <service id="sylius.registry.settings_schema" class="%sylius.registry.settings_schema.class%">
+        <service id="sylius.registry.settings_schema" class="%sylius.registry.settings_schema.class%" lazy="true">
             <argument>%sylius.settings.schema_interface%</argument>
+            <argument>Settings schema</argument>
         </service>
 
-        <service id="sylius.registry.settings_resolver" class="%sylius.registry.settings_resolver.class%">
-            <argument>%sylius.settings.resolver_interface%</argument>
+        <service id="sylius.registry.settings_resolver" class="%sylius.registry.settings_resolver.class%" lazy="true">
+            <argument type="service">
+                <service class="Sylius\Component\Registry\ServiceRegistry">
+                    <argument>%sylius.settings.resolver_interface%</argument>
+                    <argument>Settings resolver</argument>
+                </service>
+            </argument>
             <argument type="service" id="sylius.settings.default_resolver"/>
         </service>
 

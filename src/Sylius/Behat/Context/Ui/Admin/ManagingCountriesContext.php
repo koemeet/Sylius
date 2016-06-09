@@ -16,8 +16,7 @@ use Behat\Mink\Exception\ElementNotFoundException;
 use Sylius\Behat\Page\Admin\Country\CreatePageInterface;
 use Sylius\Behat\Page\Admin\Country\IndexPageInterface;
 use Sylius\Behat\Page\Admin\Country\UpdatePageInterface;
-use Sylius\Behat\Service\CurrentPageResolverInterface;
-use Sylius\Behat\Service\NotificationCheckerInterface;
+use Sylius\Behat\Service\Resolver\CurrentPageResolverInterface;
 use Sylius\Component\Addressing\Model\CountryInterface;
 use Webmozart\Assert\Assert;
 
@@ -26,8 +25,6 @@ use Webmozart\Assert\Assert;
  */
 final class ManagingCountriesContext implements Context
 {
-    const RESOURCE_NAME = 'country';
-
     /**
      * @var IndexPageInterface
      */
@@ -49,29 +46,21 @@ final class ManagingCountriesContext implements Context
     private $currentPageResolver;
 
     /**
-     * @var NotificationCheckerInterface
-     */
-    private $notificationChecker;
-
-    /**
      * @param IndexPageInterface $indexPage
      * @param CreatePageInterface $createPage
      * @param UpdatePageInterface $updatePage
      * @param CurrentPageResolverInterface $currentPageResolver
-     * @param NotificationCheckerInterface $notificationChecker
      */
     public function __construct(
         IndexPageInterface $indexPage,
         CreatePageInterface $createPage,
         UpdatePageInterface $updatePage,
-        CurrentPageResolverInterface $currentPageResolver,
-        NotificationCheckerInterface $notificationChecker
+        CurrentPageResolverInterface $currentPageResolver
     ) {
         $this->indexPage = $indexPage;
         $this->createPage = $createPage;
         $this->updatePage = $updatePage;
         $this->currentPageResolver = $currentPageResolver;
-        $this->notificationChecker = $notificationChecker;
     }
 
     /**
@@ -105,7 +94,7 @@ final class ManagingCountriesContext implements Context
      */
     public function iAddProvinceWithCode($provinceName, $provinceCode, $provinceAbbreviation = null)
     {
-        $currentPage = $this->currentPageResolver->getCurrentPageWithForm($this->createPage, $this->updatePage);
+        $currentPage = $this->currentPageResolver->getCurrentPageWithForm([$this->createPage, $this->updatePage]);
 
         $currentPage->addProvince($provinceName, $provinceCode, $provinceAbbreviation);
     }
@@ -144,22 +133,6 @@ final class ManagingCountriesContext implements Context
     }
 
     /**
-     * @Then I should be notified about successful creation
-     */
-    public function iShouldBeNotifiedAboutSuccessfulCreation()
-    {
-        $this->notificationChecker->checkCreationNotification(self::RESOURCE_NAME);
-    }
-
-    /**
-     * @Then I should be notified about successful edition
-     */
-    public function iShouldBeNotifiedAboutSuccessfulEdition()
-    {
-        $this->notificationChecker->checkEditionNotification(self::RESOURCE_NAME);
-    }
-
-    /**
      * @Then /^the (country "([^"]+)") should appear in the store$/
      */
     public function countryShouldAppearInTheStore(CountryInterface $country)
@@ -167,7 +140,7 @@ final class ManagingCountriesContext implements Context
         $this->indexPage->open();
 
         Assert::true(
-            $this->indexPage->isResourceOnPage(['code' => $country->getCode()]),
+            $this->indexPage->isSingleResourceOnPage(['code' => $country->getCode()]),
             sprintf('Country %s should exist but it does not', $country->getCode())
         );
     }

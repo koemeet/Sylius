@@ -82,10 +82,14 @@ class UpdatePage extends BaseUpdatePage implements UpdatePageInterface
             $provinces = $this->getElement('provinces');
 
             $item = $provinces
-                ->find('css', 'div[data-form-collection="item"] input[value="'.$provinceName.'"]')
+                ->find('css', sprintf('div[data-form-collection="item"] input[value="%s"]', $provinceName))
+                ->getParent()
+                ->getParent()
+                ->getParent()
                 ->getParent()
                 ->getParent()
             ;
+
             $item->clickLink('Delete');
         }
     }
@@ -155,12 +159,12 @@ class UpdatePage extends BaseUpdatePage implements UpdatePageInterface
     {
         $provinceForm = $this->getLastProvinceElement();
 
-        $foundedElement = $provinceForm->find('css', '.pointing');
-        if (null === $foundedElement) {
+        $foundElement = $provinceForm->find('css', '.pointing');
+        if (null === $foundElement) {
             throw new ElementNotFoundException($this->getSession(), 'Tag', 'css', '.pointing');
         }
 
-        return $message === $foundedElement->getText();
+        return $message === $foundElement->getText();
     }
 
     /**

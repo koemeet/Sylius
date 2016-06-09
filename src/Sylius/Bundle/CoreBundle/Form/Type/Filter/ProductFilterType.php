@@ -16,8 +16,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Products filter form type.
- *
  * @author Paweł Jędrzejewski <pawel@sylius.org>
  */
 class ProductFilterType extends AbstractType
@@ -35,11 +33,11 @@ class ProductFilterType extends AbstractType
                     'placeholder' => 'sylius.form.product_filter.name',
                 ],
             ])
-            ->add('sku', 'text', [
+            ->add('code', 'text', [
                 'required' => false,
-                'label' => 'sylius.form.product_filter.sku',
+                'label' => 'sylius.form.product_filter.code',
                 'attr' => [
-                    'placeholder' => 'sylius.form.product_filter.sku',
+                    'placeholder' => 'sylius.form.product_filter.code',
                 ],
             ])
         ;

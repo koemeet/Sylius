@@ -21,7 +21,7 @@ sylius:
             payment_method: Metoda płatności
             shipping_method: Metoda wysyłki
         promotion:
-            channels: Kanał
+            channels: Kanały
         coupon:
             per_customer_usage_limit: Limit użycia na 1 klienta
         group:
@@ -36,6 +36,7 @@ sylius:
             shipping_methods: Metody wysyłki
             payment_methods: Metody płatności
             theme: Motyw
+            hostname: Nazwa hosta
         image:
             file: Zdjęcie
         locale:
@@ -61,7 +62,7 @@ sylius:
             main_taxon: Główne grupy
         product_filter:
             name: Nazwa
-            sku: SKU
+            code: Kod
         product_variant:
             tax_category: Kategoria podatkowa
         settings:
@@ -75,6 +76,7 @@ sylius:
                     Tracking code (for example: Kod Google Analytics)
             taxation:
                 default_tax_zone: Domyślna strefa podatkowa
+                default_tax_calculation_strategy: Domyślna strategia obliczania podatku
             security:
                 enabled: Włączone?
         shipment_filter:
@@ -145,3 +147,5 @@ sylius:
             name: Potwierdzenie dostawy
         user_confirmation:
             name: Potwierdzenia przez użytkownika
+        password_reset:
+            name: Resetowanie hasła

@@ -27,13 +27,10 @@ class SyliusGridExtension extends Extension
      */
     public function load(array $config, ContainerBuilder $container)
     {
-        $processor = new Processor();
-        $config = $processor->processConfiguration(new Configuration(), $config);
-
+        $config = $this->processConfiguration($this->getConfiguration($config, $container), $config);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
         $loader->load('services.xml');
-        $loader->load('drivers.xml');
         $loader->load('filters.xml');
         $loader->load('field_types.xml');
         $loader->load('templating.xml');
@@ -48,5 +45,10 @@ class SyliusGridExtension extends Extension
 
         $container->setAlias('sylius.grid.renderer', 'sylius.grid.renderer.twig');
         $container->setAlias('sylius.grid.data_extractor', 'sylius.grid.data_extractor.property_access');
+
+        foreach ($config['drivers'] as $enabledDriver) {
+            $path = sprintf('driver/%s.xml', $enabledDriver);
+            $loader->load($path);
+        }
     }
 }

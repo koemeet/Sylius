@@ -21,11 +21,21 @@ use Sylius\Component\Sequence\Repository\HashSubjectRepositoryInterface;
 interface OrderRepositoryInterface extends RepositoryInterface, HashSubjectRepositoryInterface
 {
     /**
-     * @param int $amount
+     * @return int
+     */
+    public function count();
+
+    /**
+     * @return int
+     */
+    public function getTotalSales();
+
+    /**
+     * @param int $count
      *
      * @return OrderInterface[]
      */
-    public function findRecentOrders($amount = 10);
+    public function findLatest($count);
 
     /**
      * @param int|string $number
@@ -33,4 +43,11 @@ interface OrderRepositoryInterface extends RepositoryInterface, HashSubjectRepos
      * @return bool
      */
     public function isNumberUsed($number);
+
+    /**
+     * @param string $orderNumber
+     *
+     * @return OrderInterface|null
+     */
+    public function findOneByNumber($orderNumber);
 }

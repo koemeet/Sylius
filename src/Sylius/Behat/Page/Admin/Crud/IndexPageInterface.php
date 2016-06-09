@@ -11,19 +11,27 @@
 
 namespace Sylius\Behat\Page\Admin\Crud;
 
-use Sylius\Behat\Page\PageInterface;
+use Sylius\Behat\Page\SymfonyPageInterface;
 
 /**
  * @author Arkadiusz Krakowiak <arkadiusz.krakowiak@lakion.com>
  */
-interface IndexPageInterface extends PageInterface
+interface IndexPageInterface extends SymfonyPageInterface
 {
     /**
      * @param array $parameters
      *
      * @return bool
      */
-    public function isResourceOnPage(array $parameters);
+    public function isSingleResourceOnPage(array $parameters);
+
+    /**
+     * @param array $parameters
+     * @param string $element
+     *
+     * @return bool
+     */
+    public function isSingleResourceWithSpecificElementOnPage(array $parameters, $element);
 
     /**
      * @param array $parameters

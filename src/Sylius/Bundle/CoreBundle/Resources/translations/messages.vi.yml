@@ -8,6 +8,8 @@ sylius:
             title: Tiêu đề
         cart:
             coupon: Phiếu giảm giá
+        promotion:
+            channels: Kênh
         group:
             name: Tên
             roles: Vai trò
@@ -23,7 +25,7 @@ sylius:
             title: Tiêu đề
         product_filter:
             name: Tên
-            sku: MÃ SẢN PHẨM
+            code: Mã
         settings:
             general:
                 locale: Ngôn ngữ

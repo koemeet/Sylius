@@ -50,8 +50,6 @@ class DoctrineODMDriver extends AbstractDoctrineDriver
             $repositoryClass = $metadata->getClass('repository');
         }
 
-        $repositoryReflection = new \ReflectionClass($repositoryClass);
-
         $unitOfWorkDefinition = new Definition('Doctrine\\ODM\\MongoDB\\UnitOfWork');
         $unitOfWorkDefinition
             ->setFactory([new Reference($this->getManagerServiceId($metadata)), 'getUnitOfWork'])
@@ -64,7 +62,6 @@ class DoctrineODMDriver extends AbstractDoctrineDriver
             $unitOfWorkDefinition,
             $this->getClassMetadataDefinition($metadata),
         ]);
-        $definition->setLazy(!$repositoryReflection->isFinal());
 
         $container->setDefinition($metadata->getServiceId('repository'), $definition);
     }
@@ -81,7 +78,11 @@ class DoctrineODMDriver extends AbstractDoctrineDriver
      */
     protected function getManagerServiceId(MetadataInterface $metadata)
     {
-        return sprintf('doctrine_mongodb.odm.%s_document_manager', $this->getObjectManagerName($metadata));
+        if ($objectManagerName = $this->getObjectManagerName($metadata)) {
+            return sprintf('doctrine_mongodb.odm.%s_document_manager', $objectManagerName);
+        }
+
+        return 'doctrine_mongodb.odm.document_manager';
     }
 
     /**

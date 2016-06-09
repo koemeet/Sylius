@@ -65,7 +65,8 @@ class ProductVariantSpec extends ObjectBehavior
 
     function its_price_should_be_mutable()
     {
-        $this->setPrice(499)->getPrice()->shouldReturn(499);
+        $this->setPrice(499);
+        $this->getPrice()->shouldReturn(499);
     }
 
     function its_original_price_should_be_mutable()
@@ -76,7 +77,9 @@ class ProductVariantSpec extends ObjectBehavior
 
     function its_price_should_accept_only_integer()
     {
-        $this->setPrice(410)->getPrice()->shouldBeInteger();
+        $this->setPrice(410);
+        $this->getPrice()->shouldBeInteger();
+        
         $this->shouldThrow('\InvalidArgumentException')->duringSetPrice(4.1 * 100);
         $this->shouldThrow('\InvalidArgumentException')->duringSetPrice('410');
         $this->shouldThrow('\InvalidArgumentException')->duringSetPrice(round(4.1 * 100));
@@ -91,17 +94,6 @@ class ProductVariantSpec extends ObjectBehavior
         $this->shouldThrow(\InvalidArgumentException::class)->duringSetOriginalPrice(round(3.1 * 100));
         $this->shouldThrow(\InvalidArgumentException::class)->duringSetOriginalPrice([310]);
         $this->shouldThrow(\InvalidArgumentException::class)->duringSetOriginalPrice(new \stdClass());
-    }
-
-    function it_should_inherit_price_from_master_variant(ProductVariantInterface $masterVariant)
-    {
-        $masterVariant->isMaster()->willReturn(true);
-        $masterVariant->getAvailableOn()->willReturn(new \DateTime('yesterday'));
-        $masterVariant->getPrice()->willReturn(499);
-
-        $this->setDefaults($masterVariant);
-
-        $this->getPrice()->shouldReturn(499);
     }
 
     function it_implements_Sylius_shippable_interface()
@@ -186,17 +178,17 @@ class ProductVariantSpec extends ObjectBehavior
         $this->getShippingHeight()->shouldReturn(110);
     }
 
-    function it_has_no_sku_by_default()
+    function it_has_no_code_by_default()
     {
-        $this->getSku()->shouldReturn(null);
+        $this->getCode()->shouldReturn(null);
     }
 
-    function its_sku_is_mutable()
+    function its_code_is_mutable()
     {
         $sku = 'dummy-sku123';
 
-        $this->setSku($sku);
-        $this->getSku()->shouldReturn($sku);
+        $this->setCode($sku);
+        $this->getCode()->shouldReturn($sku);
     }
 
     function it_does_not_have_tax_category_by_default()

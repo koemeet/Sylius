@@ -1,4 +1,4 @@
-@promotion
+@managing_promotions
 Feature: Prevent deletion of promotions applied to order
     In order to maintain proper order history
     As an Administrator
@@ -11,12 +11,13 @@ Feature: Prevent deletion of promotions applied to order
         And the store has a product "PHP Mug" priced at "€12.00"
         And there is a promotion "Christmas sale"
         And it gives "€3.00" discount to every order
-        And the customer "john.doe@gmail.com" placed an order "#00000022"
+        And there is a customer "john.doe@gmail.com" that placed an order "#00000022"
         And the customer chose "Free" shipping method to "France" with "Cash on Delivery" payment
-        And the customer bought single "PHP Mug"
+        And the customer bought a single "PHP Mug"
+        And I am logged in as an administrator
 
-    @domain
+    @domain @ui
     Scenario: Being unable to delete a promotion that was applied to an order
-        When I try to delete promotion "Christmas sale"
+        When I try to delete a "Christmas sale" promotion
         Then I should be notified that it is in use and cannot be deleted
         And promotion "Christmas sale" should still exist in the registry

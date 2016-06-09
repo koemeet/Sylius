@@ -30,20 +30,21 @@ class SyliusPromotionExtension extends AbstractResourceExtension
      */
     public function load(array $config, ContainerBuilder $container)
     {
-        $config = $this->processConfiguration(new Configuration(), $config);
+        $config = $this->processConfiguration($this->getConfiguration($config, $container), $config);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
-        $this->registerResources('sylius', $config['driver'], $config['resources'], $container);
         $this->mapFormValidationGroupsParameters($config, $container);
 
         $configFiles = [
             'services.xml',
+            sprintf('driver/%s.xml', $config['driver']),
         ];
 
         foreach ($configFiles as $configFile) {
             $loader->load($configFile);
         }
 
+        $this->registerResources('sylius', $config['driver'], $config['resources'], $container);
         $this->overwriteCouponFactory($container);
         $this->overwriteActionFactory($container);
 

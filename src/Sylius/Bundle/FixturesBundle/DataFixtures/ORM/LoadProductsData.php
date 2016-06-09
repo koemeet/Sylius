@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sylius\Bundle\FixturesBundle\DataFixtures\DataFixture;
 use Sylius\Component\Core\Model\ProductInterface;
+use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Product\Model\AttributeValueInterface;
 use Sylius\Component\Taxation\Model\TaxCategoryInterface;
 
@@ -38,8 +39,7 @@ class LoadProductsData extends DataFixture
      */
     public function load(ObjectManager $manager)
     {
-        // T-Shirts...
-        for ($i = 1; $i <= 120; ++$i) {
+        for ($i = 1; $i <= 30; ++$i) {
             switch (rand(0, 3)) {
                 case 0:
                     $manager->persist($this->createTShirt($i));
@@ -58,7 +58,7 @@ class LoadProductsData extends DataFixture
                     break;
             }
 
-            if (0 === $i % 20) {
+            if (0 === $i % 10) {
                 $manager->flush();
             }
         }
@@ -90,26 +90,28 @@ class LoadProductsData extends DataFixture
             'es_ES' => sprintf('Camiseta "%s"', $this->fakers['es_ES']->word),
         ];
         $this->addTranslatedFields($product, $translatedNames);
+        $product->setCode($this->faker->uuid);
 
         $product->setVariantSelectionMethod(ProductInterface::VARIANT_SELECTION_MATCH);
 
-        $this->addMasterVariant($product);
-        $this->setChannels($product, ['DEFAULT']);
-
-        $this->setTaxons($product, ['T-Shirts', 'SuperTees']);
+        $this->setTaxons($product, ['t-shirts', 'super_tees']);
+        $product->setMainTaxon($this->getReference('Sylius.Taxon.t-shirts'));
         $product->setArchetype($this->getReference('Sylius.Archetype.t_shirt'));
+
+        $this->addVariant($product);
+        $this->setChannels($product, ['DEFAULT']);
 
         // T-Shirt brand.
         $randomBrand = $this->faker->randomElement(['Nike', 'Adidas', 'Puma', 'Potato']);
-        $this->addAttribute($product, 'T-Shirt brand', $randomBrand);
+        $this->addAttribute($product, 't_shirt_brand', $randomBrand);
 
         // T-Shirt collection.
         $randomCollection = sprintf('Symfony2 %s %s', $this->faker->randomElement(['Summer', 'Winter', 'Spring', 'Autumn']), rand(1995, 2012));
-        $this->addAttribute($product, 'T-Shirt collection', $randomCollection);
+        $this->addAttribute($product, 't_shirt_collection', $randomCollection);
 
         // T-Shirt material.
         $randomMaterial = $this->faker->randomElement(['Polyester', 'Wool', 'Polyester 10% / Wool 90%', 'Potato 100%']);
-        $this->addAttribute($product, 'T-Shirt material', $randomMaterial);
+        $this->addAttribute($product, 't_shirt_material', $randomMaterial);
 
         $product->addOption($this->getReference('Sylius.Option.t_shirt_size'));
         $product->addOption($this->getReference('Sylius.Option.t_shirt_color'));
@@ -137,22 +139,24 @@ class LoadProductsData extends DataFixture
             'es_ES' => sprintf('Pegatina "%s"', $this->fakers['es_ES']->word),
         ];
         $this->addTranslatedFields($product, $translatedNames);
+        $product->setCode($this->faker->uuid);
 
         $product->setVariantSelectionMethod(ProductInterface::VARIANT_SELECTION_MATCH);
 
-        $this->addMasterVariant($product);
-        $this->setChannels($product, ['DEFAULT']);
-
-        $this->setTaxons($product, ['Stickers', 'Stickypicky']);
+        $this->setTaxons($product, ['stickers', 'stickypicky']);
+        $product->setMainTaxon($this->getReference('Sylius.Taxon.stickers'));
         $product->setArchetype($this->getReference('Sylius.Archetype.sticker'));
+
+        $this->addVariant($product);
+        $this->setChannels($product, ['DEFAULT']);
 
         // Sticker resolution.
         $randomResolution = $this->faker->randomElement(['Waka waka', 'FULL HD', '300DPI', '200DPI']);
-        $this->addAttribute($product, 'Sticker resolution', $randomResolution);
+        $this->addAttribute($product, 'sticker_resolution', $randomResolution);
 
         // Sticker paper.
         $randomPaper = sprintf('Paper from tree %s', $this->faker->randomElement(['Wung', 'Yang', 'Lemon-San', 'Me-Gusta']));
-        $this->addAttribute($product, 'Sticker paper', $randomPaper);
+        $this->addAttribute($product, 'sticker_paper', $randomPaper);
 
         $product->addOption($this->getReference('Sylius.Option.sticker_size'));
 
@@ -179,15 +183,17 @@ class LoadProductsData extends DataFixture
             'es_ES' => sprintf('Taza "%s"', $this->fakers['es_ES']->word),
         ];
         $this->addTranslatedFields($product, $translatedNames);
+        $product->setCode($this->faker->uuid);
 
-        $this->addMasterVariant($product);
-        $this->setChannels($product, ['DEFAULT']);
-
-        $this->setTaxons($product, ['Mugs', 'Mugland']);
+        $this->setTaxons($product, ['mugs', 'mugland']);
+        $product->setMainTaxon($this->getReference('Sylius.Taxon.mugs'));
         $product->setArchetype($this->getReference('Sylius.Archetype.mug'));
 
+        $this->addVariant($product);
+        $this->setChannels($product, ['DEFAULT']);
+
         $randomMugMaterial = $this->faker->randomElement(['Invisible porcelain', 'Banana skin', 'Porcelain', 'Sand']);
-        $this->addAttribute($product, 'Mug material', $randomMugMaterial);
+        $this->addAttribute($product, 'mug_material', $randomMugMaterial);
 
         $product->addOption($this->getReference('Sylius.Option.mug_type'));
 
@@ -217,16 +223,18 @@ class LoadProductsData extends DataFixture
             'es_ES' => sprintf('Libro "%s" de "%s"', ucfirst($this->fakers['es_ES']->word), $author),
         ];
         $this->addTranslatedFields($product, $translatedNames);
+        $product->setCode($this->faker->uuid);
 
-        $this->addMasterVariant($product, $isbn);
-        $this->setChannels($product, ['DEFAULT']);
-
-        $this->setTaxons($product, ['Books', 'Bookmania']);
+        $this->setTaxons($product, ['books', 'bookmania']);
+        $product->setMainTaxon($this->getReference('Sylius.Taxon.books'));
         $product->setArchetype($this->getReference('Sylius.Archetype.book'));
 
-        $this->addAttribute($product, 'Book author', $author);
-        $this->addAttribute($product, 'Book ISBN', $isbn);
-        $this->addAttribute($product, 'Book pages', $this->faker->randomNumber(3));
+        $this->addVariant($product, $isbn);
+        $this->setChannels($product, ['DEFAULT']);
+
+        $this->addAttribute($product, 'book_author', $author);
+        $this->addAttribute($product, 'book_isbn', $isbn);
+        $this->addAttribute($product, 'book_pages', $this->faker->randomNumber(3));
 
         $this->setReference('Sylius.Product.'.$i, $product);
 
@@ -248,7 +256,7 @@ class LoadProductsData extends DataFixture
         foreach ($product->getVariants() as $variant) {
             $variant->setAvailableOn($this->faker->dateTimeThisYear);
             $variant->setPrice($this->faker->randomNumber(4));
-            $variant->setSku($this->getUniqueSku());
+            $variant->setCode($this->getUniqueCode());
             $variant->setOnHand($this->faker->randomNumber(1));
 
             $this->setReference('Sylius.Variant-'.$this->totalVariants, $variant);
@@ -258,46 +266,43 @@ class LoadProductsData extends DataFixture
     }
 
     /**
-     * Adds master variant to product.
-     *
      * @param ProductInterface $product
-     * @param string           $sku
+     * @param string $code
      */
-    protected function addMasterVariant(ProductInterface $product, $sku = null)
+    protected function addVariant(ProductInterface $product, $code = null)
     {
-        $variant = $product->getMasterVariant();
+        /** @var ProductVariantInterface $variant */
+        $variant = $this->get('sylius.factory.product_variant')->createNew();
         $variant->setProduct($product);
         $variant->setPrice($this->faker->randomNumber(4));
-        $variant->setSku(null === $sku ? $this->getUniqueSku() : $sku);
+        $variant->setCode(null === $code ? $this->getUniqueCode() : $code);
         $variant->setAvailableOn($this->faker->dateTimeThisYear);
         $variant->setOnHand($this->faker->randomNumber(1));
-        $variant->setTaxCategory($this->getTaxCategory('Taxable goods'));
+        $variant->setTaxCategory($this->getTaxCategory('taxable'));
 
-        $productName = explode(' ', $product->getName());
-        $image = clone $this->getReference(
-            'Sylius.Image.'.strtolower($productName[0])
-        );
+        $mainTaxon = $product->getMainTaxon();
+        $image = clone $this->getReference('Sylius.Image.'.$mainTaxon->getCode());
         $variant->addImage($image);
+
+        $product->addVariant($variant);
 
         $this->setReference('Sylius.Variant-'.$this->totalVariants, $variant);
 
         ++$this->totalVariants;
-
-        $product->setMasterVariant($variant);
     }
 
     /**
      * Adds attribute to product with given value.
      *
      * @param ProductInterface $product
-     * @param string           $name
-     * @param string           $value
+     * @param string $code
+     * @param string $value
      */
-    protected function addAttribute(ProductInterface $product, $name, $value)
+    protected function addAttribute(ProductInterface $product, $code, $value)
     {
         /* @var $attribute AttributeValueInterface */
         $attribute = $this->getProductAttributeValueFactory()->createNew();
-        $attribute->setAttribute($this->getReference('Sylius.Attribute.'.$name));
+        $attribute->setAttribute($this->getReference('Sylius.Attribute.'.$code));
         $attribute->setProduct($product);
         $attribute->setValue($value);
 
@@ -308,14 +313,14 @@ class LoadProductsData extends DataFixture
      * Adds taxons to given product.
      *
      * @param ProductInterface $product
-     * @param array            $taxonNames
+     * @param array $taxonCodes
      */
-    protected function setTaxons(ProductInterface $product, array $taxonNames)
+    protected function setTaxons(ProductInterface $product, array $taxonCodes)
     {
         $taxons = new ArrayCollection();
 
-        foreach ($taxonNames as $taxonName) {
-            $taxons->add($this->getReference('Sylius.Taxon.'.$taxonName));
+        foreach ($taxonCodes as $taxonCode) {
+            $taxons->add($this->getReference('Sylius.Taxon.'.$taxonCode));
         }
 
         $product->setTaxons($taxons);
@@ -325,7 +330,7 @@ class LoadProductsData extends DataFixture
      * Set channels.
      *
      * @param ProductInterface $product
-     * @param array            $channelCodes
+     * @param array $channelCodes
      */
     protected function setChannels(ProductInterface $product, array $channelCodes)
     {
@@ -335,27 +340,23 @@ class LoadProductsData extends DataFixture
     }
 
     /**
-     * Get tax category by name.
-     *
-     * @param string $name
+     * @param string $code
      *
      * @return TaxCategoryInterface
      */
-    protected function getTaxCategory($name)
+    protected function getTaxCategory($code)
     {
-        return $this->getReference('Sylius.TaxCategory.'.ucfirst($name));
+        return $this->getReference('Sylius.TaxCategory.'.$code);
     }
 
     /**
      * Get unique SKU.
      *
-     * @param int $length
-     *
      * @return string
      */
-    protected function getUniqueSku($length = 5)
+    protected function getUniqueCode()
     {
-        return $this->faker->unique()->randomNumber($length);
+        return $this->faker->unique()->uuid();
     }
 
     /**
@@ -369,8 +370,6 @@ class LoadProductsData extends DataFixture
     }
 
     /**
-     * Create new product instance.
-     *
      * @return ProductInterface
      */
     protected function createProduct()

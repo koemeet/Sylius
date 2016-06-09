@@ -43,11 +43,6 @@ class Product extends BaseProduct implements ProductInterface, ReviewableProduct
     protected $shippingCategory;
 
     /**
-     * @var ZoneInterface
-     */
-    protected $restrictedZone;
-
-    /**
      * @var ChannelInterface[]|Collection
      */
     protected $channels;
@@ -97,24 +92,6 @@ class Product extends BaseProduct implements ProductInterface, ReviewableProduct
     /**
      * {@inheritdoc}
      */
-    public function getSku()
-    {
-        return $this->getMasterVariant()->getSku();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setSku($sku)
-    {
-        $this->getMasterVariant()->setSku($sku);
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getVariantSelectionMethod()
     {
         return $this->variantSelectionMethod;
@@ -130,8 +107,6 @@ class Product extends BaseProduct implements ProductInterface, ReviewableProduct
         }
 
         $this->variantSelectionMethod = $variantSelectionMethod;
-
-        return $this;
     }
 
     /**
@@ -172,8 +147,6 @@ class Product extends BaseProduct implements ProductInterface, ReviewableProduct
     public function setTaxons(Collection $taxons)
     {
         $this->taxons = $taxons;
-
-        return $this;
     }
 
     /**
@@ -184,8 +157,6 @@ class Product extends BaseProduct implements ProductInterface, ReviewableProduct
         if (!$this->hasTaxon($taxon)) {
             $this->taxons->add($taxon);
         }
-
-        return $this;
     }
 
     /**
@@ -196,8 +167,6 @@ class Product extends BaseProduct implements ProductInterface, ReviewableProduct
         if ($this->hasTaxon($taxon)) {
             $this->taxons->removeElement($taxon);
         }
-
-        return $this;
     }
 
     /**
@@ -206,24 +175,6 @@ class Product extends BaseProduct implements ProductInterface, ReviewableProduct
     public function hasTaxon(BaseTaxonInterface $taxon)
     {
         return $this->taxons->contains($taxon);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPrice()
-    {
-        return $this->getMasterVariant()->getPrice();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setPrice($price)
-    {
-        $this->getMasterVariant()->setPrice($price);
-
-        return $this;
     }
 
     /**
@@ -240,42 +191,6 @@ class Product extends BaseProduct implements ProductInterface, ReviewableProduct
     public function setShippingCategory(ShippingCategoryInterface $category = null)
     {
         $this->shippingCategory = $category;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRestrictedZone()
-    {
-        return $this->restrictedZone;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setRestrictedZone(ZoneInterface $zone = null)
-    {
-        $this->restrictedZone = $zone;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getImages()
-    {
-        return $this->getMasterVariant()->getImages();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getImage()
-    {
-        return $this->getMasterVariant()->getImages()->first();
     }
 
     /**
@@ -292,8 +207,6 @@ class Product extends BaseProduct implements ProductInterface, ReviewableProduct
     public function setChannels(Collection $channels)
     {
         $this->channels = $channels;
-
-        return $this;
     }
 
     /**
@@ -405,5 +318,41 @@ class Product extends BaseProduct implements ProductInterface, ReviewableProduct
     public function getAverageRating()
     {
         return $this->averageRating;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFirstVariant()
+    {
+        if ($this->variants->isEmpty()) {
+            return null;
+        }
+
+        return $this->variants->first();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPrice()
+    {
+        if (null === $this->getFirstVariant()) {
+            return null;
+        }
+
+        return $this->getFirstVariant()->getPrice();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getImage()
+    {
+        if (null === $this->getFirstVariant()) {
+            return null;
+        }
+
+        return $this->getFirstVariant()->getImage();
     }
 }

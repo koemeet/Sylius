@@ -5,13 +5,14 @@ Feature: Shipping method validation
     I want to be prevented from adding it without specifying required fields
 
     Background:
-        Given the store operates on a single channel in "France"
+        Given the store is available in "English (United States)"
+        And the store has a base currency "Euro"
         And there is a zone "EU" containing all members of the European Union
-        Given I am logged in as an administrator
+        And I am logged in as an administrator
 
     @ui
     Scenario: Trying to add a new shipping method without specifying its code
-        Given I want to create a new shipping method
+        When I want to create a new shipping method
         And I name it "FedEx Carrier" in "English (United States)"
         But I do not specify its code
         And I try to add it
@@ -30,7 +31,7 @@ Feature: Shipping method validation
     @ui
     Scenario: Trying to add a new shipping method without specifying its zone
         Given the store does not have any zones defined
-        And I want to create a new shipping method
+        When I want to create a new shipping method
         And I name it "FedEx Carrier" in "English (United States)"
         But I do not specify its zone
         And I try to add it

@@ -85,8 +85,6 @@ sylius:
         no_shipments: Non ci sono spedizioni per questo ordine
         no_shipping_charges: Nessuna spesa di spedizione applicata
         no_taxes: Nessuna tassa applicata
-        state:
-            order_confimed: Ordine confermato
     order_item:
         quantity: Q.tà
         sellable: Prodotto
@@ -94,6 +92,18 @@ sylius:
         no_route: Il contenuto non apparirà nel frontend se nessuna rotta è definita
         publishable: Pubblicato
     payment:
+        state:
+            checkout: Checkout
+            completed: Completato
+            authorized: Autorizzato
+            failed: Fallimento
+            new: Nuovo
+            pending: In attesa
+            processing: In elaborazione
+            unknown: Sconosciuto
+            void: Nullo
+            cancelled: Annullato
+            refunded: Rimborsato
         transition:
             cancel: annulla
             complete: completare
@@ -121,6 +131,13 @@ sylius:
             no_account: Non hai ancora un account
     shipment:
         no_items: Non ci sono articoli da mostrare
+        state:
+            ready: Pronto
+            returned: Restituito
+            shipped: Spedito
+            pending: In attesa
+            onhold: In attesa
+            cancelled: Annullato
         transition:
             backorder: backorder
             cancel: annulla
@@ -191,13 +208,10 @@ sylius:
         building_product_from_archetype: "Costruzione del prodotto dall'archetipo"
         calculator: Calcolatore
         cancel: Annulla
-        cancelled: Annullato
         cart_locked: Carrello bloccato
         cart_summary: Riepilogo carrello
         categorization: Categorizzazione
         category: Categoria fiscale
-        change_password: Modifica la password
-        change_your_password: Modifica la password
         channel: Canale
         channels: Canali
         checkout: "Procedi all'acquisto"
@@ -221,7 +235,6 @@ sylius:
         country: Paese
         country_details: Dettagli paese
         coupon: Promozione
-        coupon_based: Basata su coupon
         coupons: Codici promozionali
         create: Crea
         create_a_new_address: Crea un nuovo indirizzo
@@ -287,7 +300,6 @@ sylius:
         customer_not_notified: Cliente non notificato
         customer_notified: Cliente notificato
         customer_orders: Ordini dei clienti
-        customer_since: Sei un cliente dal
         customers: Clienti
         customers_list_of_all_customers_in_store: 'I clienti di <small>elenco di tutti i clienti nel negozio</small>'
         customize_default_metadata: Personalizzare i metadati predefiniti
@@ -360,7 +372,6 @@ sylius:
         enjoy_all_the_features_that_are_available_on_your_personal_space_to_view_track_and_manage_all_your_data: Godetevi tutte le funzionalità che sono disponibili sul tuo spazio personale per visualizzare, tenere traccia e gestire tutti i dati
         error: Errore
         exchange_rate: Tasso di cambio
-        exclusive: Esclusivo
         existing_customer: Cliente esistente
         expires_at: Scadenza il
         failed: Fallimento
@@ -561,6 +572,7 @@ sylius:
         provinces: Province
         qty_max: Max Qty
         qty_min: Min qty
+        quantity: Quantità
         rating: Voto
         recent_customers: Clienti recenti
         recent_orders: Ordini recenti
@@ -583,7 +595,6 @@ sylius:
         restricted_zone: Zona soggetta a restrizioni
         retail_price: Prezzo al dettaglio
         return: Ritorno
-        returned: Restituito
         revert: Ripristina
         review_details: Esaminare i dettagli
         reviews: Recensioni
@@ -605,7 +616,6 @@ sylius:
         shipment_mode: Metodo di spedizione
         shipment_state: Stato spedizione
         shipments: Spedizioni
-        shipped: Spedito
         shipping_address: Indirizzo spedizione
         shipping_categories: Categorie di spedizione
         shipping_category: Categoria di spedizione
@@ -699,6 +709,7 @@ sylius:
         total_registrations: Registrazioni totali
         tracking_code: Codice di monitoraggio
         tracking_number: Numero di tracking
+        translations: Traduzioni
         type: Tipo
         unavailable: Non disponibile
         unit_price: Prezzo unitario
@@ -715,6 +726,7 @@ sylius:
         users_list_of_all_users_registered_in_store: 'Utenti <small>Lista degli utenti registrati al negozio</small>'
         values: Valori
         variant_selection_method: Metodo di selezione variante
+        variant: Varianti
         variants: Varianti
         view: Vista
         view_more: Dettaglio

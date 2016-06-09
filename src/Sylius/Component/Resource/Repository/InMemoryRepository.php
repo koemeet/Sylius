@@ -162,12 +162,12 @@ class InMemoryRepository implements RepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function createPaginator(array $criteria = null, array $orderBy = null)
+    public function createPaginator(array $criteria = [], array $sorting = [])
     {
         $resources = $this->findAll();
 
-        if (!empty($orderBy)) {
-            $resources = $this->applyOrder($resources, $orderBy);
+        if (!empty($sorting)) {
+            $resources = $this->applyOrder($resources, $sorting);
         }
 
         if (!empty($criteria)) {

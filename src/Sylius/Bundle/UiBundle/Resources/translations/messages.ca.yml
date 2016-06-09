@@ -6,12 +6,17 @@ sylius:
         login:
             username: "Nom d'usuari"
             password: Contrasenya
+        option:
+            presentation: Presentació
     ui:
+        checkout: Realitza la compra
+        default_currency: Moneda predeterminada
         delete: Suprimir
         description: Descripció
         edit: Editar
         enabled: Activat
         new: Nou
         "no": false
+        price: Preu
         success: Realitzat amb èxit
         "yes": true

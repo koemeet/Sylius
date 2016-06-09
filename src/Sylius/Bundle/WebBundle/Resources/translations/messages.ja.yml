@@ -71,8 +71,6 @@ sylius:
         cancel: キャンセル
         categorization: カテゴリ設定
         category: 税区分
-        change_password: パスワードの変更
-        change_your_password: パスワードの変更
         checkout: 注文に進む
         choose_file: ファイルを選択
         city: 市町村
@@ -180,7 +178,6 @@ sylius:
         name: ゾーン名
         new: sylius.breadcrumb.new
         new_country: 国を登録
-        new_customer: 新規顧客登録
         new_order: 新しい注文を登録
         new_password: 新しいパスワード
         new_payment: 入金を登録

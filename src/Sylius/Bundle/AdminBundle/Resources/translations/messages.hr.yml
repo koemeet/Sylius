@@ -5,11 +5,20 @@ sylius:
     menu:
         admin:
             main:
+                catalog:
+                    options: Opcije
+                    products: Proizvodi
+                    taxons: Taksoni
                 configuration:
                     countries: Države
                     header: Postavke
                     locales: Lokaliteti
+                    payment_methods: Načini plaćanja
                     shipping_methods: Načini slanja
                     tax_rates: Stope poreza
+                    zones: Regije
                 marketing:
                     promotions: Promocije
+                sales:
+                    header: Prodaja
+                    orders: Narudžbe

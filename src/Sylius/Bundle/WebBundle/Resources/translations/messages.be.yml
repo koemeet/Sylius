@@ -44,10 +44,28 @@ sylius:
     order_item:
         quantity: Колькасць
         sellable: Тавар
+    payment:
+        state:
+            checkout: Афрмленне замовы
+            completed: Завершана
+            failed: Памылка
+            new: Новы
+            pending: У чаканні
+            processing: Апрацоўваецца
+            unknown: Невядома
+            void: Пусты
+            cancelled: Адменена
+            refunded: Вернута
     promotion_coupon:
         generate: Генераваць купоны
         index: Стварыць спіс купонаў
     shipment:
+        state:
+            ready: Гатова
+            returned: Вернута
+            shipped: Дастаўлена
+            pending: У чаканні
+            cancelled: Адменена
         update: Рэдагаваць
     taxon:
         image: Абраць выяву
@@ -84,11 +102,8 @@ sylius:
         build: Пабудаваць
         calculator: Калькулятар
         cancel: Адмяніць
-        cancelled: Адменена
         categorization: Класіфікацыя
         category: Катэгорыя
-        change_password: Змяніць пароль
-        change_your_password: Змяніць пароль
         checkout: Афрмленне замовы
         choose_file: Абярыце файл
         city: Горад
@@ -104,7 +119,6 @@ sylius:
         country: Краіна
         country_details: Дэталі краіны
         coupon: Купон
-        coupon_based: Заснавана на купонах
         coupons: Купоны
         create: Стварыць
         create_a_new_address: Стварыць новы адрас
@@ -222,7 +236,6 @@ sylius:
         name: Імя
         new: Новы
         new_country: Новая краіна
-        new_customer: Новы пакупнік
         new_order: Новая замова
         new_password: Новы пароль
         new_payment: Новы плацёж
@@ -287,6 +300,7 @@ sylius:
         promotions: Прамоцыі
         province: Вобласць
         provinces: Вобласці
+        quantity: Колькасць
         recent_orders: Нядаўнія замовы
         recent_users: Нядаўнія карыстальнікі
         refunded: Вернута
@@ -297,7 +311,6 @@ sylius:
         restricted_zone: Забароненая зона
         retail_price: Рознічная цана
         return: Вярнуць
-        returned: Вернута
         roles: Ролі
         rules: Правілы
         sales: Продаж
@@ -312,7 +325,6 @@ sylius:
         shipment_details: Дэталі дастаўкі
         shipment_state: Статус дастаўкі
         shipments: Дастаўка
-        shipped: Дастаўлена
         shipping_address: Адрас дастаўкі
         shipping_categories: Катэгорыі дастаўкі
         shipping_category: Катэгорыя дастаўкі

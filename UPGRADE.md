@@ -1,7 +1,85 @@
 UPGRADE
 =======
 
+## From 0.18 to 0.19.x
+
+### Core and CoreBundle
+
+* Introduced new adjustments type ``ORDER_UNIT_PROMOTION``
+* Changed current *item* promotion actions to *unit* promotion actions (as they're applied on ``OrderItemUnit`` level)
+* Introduced ``getDiscountedUnitPrice`` method on ``OrderItem``, which returns single *unit* price lowered by ``ORDER_UNIT_PROMOTION`` adjustments
+* Removed the concept of restricted zone per product
+
+### Variation and VariationBundle
+
+* Removed concept of master variant (removed ``$master`` flag from ``Sylius\Component\Variation\Model\Variant``), all usages of **master** variant has been, for now, replaced with **first** variant;
+
 ## From 0.17 to 0.18.x
+
+### Application
+
+* Moved some of the parameters out of parameters.yml.dist file, please check your configurations;
+* Moved parameters are now in ``CoreBundle/Resource/config/app.parameters.yml``, you should import them before your own parameters.yml file;
+* Renamed basic parameters to match Symfony Standard's conventions:
+
+Before:
+
+```yaml
+%sylius.database.host%
+%sylius.locale%
+
+# etc.
+```
+
+After:
+
+```yaml
+%database_host%
+%locale%
+```
+
+### HWIOAuthBundle is now optional 
+
+HWIOAuthBundle for social logins is no longer a required dependency. If you would like to use it in your project, you should add it to composer.json's ``require`` section, install it and add proper configuration for routing:
+
+```yml
+# routing.yml
+
+hwi_oauth_security:
+    resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
+    prefix: /connect-login
+ 
+hwi_oauth_redirect:
+    resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
+    prefix: /connect
+ 
+amazon_login:
+    path: /connect-login/check-amazon
+ 
+facebook_login:
+    path: /connect-login/check-facebook
+ 
+google_login:
+    path: /connect-login/check-google
+```
+
+And for security:
+
+```yml
+# security.yml
+
+# For your shop firewall, configure "oauth" section:
+
+oauth:
+    resource_owners:
+        amazon:   "/connect-login/check-amazon"
+        facebook: "/connect-login/check-facebook"
+        google:   "/connect-login/check-google"
+        login_path:   /login
+        failure_path: /login
+        oauth_user_provider:
+            service: sylius.oauth.user_provider
+```
 
 ### Translation and TranslationBundle
 
@@ -12,7 +90,13 @@ UPGRADE
 ### Core and CoreBundle
 
 * Removed "exclude" option from ``taxon`` rule
+* Changed ``ORDER_PROMOTION_ADJUSTMENT``s to be added on ``OrderItemUnit`` level instead of ``Order`` level, based on distributed promotion amount 
 
+### SettingsBundle
+
+* Renamed `sylius_settings_all()` Twig function to `sylius_settings()`
+* Removed `sylius_settings_get('foo.property')` and `sylius_settings_has('foo.property')` Twig functions, use 
+  `sylius_settings('foo').property` and `sylius_settings('foo').property is defined` instead
 
 ## From 0.16 to 0.17.x
 

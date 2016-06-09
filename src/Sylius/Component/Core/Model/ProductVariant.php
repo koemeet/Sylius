@@ -24,11 +24,6 @@ use Sylius\Component\Variation\Model\VariantInterface as BaseVariantInterface;
 class ProductVariant extends BaseVariant implements ProductVariantInterface
 {
     /**
-     * @var string
-     */
-    protected $sku;
-
-    /**
      * @var int
      */
     protected $price;
@@ -98,9 +93,6 @@ class ProductVariant extends BaseVariant implements ProductVariantInterface
      */
     protected $taxCategory;
 
-    /**
-     * Override constructor to set on hand stock.
-     */
     public function __construct()
     {
         parent::__construct();
@@ -108,6 +100,9 @@ class ProductVariant extends BaseVariant implements ProductVariantInterface
         $this->images = new ArrayCollection();
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         $string = $this->getProduct()->getName();
@@ -144,24 +139,6 @@ class ProductVariant extends BaseVariant implements ProductVariantInterface
     /**
      * {@inheritdoc}
      */
-    public function getSku()
-    {
-        return $this->sku;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setSku($sku)
-    {
-        $this->sku = $sku;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getPrice()
     {
         return $this->price;
@@ -175,9 +152,8 @@ class ProductVariant extends BaseVariant implements ProductVariantInterface
         if (!is_int($price)) {
             throw new \InvalidArgumentException('Price must be an integer.');
         }
-        $this->price = $price;
 
-        return $this;
+        $this->price = $price;
     }
 
     /**
@@ -188,6 +164,7 @@ class ProductVariant extends BaseVariant implements ProductVariantInterface
         if (null !== $originalPrice && !is_int($originalPrice)) {
             throw new \InvalidArgumentException('Original price must be an integer.');
         }
+
         $this->originalPrice = $originalPrice;
     }
 
@@ -213,8 +190,6 @@ class ProductVariant extends BaseVariant implements ProductVariantInterface
     public function setPricingCalculator($calculator)
     {
         $this->pricingCalculator = $calculator;
-
-        return $this;
     }
 
     /**
@@ -231,8 +206,6 @@ class ProductVariant extends BaseVariant implements ProductVariantInterface
     public function setPricingConfiguration(array $configuration)
     {
         $this->pricingConfiguration = $configuration;
-
-        return $this;
     }
 
     /**
@@ -257,8 +230,6 @@ class ProductVariant extends BaseVariant implements ProductVariantInterface
     public function setOnHold($onHold)
     {
         $this->onHold = $onHold;
-
-        return $this;
     }
 
     /**
@@ -274,13 +245,7 @@ class ProductVariant extends BaseVariant implements ProductVariantInterface
      */
     public function setOnHand($onHand)
     {
-        $this->onHand = $onHand;
-
-        if (0 > $this->onHand) {
-            $this->onHand = 0;
-        }
-
-        return $this;
+        $this->onHand = (0 > $onHand) ? 0 : $onHand;
     }
 
     /**
@@ -321,20 +286,6 @@ class ProductVariant extends BaseVariant implements ProductVariantInterface
     public function setAvailableOnDemand($availableOnDemand)
     {
         $this->availableOnDemand = (bool) $availableOnDemand;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setDefaults(BaseVariantInterface $masterVariant)
-    {
-        parent::setDefaults($masterVariant);
-
-        $this->setPrice($masterVariant->getPrice());
-
-        return $this;
     }
 
     /**
@@ -367,7 +318,7 @@ class ProductVariant extends BaseVariant implements ProductVariantInterface
     public function getImage()
     {
         if ($this->images->isEmpty()) {
-            return $this->getProduct()->getImage();
+            return null;
         }
 
         return $this->images->first();
@@ -382,8 +333,6 @@ class ProductVariant extends BaseVariant implements ProductVariantInterface
             $image->setVariant($this);
             $this->images->add($image);
         }
-
-        return $this;
     }
 
     /**
@@ -393,8 +342,6 @@ class ProductVariant extends BaseVariant implements ProductVariantInterface
     {
         $image->setVariant(null);
         $this->images->removeElement($image);
-
-        return $this;
     }
 
     /**
@@ -411,8 +358,6 @@ class ProductVariant extends BaseVariant implements ProductVariantInterface
     public function setWeight($weight)
     {
         $this->weight = $weight;
-
-        return $this;
     }
 
     /**
@@ -429,8 +374,6 @@ class ProductVariant extends BaseVariant implements ProductVariantInterface
     public function setWidth($width)
     {
         $this->width = $width;
-
-        return $this;
     }
 
     /**
@@ -447,8 +390,6 @@ class ProductVariant extends BaseVariant implements ProductVariantInterface
     public function setHeight($height)
     {
         $this->height = $height;
-
-        return $this;
     }
 
     /**
@@ -465,8 +406,6 @@ class ProductVariant extends BaseVariant implements ProductVariantInterface
     public function setDepth($depth)
     {
         $this->depth = $depth;
-
-        return $this;
     }
 
     /**

@@ -57,10 +57,25 @@ sylius:
         sellable: Termék
     page:
         publishable: Megjelent
+    payment:
+        state:
+            checkout: Fizetés
+            completed: Befejezve
+            failed: Sikertelen
+            new: Új
+            pending: Függőben
+            processing: Feldolgozás alatt
+            unknown: Ismeretlen
+            void: Hiányos
     promotion_coupon:
         generate: Kuponok generálása
         index: Kuponok listázása
     shipment:
+        state:
+            ready: Kész
+            returned: Visszaküldött
+            shipped: Kiszállítva
+            pending: Függőben
         update: Szerkesztés
     taxon:
         image: Kép választása
@@ -100,8 +115,6 @@ sylius:
         cancel: Mégse
         categorization: Kategorizálás
         category: Kategória
-        change_password: Jelszó módosítása
-        change_your_password: Jelszó módosítása
         channels: Csatornák
         checkout: Fizetés
         choose_file: Válassza ki a fájlt
@@ -118,7 +131,6 @@ sylius:
         country: Ország
         country_details: Ország részletek
         coupon: Kupon
-        coupon_based: Kupon alapján
         coupons: Kuponok
         create: Létrehozás
         create_a_new_address: Új cím létrehozása
@@ -246,7 +258,6 @@ sylius:
         name: Név
         new: Új
         new_country: Új ország
-        new_customer: Új ügyfél
         new_order: Új rendelés
         new_password: Új jelszó
         new_payment: Új fizetés
@@ -315,6 +326,7 @@ sylius:
         promotions: Promóciók
         province: Tartomány/állam
         provinces: Tartományok
+        quantity: Mennyiség
         recent_orders: Legutóbbi rendelések
         recent_users: Legutóbbi felhasználók
         register: Regisztráció
@@ -325,7 +337,6 @@ sylius:
         restricted_zone: Tiltott zóna
         retail_price: Kiskereskedelmi ár
         return: Vissza
-        returned: Visszaküldött
         reviews: Értékelések
         roles: Szerepek
         routes: Útvonalak
@@ -342,7 +353,6 @@ sylius:
         shipment_details: Szállítás részletei
         shipment_state: Szállítási állapot
         shipments: Szállítások
-        shipped: Kiszállítva
         shipping_address: Szállítási cím
         shipping_categories: Szállítási kategóriák
         shipping_category: Szállítási kategória

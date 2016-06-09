@@ -5,11 +5,20 @@ sylius:
     menu:
         admin:
             main:
+                catalog:
+                    options: Indstillinger
+                    products: Produkter
+                    taxons: Taxons
                 configuration:
                     countries: Lande
                     header: Konfiguration
                     locales: Landekoder
+                    payment_methods: Betalingsmetoder
                     shipping_methods: Fragtmetoder
                     tax_rates: Momssatser
+                    zones: Zoner
                 marketing:
                     promotions: Kampagner
+                sales:
+                    header: Salg
+                    orders: Ordrer

@@ -5,7 +5,9 @@ Feature: Editing shipping method
     I want to be able to edit a shipping method
 
     Background:
-        Given the store operates on a single channel in "France"
+        Given the store is available in "English (United States)"
+        And the store has a base currency "Euro"
+        And there is a zone "EU" containing all members of the European Union
         And the store allows shipping with "UPS Carrier" identified by "UPS_CARRIER"
         And I am logged in as an administrator
 
@@ -19,7 +21,7 @@ Feature: Editing shipping method
 
     @ui
     Scenario: Seeing disabled code field when editing shipping method
-        Given I want to modify a shipping method "UPS Carrier"
+        When I want to modify a shipping method "UPS Carrier"
         Then the code field should be disabled
 
     @ui @javascript
@@ -27,5 +29,5 @@ Feature: Editing shipping method
         Given I want to modify a shipping method "UPS Carrier"
         When I rename it to "UPS Transport" in "English (United States)"
         And I save my changes
-        Then I should be notified about successful edition
+        Then I should be notified that it has been successfully edited
         And this shipping method name should be "UPS Transport"

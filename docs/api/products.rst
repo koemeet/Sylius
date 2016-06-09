@@ -1,7 +1,7 @@
 Products API
 ============
 
-Sylius products catalogue API endpoint is `/api/products` and it allows for browsing, creating & editing product information.
+Sylius products catalogue API endpoint is ``/api/products`` and it allows for browsing, creating & editing product information.
 
 Index of all products
 ---------------------
@@ -60,16 +60,8 @@ Response will contain a paginated list of products.
                     "created_at": "2014-11-26T23:00:20+0000",
                     "description": "Facere ipsum id eveniet rem omnis et. Totam vero eos eveniet nihil sint. Labore occaecati qui placeat fugit.",
                     "id": 2173,
-                    "masterVariant": {
-                        "available_on": "2014-03-29T01:30:04+0000",
-                        "created_at": "2014-11-26T23:00:20+0000",
-                        "id": 13403,
-                        "master": true,
-                        "options": [],
-                        "sku": "68051",
-                        "updated_at": "2014-11-26T23:00:20+0000"
-                    },
                     "name": "T-Shirt \"ipsam\"",
+                    "code": "T-SHIRT-IPSAM",
                     "short_description": "Aut rerum quasi neque.",
                     "updated_at": "2014-11-26T23:00:20+0000"
                 }
@@ -99,22 +91,14 @@ Response
         "created_at": "2014-11-26T23:00:20+0000",
         "description": "Facere ipsum id eveniet rem omnis et. Totam vero eos eveniet nihil sint. Labore occaecati qui placeat fugit.",
         "id": 2173,
-        "masterVariant": {
-            "available_on": "2014-03-29T01:30:04+0000",
-            "created_at": "2014-11-26T23:00:20+0000",
-            "id": 13403,
-            "master": true,
-            "options": [],
-            "sku": "68051",
-            "updated_at": "2014-11-26T23:00:20+0000"
-        },
         "name": "T-Shirt \"ipsam\"",
+        "code": "T-SHIRT-IPSAM",
         "short_description": "Aut rerum quasi neque.",
         "updated_at": "2014-11-26T23:00:20+0000"
     }
 
-Create an product
----------------
+Creating an product
+-------------------
 
 To create a new product, you can execute the following request:
 
@@ -147,15 +131,8 @@ Response
         "created_at": "2014-11-29T14:23:57+0000",
         "description": "Bar",
         "id": 2181,
-        "masterVariant": {
-            "available_on": "2014-11-29T14:23:57+0000",
-            "created_at": "2014-11-29T14:23:57+0000",
-            "id": 13468,
-            "master": true,
-            "options": [],
-            "updated_at": "2014-11-29T14:23:58+0000"
-        },
         "name": "Foo",
+        "code": "FOO",
         "updated_at": "2014-11-29T14:23:58+0000"
     }
 

@@ -19,6 +19,8 @@ sylius:
                 different_billing_address: Використовувати іншу платіжну адресу?
             payment_method: Спосіб оплати
             shipping_method: Метод доставки
+        promotion:
+            channels: Канали
         group:
             name: Ім’я
             roles: Ролі
@@ -51,7 +53,7 @@ sylius:
             variant_selection_method: Метод вибору варіанту
         product_filter:
             name: Ім’я
-            sku: Артикул
+            code: Код
         product_variant:
             tax_category: Категорія податку
         settings:

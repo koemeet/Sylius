@@ -5,11 +5,26 @@ sylius:
     menu:
         admin:
             main:
+                catalog:
+                    attributes: Atributai
+                    options: Parinktys
+                    products: Produktai
+                    taxons: Taksonai
                 configuration:
+                    channels: Kanalai
                     countries: Šalys
+                    currencies: Valiutos
                     header: Konfigūracija
                     locales: Lokalės
+                    payment_methods: Apmokėjimo būdai
                     shipping_methods: Pristatymo būdai
                     tax_rates: Mokesčių tarifai
+                    zones: Zonos
                 marketing:
                     promotions: Akcijos
+                customers:
+                    customers: Klientai
+                    header: Klienta
+                sales:
+                    header: Pardavimai
+                    orders: Užsakymai

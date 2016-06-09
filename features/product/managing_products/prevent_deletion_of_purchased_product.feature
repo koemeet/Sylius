@@ -1,4 +1,4 @@
-@product
+@managing_products
 Feature: Prevent deletion of purchased product
     In order to maintain proper order history
     As an Administrator
@@ -9,11 +9,12 @@ Feature: Prevent deletion of purchased product
         And the store ships everywhere for free
         And the store allows paying with "Cash on Delivery"
         And the store has a product "Toyota GT86 model"
-        And the customer "john.doe@gmail.com" placed an order "#00000027"
+        And there is a customer "john.doe@gmail.com" that placed an order "#00000027"
         And the customer chose "Free" shipping method to "France" with "Cash on Delivery" payment
-        And the customer bought single "Toyota GT86 model"
+        And the customer bought a single "Toyota GT86 model"
+        And I am logged in as an administrator
 
-    @domain
+    @domain @ui
     Scenario: Purchased product cannot be deleted
         When I try to delete the "Toyota GT86 model" product
         Then I should be notified that this product is in use and cannot be deleted

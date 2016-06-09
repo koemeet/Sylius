@@ -5,12 +5,27 @@ sylius:
     menu:
         admin:
             main:
+                catalog:
+                    attributes: Nitelikler
+                    options: Ayarlar
+                    products: Ürünler
+                    taxons: Kategoriler
                 configuration:
+                    channels: Kanallar
                     countries: Ülkeler
+                    currencies: Para birimi
                     header: Ayarlar
                     locales: Diller
+                    payment_methods: Ödeme Yöntemleri
                     shipping_methods: Gönderim metodları
                     tax_rates: Vergi oranları
+                    zones: Bölgeler
                 marketing:
                     header: Pazarlama
                     promotions: Promosyonlar
+                customers:
+                    customers: Müşteriler
+                    header: Müşteri
+                sales:
+                    header: Satışlar
+                    orders: Siparişler

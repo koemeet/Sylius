@@ -21,7 +21,7 @@ sylius:
             payment_method: วิธีการชำระเงิน
             shipping_method: วิธีการจัดส่ง
         promotion:
-            channels: ช่อง
+            channels: ช่องทางการจัดจำหน่าย
         coupon:
             per_customer_usage_limit: จำกัดการใช้งานสำหรับลูกค้าแต่ละคน
         group:
@@ -62,7 +62,7 @@ sylius:
             main_taxon: หมวดหมู่หลัก
         product_filter:
             name: ชื่อ
-            sku: SKU
+            code: รหัส
         product_variant:
             tax_category: ประเภทภาษี
         settings:
@@ -133,10 +133,12 @@ sylius:
             name: ชื่อ
         promotion_rule:
             contains_taxon:
+                taxon: หมวดหมู่
                 count: จำนวน
             taxon:
                 taxons: หมวดหมู่
             total_of_items_from_taxon:
+                taxon: หมวดหมู่
                 amount: ยอดรวม
     email:
         order_confirmation:
@@ -147,3 +149,5 @@ sylius:
             name: ยืนยันการจัดส่ง
         user_confirmation:
             name: ยืนยันการสั่งซื้อ
+        password_reset:
+            name: ตั้งรหัสผ่านใหม่

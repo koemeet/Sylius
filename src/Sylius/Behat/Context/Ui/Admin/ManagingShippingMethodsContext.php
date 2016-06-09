@@ -15,7 +15,7 @@ use Behat\Behat\Context\Context;
 use Sylius\Behat\Page\Admin\Crud\IndexPageInterface;
 use Sylius\Behat\Page\Admin\ShippingMethod\CreatePageInterface;
 use Sylius\Behat\Page\Admin\ShippingMethod\UpdatePageInterface;
-use Sylius\Behat\Service\CurrentPageResolverInterface;
+use Sylius\Behat\Service\Resolver\CurrentPageResolverInterface;
 use Sylius\Behat\Service\NotificationCheckerInterface;
 use Sylius\Behat\NotificationType;
 use Sylius\Component\Core\Model\ShippingMethodInterface;
@@ -28,8 +28,6 @@ use Webmozart\Assert\Assert;
  */
 final class ManagingShippingMethodsContext implements Context
 {
-    const RESOURCE_NAME = 'shipping_method';
-
     /**
      * @var SharedStorageInterface
      */
@@ -136,14 +134,6 @@ final class ManagingShippingMethodsContext implements Context
     }
 
     /**
-     * @Then I should be notified that it has been successfully created
-     */
-    public function iShouldBeNotifiedItHasBeenSuccessfullyCreated()
-    {
-        $this->notificationChecker->checkCreationNotification(self::RESOURCE_NAME);
-    }
-
-    /**
      * @When I choose :calculatorName calculator
      * @When I do not specify amount for :calculatorName calculator
      */
@@ -161,7 +151,7 @@ final class ManagingShippingMethodsContext implements Context
         $this->iWantToBrowseShippingMethods();
 
         Assert::true(
-            $this->indexPage->isResourceOnPage(['name' => $shipmentMethodName]),
+            $this->indexPage->isSingleResourceOnPage(['name' => $shipmentMethodName]),
             sprintf('The shipping method with name %s has not been found.', $shipmentMethodName)
         );
     }
@@ -193,8 +183,8 @@ final class ManagingShippingMethodsContext implements Context
         $this->iWantToBrowseShippingMethods();
 
         Assert::true(
-            $this->indexPage->isResourceOnPage([$element => $code]),
-            sprintf('Shipping method with %s %s cannot be founded.', $element, $code)
+            $this->indexPage->isSingleResourceOnPage([$element => $code]),
+            sprintf('Shipping method with %s %s cannot be found.', $element, $code)
         );
     }
 
@@ -227,7 +217,7 @@ final class ManagingShippingMethodsContext implements Context
         $this->iWantToBrowseShippingMethods();
 
         Assert::true(
-            $this->indexPage->isResourceOnPage(
+            $this->indexPage->isSingleResourceOnPage(
                 [
                     'code' => $shippingMethod->getCode(),
                     'name' => $shippingMethodName,
@@ -247,14 +237,6 @@ final class ManagingShippingMethodsContext implements Context
     }
 
     /**
-     * @Then I should be notified about successful edition
-     */
-    public function iShouldBeNotifiedAboutSuccessfulEdition()
-    {
-        $this->notificationChecker->checkEditionNotification(self::RESOURCE_NAME);
-    }
-
-    /**
      * @Then I should be notified that :element is required
      */
     public function iShouldBeNotifiedThatIsRequired($element)
@@ -270,7 +252,7 @@ final class ManagingShippingMethodsContext implements Context
         $this->iWantToBrowseShippingMethods();
 
         Assert::false(
-            $this->indexPage->isResourceOnPage([$element => $name]),
+            $this->indexPage->isSingleResourceOnPage([$element => $name]),
             sprintf('Shipping method with %s %s was created, but it should not.', $element, $name)
         );
     }
@@ -383,17 +365,9 @@ final class ManagingShippingMethodsContext implements Context
     public function thisShippingMethodShouldNoLongerExistInTheRegistry(ShippingMethodInterface $shippingMethod)
     {
         Assert::false(
-            $this->indexPage->isResourceOnPage(['code' => $shippingMethod->getCode()]),
+            $this->indexPage->isSingleResourceOnPage(['code' => $shippingMethod->getCode()]),
             sprintf('Shipping method with code %s exists but should not.', $shippingMethod->getCode())
         );
-    }
-
-    /**
-     * @Then I should be notified that it has been successfully deleted
-     */
-    public function iShouldBeNotifiedAboutSuccessfulDeletion()
-    {
-        $this->notificationChecker->checkDeletionNotification(self::RESOURCE_NAME);
     }
 
     /**
@@ -410,7 +384,7 @@ final class ManagingShippingMethodsContext implements Context
      */
     private function assertFieldValidationMessage($element, $expectedMessage)
     {
-        $currentPage = $this->currentPageResolver->getCurrentPageWithForm($this->createPage, $this->updatePage);
+        $currentPage = $this->currentPageResolver->getCurrentPageWithForm([$this->createPage, $this->updatePage]);
 
         Assert::true(
             $currentPage->checkValidationMessageFor($element, $expectedMessage),
@@ -427,7 +401,7 @@ final class ManagingShippingMethodsContext implements Context
         $this->iWantToBrowseShippingMethods();
 
         Assert::true(
-            $this->indexPage->isResourceOnPage(
+            $this->indexPage->isSingleResourceOnPage(
                 [
                     'name' => $shippingMethod->getName(),
                     'enabled' => $state,

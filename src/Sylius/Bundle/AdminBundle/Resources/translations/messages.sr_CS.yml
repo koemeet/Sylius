@@ -5,9 +5,15 @@ sylius:
     menu:
         admin:
             main:
+                catalog:
+                    products: Poroizvodi
                 configuration:
                     countries: Zemlje
+                    payment_methods: Opcije plaćanja
                     shipping_methods: Načini dostave
                     tax_rates: Poreske stope
+                    zones: Zone
                 marketing:
                     promotions: Promocije
+                sales:
+                    orders: Narudžbine

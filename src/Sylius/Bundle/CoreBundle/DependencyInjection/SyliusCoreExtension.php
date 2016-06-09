@@ -22,8 +22,6 @@ use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Core extension.
- *
  * @author Paweł Jędrzejewski <pawel@sylius.org>
  * @author Gonzalo Vilaseca <gvilaseca@reiss.co.uk>
  */
@@ -65,7 +63,7 @@ class SyliusCoreExtension extends AbstractResourceExtension implements PrependEx
      */
     public function load(array $config, ContainerBuilder $container)
     {
-        $config = $this->processConfiguration(new Configuration(), $config);
+        $config = $this->processConfiguration($this->getConfiguration($config, $container), $config);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
         $this->registerResources('sylius', $config['driver'], $config['resources'], $container);
@@ -73,6 +71,7 @@ class SyliusCoreExtension extends AbstractResourceExtension implements PrependEx
         $configFiles = [
             'services.xml',
             'controller.xml',
+            'context.xml',
             'form.xml',
             'api_form.xml',
             'templating.xml',
@@ -82,6 +81,7 @@ class SyliusCoreExtension extends AbstractResourceExtension implements PrependEx
             'email.xml',
             'metadata.xml',
             'sitemap.xml',
+            'dashboard.xml',
         ];
 
         $env = $container->getParameter('kernel.environment');
@@ -139,7 +139,7 @@ class SyliusCoreExtension extends AbstractResourceExtension implements PrependEx
     }
 
     /**
-     * @param array            $config
+     * @param array $config
      * @param ContainerBuilder $container
      */
     protected function loadCheckoutConfiguration(array $config, ContainerBuilder $container)
@@ -148,7 +148,6 @@ class SyliusCoreExtension extends AbstractResourceExtension implements PrependEx
             $container->setParameter(sprintf('sylius.checkout.step.%s.template', $name), $step['template']);
         }
     }
-
 
     /**
      * @param ContainerBuilder $container

@@ -11,8 +11,13 @@ sylius:
             placed_at: 'Hecho el %at%'
             shipment:
                 ready: 'Preparado desde %at%'
-                returned: 'Devuelto %at%'
-                shipped: 'Enviado %at%'
+                returned: 'Devuelto el %at%'
+                shipped: 'Enviado el %at%'
+                checkout: 'Extraído de %at%'
+                pending: 'Pendiente %at%'
+                onhold: 'En espera desde %at%'
+                backordered: 'Pendientes desde %at%'
+                cancelled: '%at% cancelado'
         title: Mi cuenta
     archetype:
         build: Construir prototipo
@@ -33,7 +38,7 @@ sylius:
         empty: El carrito está vacío
         summary:
             clear: Vaciar carrito
-            quantity: Cantidad
+            quantity: Cant.
         total_items: Total de articulos
     checkout:
         finalize:
@@ -47,7 +52,7 @@ sylius:
                 quantity: Cantidad
         forward: Siguiente
         security:
-            proceed_order: Proceder con su orden
+            proceed_order: Realizar pedido
         shipping:
             error: Lo sentimos, pero nuestra tienda no puede enviar productos al país que ha elegido
     confirmation:
@@ -86,13 +91,30 @@ sylius:
         no_shipping_charges: Sin cargos de envío aplicados
         no_taxes: Sin impuestos
         state:
-            order_confimed: Pedido confirmado
+            order_confirmed: Pedido confirmado
     order_item:
         quantity: Cantidad
         sellable: Producto
     page:
         no_route: Su contenido no aparecerá en la interfaz si no se ha definido ninguna ruta
         publishable: Publicado
+    payment:
+        state:
+            checkout: Completar pedido
+            completed: Completado
+            authorized: Autorizado
+            failed: Fallido
+            new: Nuevo
+            pending: Pendiente
+            processing: Procesando
+            unknown: Desconocido
+            void: Vacío
+            cancelled: Cancelado/a
+            refunded: Reembolsado
+        transition:
+            cancel: cancelar
+            complete: completar
+            refund: reembolsar
     pricing:
         volume_based:
             max: Volumen máximo
@@ -100,6 +122,7 @@ sylius:
     promotion_coupon:
         generate: Generar cupones
         index: Listar cupones
+        total_results: 'Total: %total%'
     report:
         data_fetcher: Tipo de obtención de datos
         no_data: No hay datos para mostrar
@@ -114,6 +137,23 @@ sylius:
             no_account: Sin cuenta todavía
     shipment:
         no_items: No hay elementos para mostrar
+        state:
+            ready: Listo
+            returned: Devuelto
+            shipped: Enviado
+            checkout: Completado
+            pending: Pendiente
+            onhold: En espera
+            backordered: Pendientes de entrega
+            cancelled: Cancelado/a
+            partially_shipped: Enviado parcialmente
+        transition:
+            backorder: en espera
+            cancel: cancelar
+            prepare: preparar
+            release: lanzamiento
+            return: devolver
+            ship: enviar
         update: Editar
     stockable:
         on_hand: Nivel de existencias
@@ -177,12 +217,10 @@ sylius:
         building_product_from_archetype: Construir producto de prototipo
         calculator: Calculadora
         cancel: Cancelar
-        cancelled: Cancelado/a
         cart_locked: Carrito bloqueado
+        cart_summary: Resumen del carrito
         categorization: Categorización
         category: Categoria
-        change_password: Cambiar mi contraseña
-        change_your_password: Cambiar mi contraseña
         channel: Canal
         channels: Canales
         checkout: Completar pedido
@@ -206,7 +244,6 @@ sylius:
         country: País
         country_details: Detalles del país
         coupon: Cupón
-        coupon_based: Basado en cupones
         coupons: sylius.breadcrumb.promotion_coupon.index
         create: Crear
         create_a_new_address: sylius.account.address.create
@@ -272,7 +309,7 @@ sylius:
         customer_not_notified: Cliente no notificado
         customer_notified: Cliente notificado
         customer_orders: Pedidos del cliente
-        customer_since: Usted es cliente desde
+        customer_since: Cliente desde
         customers: Clientes
         customers_list_of_all_customers_in_store: 'Clientes <small>Lista de todos los clientes en la tienda</small>'
         customize_default_metadata: Personalizar metadatos predeterminados
@@ -291,6 +328,7 @@ sylius:
         description: Descripción
         details: Detalles
         disable: Desactivar
+        discounted_unit_price: Precio unitario con descuento
         edit: Editar
         edit_association_type: Editar tipo de asociación
         edit_group: Editar grupo
@@ -343,8 +381,8 @@ sylius:
         end_date: Fecha fin
         ends_at: Fecha de fin
         enjoy_all_the_features_that_are_available_on_your_personal_space_to_view_track_and_manage_all_your_data: Disfrute de todas las características disponibles en su espacio personal para examinar, controlar y gestionar todos sus datos
+        error: Error
         exchange_rate: Tasa o tipo de cambio
-        exclusive: Exclusivo
         existing_customer: Cliente existente
         expires_at: Caduca en
         failed: Fallido
@@ -366,6 +404,7 @@ sylius:
         guest: Invitado
         hello_name: 'Hola <b>%name%</b>'
         hide_deleted: Ocultar eliminados
+        hostname: Nombre del host
         id: ID
         identifier: Identificador
         images: Imágenes
@@ -432,6 +471,7 @@ sylius:
         modified: Fecha de modificacion
         move_down: Bajar
         move_up: Subir
+        n_a: N/D
         name: Nombre
         new: Nuevo
         new_archetype: Nuevo prototipo
@@ -440,7 +480,7 @@ sylius:
         new_contact_topic: Nuevo tema de contacto
         new_country: Nuevo país
         new_currency: Nueva moneda
-        new_customer: Nuevo Cliente
+        new_customer: Nuevo cliente
         new_order: Nuevo pedido
         new_password: Nueva contraseña
         new_payment: Nuevo pago
@@ -462,6 +502,7 @@ sylius:
         new_zone: Nueva zona
         newest_products: Novedades
         next: Siguiente
+        "no": 'No'
         no_account: Sin cuenta todavía
         no_association_types_to_display: No hay tipos de asociación definidos
         no_comment: No hay comentarios
@@ -542,6 +583,7 @@ sylius:
         provinces: Provincias
         qty_max: Cantidad Maxima
         qty_min: Cantidad minima
+        quantity: Cantidad
         rating: Valoración
         recent_customers: Clientes recientes
         recent_orders: Pedidos recientes
@@ -564,11 +606,10 @@ sylius:
         restricted_zone: Zona restringida
         retail_price: Precio
         return: Devolver
-        returned: Devuelto
         revert: Revertir
         review_details: Detalles de reseña
         reviews: Reseñas
-        roles: Roles
+        roles: Perfiles
         routes: Rutas
         rules: Reglas
         sales: Ventas
@@ -586,7 +627,6 @@ sylius:
         shipment_mode: Modo de envío
         shipment_state: Estado del envio
         shipments: Envios
-        shipped: Enviado
         shipping_address: Dirección de envio
         shipping_categories: Categorías de envío
         shipping_category: Categoría de envío
@@ -615,6 +655,7 @@ sylius:
         subject: Asunto
         success: Exito
         support: Soporte
+        sylius_logo: Sylius
         tax_categories: Categorías de impuestos
         tax_category: Categoría de impuestos
         tax_rate_details: Mostrar
@@ -625,6 +666,7 @@ sylius:
         taxes: Impuestos
         taxons: Taxonomías
         thank_you_for_your_order: Gracias por su pedido
+        theme: Tema
         there_are_no_archetypes_defined: No hay prototipos definidos
         there_are_no_attributes_configured: No hay atributos configurados
         there_are_no_blocks_to_display: No hay bloques para mostrar
@@ -672,11 +714,13 @@ sylius:
         this_product_has_no_attributes_defined: Este producto no tiene atributos definidos
         title: Título
         topic: Asunto
+        total: Total
         total_orders: Pedidos
         total_qty: Cant total
         total_registrations: Usuarios
         tracking_code: Código de seguimiento
         tracking_number: Número de seguimiento
+        translations: Traducciones
         type: Tipo
         unavailable: No disponible
         unit_price: Precio unitario
@@ -693,6 +737,7 @@ sylius:
         users_list_of_all_users_registered_in_store: Lista de todos los usuarios registrados en la tienda
         values: Valores
         variant_selection_method: étodo de selección de la variante
+        variant: Variantes
         variants: Variantes
         view: Ver
         view_more: Ver más
@@ -703,6 +748,7 @@ sylius:
         welcome: Bienvenido/a
         welcome_to_our_store: Bienvenido a nuestra tienda
         welcome_to_your_space: Bienvenido a tu espacio
+        "yes": Sí
         you_are_customer_since: Eres cliente desde
         you_have_no_addresses_defined: No tiene ninguna dirección definida
         you_have_no_new_orders: No tiene pedidos nuevos

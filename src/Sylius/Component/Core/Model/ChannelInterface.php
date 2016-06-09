@@ -29,7 +29,7 @@ use Sylius\Component\Taxonomy\Model\TaxonsAwareInterface;
  *   - Shipping methods;
  *   - Taxons.
  *
- * @author Paweł Jędrzejewski <pjedrzejewski@diweb.pl>
+ * @author Paweł Jędrzejewski <pawel@sylius.org>
  */
 interface ChannelInterface extends
     BaseChannelInterface,
@@ -40,14 +40,14 @@ interface ChannelInterface extends
     TaxonsAwareInterface
 {
     /**
-     * @return ThemeInterface
+     * @return string
      */
-    public function getTheme();
+    public function getThemeName();
 
     /**
-     * @param ThemeInterface|null $theme
+     * @param string $themeName
      */
-    public function setTheme(ThemeInterface $theme = null);
+    public function setThemeName($themeName);
 
     /**
      * @param LocaleInterface $locale

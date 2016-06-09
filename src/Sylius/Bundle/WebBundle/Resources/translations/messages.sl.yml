@@ -85,14 +85,25 @@ sylius:
         no_shipments: Za to naročilo ni na voljo nobenih pošiljk
         no_shipping_charges: Stroški pošiljanja niso uporabljeni
         no_taxes: Davki niso uporabljeni
-        state:
-            order_confimed: Naročilo potrjeno
     order_item:
         quantity: Količina
         sellable: Izdelek
     page:
         no_route: Vaša vsebina ne bo prikazana v ospredju, če ni definirane nobene poti
         publishable: Objavljeno
+    payment:
+        state:
+            checkout: Plačilo
+            completed: Zaključeno
+            authorized: Pooblaščeno
+            failed: Ni uspelo
+            new: Novo
+            pending: Na čakanju
+            processing: V teku
+            unknown: Ni znano
+            void: Nično
+            cancelled: Preklicano
+            refunded: Povrnjena kupnina
     pricing:
         volume_based:
             max: Največja prostornina
@@ -111,6 +122,13 @@ sylius:
             no_account: Nimate še računa
     shipment:
         no_items: Ni elementov za prikaz
+        state:
+            ready: Pripravljen
+            returned: Vrnjeno
+            shipped: Poslano
+            pending: Na čakanju
+            onhold: Na čakanju
+            cancelled: Preklicano
         update: Urejanje
     stockable:
         on_hand: Raven zalog
@@ -173,12 +191,9 @@ sylius:
         building_product_from_archetype: Gradnja izdelka iz prototipa
         calculator: Kalkulator
         cancel: Prekliči
-        cancelled: Preklicano
         cart_locked: Košarica zaklenjena
         categorization: Kategorizacija
         category: Kategorija
-        change_password: Spremenite vaše geslo
-        change_your_password: Spremenite vaše geslo
         channel: Kanal
         channels: Kanali
         checkout: Plačilo
@@ -202,7 +217,6 @@ sylius:
         country: Država
         country_details: Podrobnosti države
         coupon: Kupon
-        coupon_based: Kupon, ki temelji
         coupons: Kuponi
         create: Ustvarite
         create_a_new_address: Ustvarite nov naslov
@@ -268,7 +282,6 @@ sylius:
         customer_not_notified: Kupec ni obveščen
         customer_notified: Kupec je obveščen
         customer_orders: Naročila kupca
-        customer_since: Kupec ste od
         customers: Kupci
         customers_list_of_all_customers_in_store: 'Kupci <small>Seznam vseh kupcev v trgovini</small>'
         customize_default_metadata: Prilagodite privzete metapodatke
@@ -340,7 +353,6 @@ sylius:
         enjoy_all_the_features_that_are_available_on_your_personal_space_to_view_track_and_manage_all_your_data: Uživajte vse lastnosti vašega osebnega prostora, ki so na voljo za ogled, sledenje in upravljanje vseh vaših podatkov
         error: Napaka
         exchange_rate: Menjalni tečaj
-        exclusive: Izključno
         existing_customer: Obstoječa stranka
         expires_at: Poteče dne
         failed: Ni uspelo
@@ -432,7 +444,6 @@ sylius:
         new_contact_topic: Nova tema stika
         new_country: Nova država
         new_currency: Nova valuta
-        new_customer: Nov uporabnik
         new_order: Novo naročilo
         new_password: Novo geslo
         new_payment: Novo plačilo
@@ -531,6 +542,7 @@ sylius:
         provinces: Province
         qty_max: Največja količina
         qty_min: Najmanjša količina
+        quantity: Količina
         recent_customers: Nedavni kupci
         recent_orders: Nedavna naročila
         recent_users: Nedavni uporabniki
@@ -552,7 +564,6 @@ sylius:
         restricted_zone: Območje z omejitvami
         retail_price: Maloprodajna cena
         return: Vračilo
-        returned: Vrnjeno
         revert: Povrni
         roles: Vloge
         routes: Poti
@@ -572,7 +583,6 @@ sylius:
         shipment_mode: Način dobave
         shipment_state: Stanje pošiljanja
         shipments: Pošiljke
-        shipped: Poslano
         shipping_address: Naslov za dostavo
         shipping_categories: Kategorije dostave
         shipping_category: Kategorija dostave
@@ -663,6 +673,7 @@ sylius:
         total_registrations: Skupaj registracij
         tracking_code: Koda za sledenje
         tracking_number: Številka sledenja
+        translations: Prevodi
         type: Vrsta
         unavailable: Ni na voljo
         unit_price: Cena za enoto
@@ -679,6 +690,7 @@ sylius:
         users_list_of_all_users_registered_in_store: 'Uporabniki <small>Seznam vseh registriranih uporabnikov v trgovini</small>'
         values: Vrednosti
         variant_selection_method: Način izbora variante
+        variant: Variante
         variants: Variante
         view: Pogled
         view_more: Poglejte si več

@@ -67,7 +67,9 @@ sylius:
     meta:
         frontend_title: Sylius, современное решение электронной коммерции для Symfony2
     order:
+        guest: Гость
         no_items: Заказ не содержит товаров
+        no_promotion: Ни одного купона не было использовано
         no_shipments: Для данного заказа нет отправлений
         no_shipping_charges: Нет затрат на доставку
         no_taxes: Налогами не облагается
@@ -75,7 +77,23 @@ sylius:
         quantity: Кол-во
         sellable: Товар
     page:
+        no_route: Содержимое не будет отображено в интерфейсе, если для него не определен маршрут
         publishable: Опубликовано
+    payment:
+        state:
+            checkout: Сверка
+            completed: Завершен
+            authorized: Авторизовано
+            failed: Провален
+            new: Новый
+            pending: Ожидает
+            processing: Обрабатывается
+            unknown: Неизвестен
+            void: Пустой
+            cancelled: Отменён
+            refunded: Возвращено
+        transition:
+            refund: Возврат
     pricing:
         volume_based:
             max: Макс. часть
@@ -84,6 +102,14 @@ sylius:
         generate: Генерировать купоны
         index: Список купонов
     shipment:
+        state:
+            ready: Готов
+            returned: Возвращено
+            shipped: Доставлено
+            pending: Ожидает
+            cancelled: Отменён
+        transition:
+            ship: отправить
         update: Редактировать
     taxon:
         image: Выбрать изображение
@@ -134,11 +160,8 @@ sylius:
         building_product_from_archetype: Построить продукт из архетипа
         calculator: Калькулятор
         cancel: Отмена
-        cancelled: Отменён
         categorization: Каталоги
         category: sylius.tax_rate.category
-        change_password: Change my password
-        change_your_password: Change my password
         channel: Канал
         channels: Каналы
         checkout: Сверка
@@ -160,7 +183,6 @@ sylius:
         country: Страна
         country_details: Информация о стране
         coupon: Купон
-        coupon_based: Основана на купонах
         coupons: sylius.breadcrumb.promotion_coupon.index
         create: Добавить
         create_a_new_address: sylius.account.address.create
@@ -174,6 +196,7 @@ sylius:
         create_group: Создать группу
         create_imagine_block: Создать блок-изображение
         create_locale: Добавить язык
+        create_menu_node: Создание пункта меню
         create_new_coupon: Создать новый купон
         create_new_page: Создать новую страницу
         create_order: Заказать
@@ -257,7 +280,6 @@ sylius:
         enjoy_all_the_features_that_are_available_on_your_personal_space_to_view_track_and_manage_all_your_data: Воспользуйтесь всеми возможными преимуществами для просмотра, отслеживания и управления своих данных
         error: Ошибка
         exchange_rate: Обменный курс
-        exclusive: Эксклюзив
         existing_customer: Существующий клиент
         expires_at: Истекает
         failed: Провален
@@ -271,6 +293,7 @@ sylius:
         generate: Сгенерировать
         generate_variants: Генерировать варианты
         generating_coupons: Генерирование купонов
+        go_to_dashboard: Перейти в панель управления
         grand_total: Всего в корзине
         groups: Группы
         guest: Гость
@@ -300,8 +323,10 @@ sylius:
         locales: Языки
         login: Войти
         login_button: Вход
+        login_sylius_store: 'Вход в <small>магазин Sylius</small>'
         logout: Выход
         main_taxon: Основной таксон
+        male: Мужской
         manage: Управление
         manage_channels: Управление каналами
         manage_countries: Управление странами
@@ -334,7 +359,6 @@ sylius:
         new_contact_topic: Новая тема контакта
         new_country: Добавить страну
         new_currency: Новая валюта
-        new_customer: Новый клиент
         new_order: Новый заказ
         new_password: Новый пароль
         new_payment: Новый платеж
@@ -409,6 +433,7 @@ sylius:
         promotions: Список рекламных акций
         province: Регион
         provinces: Области
+        quantity: Количество
         recent_customers: Последние клиенты
         recent_orders: Недавние заказы
         recent_users: Последние пользователи
@@ -423,7 +448,6 @@ sylius:
         restricted_zone: Зона ограничений
         retail_price: Розничная цена
         return: Возврат
-        returned: Возвращено
         roles: Роли
         routes: Маршруты
         rules: Правила
@@ -442,7 +466,6 @@ sylius:
         shipment_mode: Способ доставки
         shipment_state: Статус доставки
         shipments: Посылки
-        shipped: Доставлено
         shipping_address: Адрес доставки
         shipping_categories: Список категорий доставки
         shipping_category: Категория доставки
@@ -496,6 +519,7 @@ sylius:
         total_registrations: Регистраций в этом месяце
         tracking_code: Код для отслеживания
         tracking_number: Номер для отслеживания
+        translations: ﻿Переводы
         type: Тип
         unavailable: Недоступен
         unit_price: Цена

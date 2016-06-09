@@ -44,8 +44,11 @@ class OrderShipmentTaxesApplicator implements OrderTaxesApplicatorInterface
      * @param AdjustmentFactoryInterface $adjustmentFactory
      * @param TaxRateResolverInterface $taxRateResolver
      */
-    public function __construct(CalculatorInterface $calculator, AdjustmentFactoryInterface $adjustmentFactory, TaxRateResolverInterface $taxRateResolver)
-    {
+    public function __construct(
+        CalculatorInterface $calculator,
+        AdjustmentFactoryInterface $adjustmentFactory,
+        TaxRateResolverInterface $taxRateResolver
+    ) {
         $this->calculator = $calculator;
         $this->adjustmentFactory = $adjustmentFactory;
         $this->taxRateResolver = $taxRateResolver;
@@ -71,8 +74,9 @@ class OrderShipmentTaxesApplicator implements OrderTaxesApplicatorInterface
             return;
         }
 
-        $lastShippingAdjustment = $shippingAdjustments->last();
-        $taxAmount = $this->calculator->calculate($lastShippingAdjustment->getAmount(), $taxRate);
+        $shippingPrice = $order->getShippingTotal();
+
+        $taxAmount = $this->calculator->calculate($shippingPrice, $taxRate);
         if (0 === $taxAmount) {
             return;
         }

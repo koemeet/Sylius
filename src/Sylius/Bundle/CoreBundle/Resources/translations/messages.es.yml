@@ -21,7 +21,7 @@ sylius:
             payment_method: Método de pago
             shipping_method: Método de envío
         promotion:
-            channels: Canal
+            channels: Canales
         coupon:
             per_customer_usage_limit: Límite de uso por cliente
         group:
@@ -35,6 +35,8 @@ sylius:
             currencies: Monedas
             shipping_methods: Métodos de envío
             payment_methods: Métodos de pago
+            theme: Tema
+            hostname: Nombre del host
         image:
             file: Imagen
         locale:
@@ -60,7 +62,7 @@ sylius:
             main_taxon: Clasificación principal
         product_filter:
             name: Nombre
-            sku: SKU
+            code: Código
         product_variant:
             tax_category: Categoría de impuestos
         settings:
@@ -74,6 +76,7 @@ sylius:
                     Tracking code (for example: Código de Google Analytics
             taxation:
                 default_tax_zone: Zona fiscal por defecto
+                default_tax_calculation_strategy: Estrategia de cálculo de impuesto por defecto
             security:
                 enabled: ¿Activar?
         shipment_filter:
@@ -130,10 +133,12 @@ sylius:
             name: Nombre
         promotion_rule:
             contains_taxon:
+                taxon: Taxón
                 count: Contador
             taxon:
                 taxons: Taxonomías
             total_of_items_from_taxon:
+                taxon: Taxón
                 amount: Cantidad
     email:
         order_confirmation:
@@ -144,3 +149,5 @@ sylius:
             name: Confirmación del envío
         user_confirmation:
             name: Confirmación de usuario
+        password_reset:
+            name: Restablecer contraseña

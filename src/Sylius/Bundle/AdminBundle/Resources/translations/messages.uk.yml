@@ -5,13 +5,26 @@ sylius:
     menu:
         admin:
             main:
+                catalog:
+                    options: Опції
+                    products: Продукти
+                    taxons: Таксони
                 configuration:
+                    channels: Канали
                     countries: Країни
                     header: Конфігурація
                     locales: Локалі
+                    payment_methods: Варіанти оплати
                     shipping_methods: Методи доставки
                     tax_categories: Категорії оподаткування
                     tax_rates: Податкові ставки
+                    zones: Пояси
                 marketing:
                     header: Маркетинг
                     promotions: Промо-акції
+                customers:
+                    customers: Клієнти
+                    header: Клієнт
+                sales:
+                    header: Продажі
+                    orders: Замовлення

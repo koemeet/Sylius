@@ -1,6 +1,7 @@
 {% extends 'SyliusAdminBundle::layout.html.twig' %}
 
 {% import 'SyliusUiBundle:Macro:headers.html.twig' as headers %}
+{% import 'SyliusUiBundle:Macro:buttons.html.twig' as buttons %}
 
 {% set header = configuration.vars.header|default(metadata.applicationName~'.ui.edit_'~metadata.name) %}
 
@@ -11,7 +12,9 @@
 {% block content %}
 {{ headers.default(header|trans, configuration.vars.icon|default('pencil'), configuration.vars.subheader|default(null)|trans) }}
 
-{{ form_start(form, {'action': path(configuration.getRouteName('update'), {'id': resource.id}), 'attr': {'class': 'ui form', 'novalidate': 'novalidate'}}) }}
+{% include configuration.vars.templates.breadcrumb|default('SyliusAdminBundle:Crud/Breadcrumb:_update.html.twig') %}
+
+{{ form_start(form, {'action': path(configuration.getRouteName('update'), configuration.vars.route.parameters|default({ 'id': resource.id })), 'attr': {'class': 'ui form', 'novalidate': 'novalidate'}}) }}
     <div class="ui segment">
         <input type="hidden" name="_method" value="PUT" />
         {% if configuration.vars.templates.form is defined %}
@@ -19,7 +22,7 @@
         {% else %}
             {{ form_widget(form) }}
         {% endif %}
-        {% include 'SyliusUiBundle:Form:_saveChanges.html.twig' with {'cancel_path': path(configuration.getRouteName('index'))} %}
+        {% include 'SyliusUiBundle:Form:_saveChanges.html.twig' with {'cancel_path': path(configuration.getRouteName('index'), configuration.vars.route.parameters|default({}))} %}
     </div>
 {{ form_row(form._token) }}
 {{ form_end(form, {'render_rest': false}) }}
