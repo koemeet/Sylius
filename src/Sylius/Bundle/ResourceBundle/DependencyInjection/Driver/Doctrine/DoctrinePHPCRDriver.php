@@ -61,7 +61,7 @@ class DoctrinePHPCRDriver extends AbstractDoctrineDriver
                 'name_filter' => true,
 
                 // automatically resolve same-name-sibling conflicts.
-                'name_resolver' => true,
+                'name_resolver' => false,
         ];
         $metadataOptions = $metadata->hasParameter('options') ? $metadata->getParameter('options') : [];
 
