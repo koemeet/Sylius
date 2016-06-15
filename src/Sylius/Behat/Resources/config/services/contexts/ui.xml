@@ -229,6 +229,7 @@
             <argument type="service" id="sylius.behat.page.shop.checkout.addressing_step" />
             <argument type="service" id="sylius.behat.page.shop.checkout.addressing" />
             <argument type="service" id="sylius.behat.page.shop.checkout.shipping_step" />
+            <argument type="service" id="sylius.behat.page.shop.checkout.shipping" />
             <argument type="service" id="sylius.behat.page.shop.checkout.payment_step" />
             <argument type="service" id="sylius.behat.page.shop.checkout.finalize_step" />
             <argument type="service" id="sylius.behat.page.shop.checkout.thank_you" />
@@ -292,8 +293,12 @@
         </service>
 
         <service id="sylius.behat.context.ui.shop.login" class="%sylius.behat.context.ui.shop.login.class%" scope="scenario">
-            <argument type="service" id="sylius.behat.page.shop.account.login" />
             <argument type="service" id="sylius.behat.page.shop.home" />
+            <argument type="service" id="sylius.behat.page.shop.account.login" />
+            <argument type="service" id="sylius.behat.page.shop.account.reset_password" />
+            <argument type="service" id="sylius.behat.current_page_resolver" />
+            <argument type="service" id="sylius.behat.email_checker" />
+            <argument type="service" id="sylius.behat.notification_checker" />
             <tag name="sylius.behat.context" />
         </service>
 
