@@ -15,6 +15,7 @@ use Sylius\Component\Addressing\Matcher\ZoneMatcherInterface;
 use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\ShipmentInterface;
+use Sylius\Component\Shipping\Checker\ShippingMethodEligibilityCheckerInterface;
 use Sylius\Component\Shipping\Model\ShippingSubjectInterface;
 use Sylius\Component\Shipping\Repository\ShippingMethodRepositoryInterface;
 use Sylius\Component\Shipping\Resolver\MethodsResolverInterface;
@@ -35,15 +36,23 @@ class ShippingMethodsByZonesAndChannelResolver implements MethodsResolverInterfa
     private $zoneMatcher;
 
     /**
+     * @var ShippingMethodEligibilityCheckerInterface
+     */
+    private $eligibilityChecker;
+
+    /**
      * @param ShippingMethodRepositoryInterface $shippingMethodRepository
      * @param ZoneMatcherInterface $zoneMatcher
+     * @param ShippingMethodEligibilityCheckerInterface $eligibilityChecker
      */
     public function __construct(
         ShippingMethodRepositoryInterface $shippingMethodRepository,
-        ZoneMatcherInterface $zoneMatcher
+        ZoneMatcherInterface $zoneMatcher,
+        ShippingMethodEligibilityCheckerInterface $eligibilityChecker
     ) {
         $this->shippingMethodRepository = $shippingMethodRepository;
         $this->zoneMatcher = $zoneMatcher;
+        $this->eligibilityChecker = $eligibilityChecker;
     }
 
     /**
@@ -61,9 +70,15 @@ class ShippingMethodsByZonesAndChannelResolver implements MethodsResolverInterfa
 
         $methods = [];
         foreach ($this->shippingMethodRepository->findBy(['enabled' => true, 'zone' => $zones]) as $method) {
-            if ($channel->hasShippingMethod($method)) {
-                $methods[] = $method;
+            if (!$this->eligibilityChecker->isEligible($subject, $method)) {
+                continue;
             }
+
+            if (!$channel->hasShippingMethod($method)) {
+                continue;
+            }
+
+            $methods[] = $method;
         }
 
         return $methods;
@@ -95,8 +110,7 @@ class ShippingMethodsByZonesAndChannelResolver implements MethodsResolverInterfa
     public function supports(ShippingSubjectInterface $subject)
     {
         return $subject instanceof ShipmentInterface &&
-            null !== $subject->getOrder() &&
-            null !== $subject->getOrder()->getShippingAddress()
-        ;
+        null !== $subject->getOrder() &&
+        null !== $subject->getOrder()->getShippingAddress();
     }
 }
