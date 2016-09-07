@@ -11,9 +11,10 @@
 
 namespace Sylius\Component\Core\Promotion\Action;
 
-use Sylius\Component\Core\Distributor\IntegerDistributorInterface;
+use Sylius\Component\Core\Distributor\ProportionalIntegerDistributorInterface;
+use Sylius\Component\Core\Model\OrderInterface;
+use Sylius\Component\Core\Model\OrderItemInterface;
 use Sylius\Component\Core\Promotion\Applicator\UnitsPromotionAdjustmentsApplicatorInterface;
-use Sylius\Component\Originator\Originator\OriginatorInterface;
 use Sylius\Component\Promotion\Model\PromotionInterface;
 use Sylius\Component\Promotion\Model\PromotionSubjectInterface;
 
@@ -27,7 +28,7 @@ class PercentageDiscountAction extends DiscountAction
     const TYPE = 'order_percentage_discount';
 
     /**
-     * @var IntegerDistributorInterface
+     * @var ProportionalIntegerDistributorInterface
      */
     private $distributor;
 
@@ -37,18 +38,13 @@ class PercentageDiscountAction extends DiscountAction
     private $unitsPromotionAdjustmentsApplicator;
 
     /**
-     * {@inheritdoc}
-     *
-     * @param IntegerDistributorInterface $distributor
+     * @param ProportionalIntegerDistributorInterface $distributor
      * @param UnitsPromotionAdjustmentsApplicatorInterface $unitsPromotionAdjustmentsApplicator
      */
     public function __construct(
-        OriginatorInterface $originator,
-        IntegerDistributorInterface $distributor,
+        ProportionalIntegerDistributorInterface $distributor,
         UnitsPromotionAdjustmentsApplicatorInterface $unitsPromotionAdjustmentsApplicator
     ) {
-        parent::__construct($originator);
-
         $this->distributor = $distributor;
         $this->unitsPromotionAdjustmentsApplicator = $unitsPromotionAdjustmentsApplicator;
     }
@@ -58,6 +54,7 @@ class PercentageDiscountAction extends DiscountAction
      */
     public function execute(PromotionSubjectInterface $subject, array $configuration, PromotionInterface $promotion)
     {
+        /** @var OrderInterface $subject */
         if (!$this->isSubjectValid($subject)) {
             return;
         }
@@ -69,7 +66,12 @@ class PercentageDiscountAction extends DiscountAction
             return;
         }
 
-        $splitPromotion = $this->distributor->distribute($promotionAmount, $subject->countItems());
+        $itemsTotal = [];
+        foreach ($subject->getItems() as $orderItem) {
+            $itemsTotal[] = $orderItem->getTotal();
+        }
+
+        $splitPromotion = $this->distributor->distribute($itemsTotal, $promotionAmount);
         $this->unitsPromotionAdjustmentsApplicator->apply($subject, $promotion, $splitPromotion);
     }
 

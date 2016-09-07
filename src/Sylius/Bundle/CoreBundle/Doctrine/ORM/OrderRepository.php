@@ -12,7 +12,7 @@
 namespace Sylius\Bundle\CoreBundle\Doctrine\ORM;
 
 use Doctrine\ORM\QueryBuilder;
-use Sylius\Bundle\CartBundle\Doctrine\ORM\CartRepository;
+use Sylius\Bundle\CoreBundle\Doctrine\ORM\CartRepository;
 use Sylius\Component\Core\Model\CouponInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
@@ -37,9 +37,27 @@ class OrderRepository extends CartRepository implements OrderRepositoryInterface
     /**
      * {@inheritdoc}
      */
+    public function createByCustomerQueryBuilder(CustomerInterface $customer)
+    {
+        $queryBuilder = $this->createQueryBuilder('o');
+
+        $queryBuilder
+            ->andWhere($queryBuilder->expr()->isNotNull('o.completedAt'))
+            ->innerJoin('o.customer', 'customer')
+            ->andWhere('customer = :customer')
+            ->setParameter('customer', $customer)
+        ;
+
+        return $queryBuilder;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function createPaginatorByCustomer(CustomerInterface $customer, array $sorting = [])
     {
-        $queryBuilder = $this->createQueryBuilderWithCustomer($customer, $sorting);
+        $queryBuilder = $this->createByCustomerQueryBuilder($customer);
+        $this->applySorting($queryBuilder, $sorting);
 
         return $this->getPaginator($queryBuilder);
     }
@@ -49,7 +67,8 @@ class OrderRepository extends CartRepository implements OrderRepositoryInterface
      */
     public function findByCustomer(CustomerInterface $customer, array $sorting = [])
     {
-        $queryBuilder = $this->createQueryBuilderWithCustomer($customer, $sorting);
+        $queryBuilder = $this->createByCustomerQueryBuilder($customer);
+        $this->applySorting($queryBuilder, $sorting);
 
         return $queryBuilder
             ->getQuery()
@@ -99,6 +118,23 @@ class OrderRepository extends CartRepository implements OrderRepositoryInterface
         ;
 
         return $queryBuilder
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findOneForPayment($id)
+    {
+        return $this->createQueryBuilder('o')
+            ->leftJoin('o.payments', 'payments')
+            ->leftJoin('payments.method', 'paymentMethods')
+            ->addSelect('payments')
+            ->addSelect('paymentMethods')
+            ->andWhere('o.id = :id')
+            ->setParameter('id', $id)
             ->getQuery()
             ->getOneOrNullResult()
         ;
@@ -238,17 +274,10 @@ class OrderRepository extends CartRepository implements OrderRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function countByCustomerAndPaymentState(CustomerInterface $customer, $state)
+    public function countByCustomer(CustomerInterface $customer)
     {
-        $queryBuilder = $this->createQueryBuilderWithCustomer($customer);
-
-        $queryBuilder
+       return (int) $this->createByCustomerQueryBuilder($customer)
             ->select('count(o.id)')
-            ->andWhere('o.paymentState = :state')
-            ->setParameter('state', $state)
-        ;
-
-        return (int) $queryBuilder
             ->getQuery()
             ->getSingleScalarResult()
         ;
@@ -288,7 +317,7 @@ class OrderRepository extends CartRepository implements OrderRepositoryInterface
     {
         $queryBuilder = $this->createQueryBuilderBetweenDates($from, $to, $state);
 
-        return (int) $queryBuilder
+        return (int)$queryBuilder
             ->select('sum(o.total)')
             ->getQuery()
             ->getSingleScalarResult()
@@ -298,76 +327,7 @@ class OrderRepository extends CartRepository implements OrderRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function revenueBetweenDatesGroupByDate(array $configuration = [])
-    {
-        $groupBy = '';
-        foreach ($configuration['groupBy'] as $groupByArray) {
-            $groupBy = $groupByArray.'(date)'.' '.$groupBy;
-        }
-        $groupBy = substr($groupBy, 0, -1);
-        $groupBy = str_replace(' ', ', ', $groupBy);
-
-        $queryBuilder = $this->getEntityManager()->getConnection()->createQueryBuilder();
-
-        $queryBuilder
-            ->select('DATE(o.completed_at) as date', 'COUNT(o.id) as "Number of orders"')
-            ->from($this->getClassMetadata($this->_entityName)->getTableName(), 'o')
-            ->where($queryBuilder->expr()->gte('o.completed_at', ':from'))
-            ->andWhere($queryBuilder->expr()->lte('o.completed_at', ':to'))
-            ->setParameter('from', $configuration['start']->format('Y-m-d H:i:s'))
-            ->setParameter('to', $configuration['end']->format('Y-m-d H:i:s'))
-            ->groupBy($groupBy)
-            ->orderBy($groupBy)
-        ;
-
-        $baseCurrencyCode = $configuration['baseCurrency'] ? 'in '.$configuration['baseCurrency']->getCode() : '';
-        $queryBuilder
-            ->select('DATE(o.completed_at) as date', 'TRUNCATE(SUM(o.total * o.exchange_rate)/ 100,2) as "total sum '.$baseCurrencyCode.'"')
-        ;
-
-        return $queryBuilder
-            ->execute()
-            ->fetchAll()
-        ;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function ordersBetweenDatesGroupByDate(array $configuration = [])
-    {
-        $groupBy = '';
-
-        foreach ($configuration['groupBy'] as $groupByElement) {
-            $groupBy = $groupByElement.'(date)'.' '.$groupBy;
-        }
-
-        $groupBy = substr($groupBy, 0, -1);
-        $groupBy = str_replace(' ', ', ', $groupBy);
-
-        $queryBuilder = $this->getEntityManager()->getConnection()->createQueryBuilder();
-
-        $queryBuilder
-            ->select('DATE(o.completed_at) as date', 'COUNT(o.id) as "Number of orders"')
-            ->from($this->getClassMetadata($this->_entityName)->getTableName(), 'o')
-            ->where($queryBuilder->expr()->gte('o.completed_at', ':from'))
-            ->andWhere($queryBuilder->expr()->lte('o.completed_at', ':to'))
-            ->setParameter('from', $configuration['start']->format('Y-m-d H:i:s'))
-            ->setParameter('to', $configuration['end']->format('Y-m-d H:i:s'))
-            ->groupBy($groupBy)
-            ->orderBy($groupBy)
-        ;
-
-        return $queryBuilder
-            ->execute()
-            ->fetchAll()
-        ;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function findExpired(\DateTime $expiresAt, $state = OrderInterface::STATE_PENDING)
+    public function findExpired(\DateTime $expiresAt, $state = OrderInterface::STATE_NEW)
     {
         $queryBuilder = $this->createQueryBuilder('o')
             ->leftJoin('o.items', 'item')
@@ -402,25 +362,19 @@ class OrderRepository extends CartRepository implements OrderRepositoryInterface
     }
 
     /**
-     * @param CustomerInterface $customer
-     * @param array $sorting
-     *
-     * @return QueryBuilder
+     * {@inheritdoc}
      */
-    private function createQueryBuilderWithCustomer(CustomerInterface $customer, array $sorting = [])
+    public function findOneByNumberAndCustomer($number, CustomerInterface $customer)
     {
-        $queryBuilder = $this->createQueryBuilder('o');
-
-        $queryBuilder
-            ->andWhere($queryBuilder->expr()->isNotNull('o.completedAt'))
-            ->innerJoin('o.customer', 'customer')
+        return $this->createQueryBuilder('o')
+            ->leftJoin('o.customer', 'customer')
             ->andWhere('customer = :customer')
+            ->andWhere('o.number = :number')
             ->setParameter('customer', $customer)
+            ->setParameter('number', $number)
+            ->getQuery()
+            ->getOneOrNullResult()
         ;
-
-        $this->applySorting($queryBuilder, $sorting);
-
-        return $queryBuilder;
     }
 
     /**

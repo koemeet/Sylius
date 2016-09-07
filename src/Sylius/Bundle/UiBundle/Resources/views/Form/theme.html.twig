@@ -21,8 +21,8 @@
 {% block checkbox_row -%}
     <div class="field{% if (not compound or force_error|default(false)) and not valid %} error{% endif %}">
         <div class="ui toggle checkbox">
-            {{- form_label(form) -}}
             {{- form_widget(form) -}}
+            {{- form_label(form) -}}
             {{- form_errors(form) -}}
         </div>
     </div>
@@ -40,7 +40,7 @@
 
 {% block money_widget -%}
     <div class="ui labeled input">
-        <div class="ui label">{{ sylius_currency_symbol() }}</div>
+        <div class="ui label">{{ currency|sylius_currency_symbol }}</div>
         {{- form_widget(form) -}}
     </div>
 {%- endblock money_widget %}
@@ -171,7 +171,7 @@
 
 {% block sylius_image_widget %}
     <div class="ui upload box segment">
-        {% if form.vars.value is null %}
+        {% if form.vars.value.path|default(null) is null %}
             <label for="{{ form.file.vars.id }}" class="ui icon labeled button"><i class="cloud upload icon"></i> {{ 'sylius.ui.choose_file'|trans }}</label>
         {% else %}
             <img class="ui small bordered image" src="{{ form.vars.value.path|imagine_filter('sylius_small') }}" alt="" />

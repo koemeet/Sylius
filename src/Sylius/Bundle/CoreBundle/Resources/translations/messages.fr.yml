@@ -35,6 +35,8 @@ sylius:
             currencies: Devises
             shipping_methods: Modes de livraison
             payment_methods: Moyens de paiement
+            tax_calculation_strategy: Stratégie de calcul des taxes
+            tax_zone_default: Zone de taxe par défaut
             theme: Thème
             hostname: "Nom d'hôte"
         image:
@@ -60,6 +62,8 @@ sylius:
             short_description: Brève description
             variant_selection_method: Méthode de sélection de variante
             main_taxon: Taxinomie principale
+            channels: Canaux
+            enabled: Activé
         product_filter:
             name: Nom
             code: Code
@@ -110,7 +114,6 @@ sylius:
         user_filter:
             query: Rechercher
         variant:
-            available_on_demand: Disponible sur demande
             depth: Profondeur
             height: Hauteur
             images: Images
@@ -148,6 +151,18 @@ sylius:
         shipment_confirmation:
             name: "Confirmation d'expédition"
         user_confirmation:
-            name: Utilisateur confirmé
+            name: "Confirmation d'utilisateur"
+            subject: Bienvenue dans notre boutique
+            content: 'Bienvenue sur notre boutique<br/><br/>Votre compte a bien été enregistré.<br/>Merci %username%.'
         password_reset:
             name: Réinitialiser le mot de passe
+            content: "<h3>Bonjour %username%</h3>Pour réinitialiser votre mot de passe - Merci de visiter %url%<br/><br/>Cordialement, l'équipe."
+        verification:
+            name: "Vérification de l'adresse e-mail"
+            content: 'Pour vérifier votre adresse email, visitez %url%'
+    payum_gateway:
+        cash_on_delivery: Paiement à réception
+        offline: Hors-ligne
+        paypal_express_checkout: Paiement via PayPal Express
+    shipping_method_resolver:
+        by_zones_and_channel: Par zones et canal

@@ -45,6 +45,7 @@ final class AddressingContext implements Context
 
     /**
      * @Transform /^to "([^"]+)"$/
+     * @Transform /^"([^"]+)" as shipping country$/
      */
     public function createNewAddress($countryName)
     {
@@ -55,6 +56,8 @@ final class AddressingContext implements Context
 
     /**
      * @Transform /^address as "([^"]+)", "([^"]+)", "([^"]+)", "([^"]+)" for "([^"]+)"$/
+     * @Transform /^address is "([^"]+)", "([^"]+)", "([^"]+)", "([^"]+)" for "([^"]+)"$/
+     * @Transform /^address "([^"]+)", "([^"]+)", "([^"]+)", "([^"]+)" for "([^"]+)"$/
      */
     public function createNewAddressWith($cityName, $street, $postcode, $countryName, $customerName)
     {
@@ -75,8 +78,20 @@ final class AddressingContext implements Context
     /**
      * @Transform /^"([^"]+)" addressed it to "([^"]+)", "([^"]+)" "([^"]+)" in the "([^"]+)"$/
      * @Transform /^of "([^"]+)" in the "([^"]+)", "([^"]+)" "([^"]+)", "([^"]+)"$/
+     * @Transform /^addressed it to "([^"]+)", "([^"]+)", "([^"]+)" "([^"]+)" in the "([^"]+)"$/
      */
     public function createNewAddressWithName($name, $street, $postcode, $city, $countryName)
+    {
+        $countryCode = $this->countryNameConverter->convertToCode($countryName);
+        $names = explode(" ", $name);
+
+        return $this->createAddress($countryCode, $names[0], $names[1], $city, $street, $postcode);
+    }
+
+    /**
+     * @Transform /^"([^"]+)" addressed it to "([^"]+)", "([^"]+)" "([^"]+)" in the "([^"]+)"$/
+     */
+    public function createNewAddressWithUser($name, $street, $postcode, $city, $countryName)
     {
         $countryCode = $this->countryNameConverter->convertToCode($countryName);
         $names = explode(" ", $name);
@@ -94,7 +109,7 @@ final class AddressingContext implements Context
      * @return AddressInterface
      */
     private function createAddress(
-        $countryCode = 'FR',
+        $countryCode = 'US',
         $firstName = 'John',
         $lastName = 'Doe',
         $city = 'Ankh Morpork',

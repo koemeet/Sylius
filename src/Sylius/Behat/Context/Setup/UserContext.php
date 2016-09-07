@@ -13,11 +13,12 @@ namespace Sylius\Behat\Context\Setup;
 
 use Behat\Behat\Context\Context;
 use Doctrine\Common\Persistence\ObjectManager;
+use Sylius\Bundle\CoreBundle\Fixture\Factory\ExampleFactoryInterface;
 use Sylius\Component\Addressing\Converter\CountryNameConverterInterface;
 use Sylius\Component\Addressing\Model\AddressInterface;
-use Sylius\Component\Core\Test\Factory\TestUserFactoryInterface;
-use Sylius\Component\Core\Test\Services\SharedStorageInterface;
+use Sylius\Behat\Service\SharedStorageInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
+use Sylius\Component\User\Model\UserInterface;
 use Sylius\Component\User\Repository\UserRepositoryInterface;
 
 /**
@@ -37,7 +38,7 @@ final class UserContext implements Context
     private $userRepository;
 
     /**
-     * @var TestUserFactoryInterface
+     * @var ExampleFactoryInterface
      */
     private $userFactory;
 
@@ -59,7 +60,7 @@ final class UserContext implements Context
     /**
      * @param SharedStorageInterface $sharedStorage
      * @param UserRepositoryInterface $userRepository
-     * @param TestUserFactoryInterface $userFactory
+     * @param ExampleFactoryInterface $userFactory
      * @param FactoryInterface $addressFactory
      * @param ObjectManager $userManager
      * @param CountryNameConverterInterface $countryCodeConverter
@@ -67,7 +68,7 @@ final class UserContext implements Context
     public function __construct(
         SharedStorageInterface $sharedStorage,
         UserRepositoryInterface $userRepository,
-        TestUserFactoryInterface $userFactory,
+        ExampleFactoryInterface $userFactory,
         FactoryInterface $addressFactory,
         ObjectManager $userManager,
         CountryNameConverterInterface $countryCodeConverter
@@ -81,12 +82,14 @@ final class UserContext implements Context
     }
 
     /**
-     * @Given there is user :email identified by :password
+     * @Given there is a user :email identified by :password
      * @Given there was account of :email with password :password
+     * @Given there is a user :email
+     * @Given there is a :email user
      */
-    public function thereIsUserIdentifiedBy($email, $password)
+    public function thereIsUserIdentifiedBy($email, $password = 'sylius')
     {
-        $user = $this->userFactory->create($email, $password);
+        $user = $this->userFactory->create(['email' => $email, 'password' => $password, 'enabled' => true]);
 
         $this->sharedStorage->set('user', $user);
 
@@ -98,7 +101,7 @@ final class UserContext implements Context
      */
     public function thereIsUserWithShippingCountry($email, $password, $country)
     {
-        $user = $this->userFactory->create($email, $password);
+        $user = $this->userFactory->create(['email' => $email, 'password' => $password, 'enabled' => true]);
 
         $customer = $user->getCustomer();
         $customer->setShippingAddress($this->createAddress($customer->getFirstName(), $customer->getLastName(), $country));
@@ -121,6 +124,7 @@ final class UserContext implements Context
 
     /**
      * @Given the account of :email was deleted
+     * @Given my account :email was deleted
      */
     public function accountWasDeleted($email)
     {
@@ -129,6 +133,55 @@ final class UserContext implements Context
         $this->sharedStorage->set('customer', $user->getCustomer());
 
         $this->userRepository->remove($user);
+    }
+
+    /**
+     * @Given his account was deleted
+     */
+    public function hisAccountWasDeleted()
+    {
+        $user = $this->sharedStorage->get('user');
+
+        $this->userRepository->remove($user);
+    }
+
+    /**
+     * @Given /^(this user) is not verified$/
+     * @Given /^(I) have not verified my account (?:yet)$/
+     */
+    public function accountIsNotVerified(UserInterface $user)
+    {
+        $user->setVerifiedAt(null);
+
+        $this->userManager->flush();
+    }
+
+    /**
+     * @Given /^(?:(I) have|(this user) has) already received a verification email$/
+     */
+    public function iHaveReceivedVerificationEmail(UserInterface $user)
+    {
+        $this->prepareUserVerification($user);
+    }
+
+    /**
+     * @Given a verification email has already been sent to :email
+     */
+    public function aVerificationEmailHasBeenSentTo($email)
+    {
+        $user = $this->userRepository->findOneByEmail($email);
+
+        $this->prepareUserVerification($user);
+    }
+
+    /**
+     * @Given /^(I) have already verified my account$/
+     */
+    public function iHaveAlreadyVerifiedMyAccount(UserInterface $user)
+    {
+        $user->setVerifiedAt(new \DateTime());
+
+        $this->userManager->flush();
     }
 
     /**
@@ -161,12 +214,15 @@ final class UserContext implements Context
     }
 
     /**
-     * @Given his account was deleted
+     * @param UserInterface $user
      */
-    public function hisAccountWasDeleted()
+    private function prepareUserVerification(UserInterface $user)
     {
-        $user = $this->sharedStorage->get('user');
+        $token = 'marryhadalittlelamb';
+        $this->sharedStorage->set('verification_token', $token);
 
-        $this->userRepository->remove($user);
+        $user->setEmailVerificationToken($token);
+
+        $this->userManager->flush();
     }
 }

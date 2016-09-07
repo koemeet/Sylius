@@ -15,8 +15,10 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Sylius\Bundle\SettingsBundle\Model\SettingsInterface;
+use Sylius\Bundle\SettingsBundle\Schema\SchemaInterface;
 use Sylius\Bundle\SettingsBundle\Schema\SettingsBuilder;
 use Sylius\Bundle\SettingsBundle\Transformer\ParameterTransformerInterface;
+use Sylius\Component\Registry\ServiceRegistryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -25,9 +27,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 final class ParameterTransformerListener
 {
     /**
-     * @var ContainerInterface
+     * @var ServiceRegistryInterface
      */
-    private $container;
+    private $settingsSchemaRegistry;
 
     /**
      * @var array
@@ -35,11 +37,11 @@ final class ParameterTransformerListener
     private $parametersMap = [];
 
     /**
-     * @param ContainerInterface $container
+     * @param ServiceRegistryInterface $settingsSchemaRegistry
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ServiceRegistryInterface $settingsSchemaRegistry)
     {
-        $this->container = $container;
+        $this->settingsSchemaRegistry = $settingsSchemaRegistry;
     }
 
     /**
@@ -90,7 +92,7 @@ final class ParameterTransformerListener
      * @param SettingsInterface $settings
      * @param EntityManager $entityManager
      */
-    protected function transform(SettingsInterface $settings, EntityManager $entityManager)
+    private function transform(SettingsInterface $settings, EntityManager $entityManager)
     {
         // store old parameters, so we can revert to it after flush
         $this->parametersMap[] = [
@@ -112,7 +114,7 @@ final class ParameterTransformerListener
     /**
      * @param SettingsInterface $settings
      */
-    protected function reverseTransform(SettingsInterface $settings)
+    private function reverseTransform(SettingsInterface $settings)
     {
         $transformers = $this->getTransformers($settings);
         foreach ($settings->getParameters() as $name => $value) {
@@ -127,10 +129,10 @@ final class ParameterTransformerListener
      *
      * @return ParameterTransformerInterface[]
      */
-    protected function getTransformers(SettingsInterface $settings)
+    private function getTransformers(SettingsInterface $settings)
     {
-        $registry = $this->container->get('sylius.registry.settings_schema');
-        $schema = $registry->get($settings->getSchemaAlias());
+        /** @var SchemaInterface $schema */
+        $schema = $this->settingsSchemaRegistry->get($settings->getSchemaAlias());
 
         $settingsBuilder = new SettingsBuilder();
         $schema->buildSettings($settingsBuilder);

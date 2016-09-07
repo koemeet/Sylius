@@ -14,7 +14,6 @@ namespace Sylius\Component\Order\Model;
 use Doctrine\Common\Collections\Collection;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Model\TimestampableInterface;
-use Sylius\Component\Sequence\Model\SequenceSubjectInterface;
 
 /**
  * @author Paweł Jędrzejewski <pawel@sylius.org>
@@ -23,17 +22,12 @@ interface OrderInterface extends
     AdjustableInterface,
     CommentAwareInterface,
     ResourceInterface,
-    SequenceSubjectInterface,
     TimestampableInterface
 {
     const STATE_CART = 'cart';
-    const STATE_CART_LOCKED = 'cart_locked';
-    const STATE_PENDING = 'pending';
-    const STATE_CONFIRMED = 'confirmed';
-    const STATE_SHIPPED = 'shipped';
-    const STATE_ABANDONED = 'abandoned';
+    const STATE_NEW = 'new';
     const STATE_CANCELLED = 'cancelled';
-    const STATE_RETURNED = 'returned';
+    const STATE_FULFILLED = 'fulfilled';
 
     /**
      * @return bool
@@ -51,6 +45,26 @@ interface OrderInterface extends
      * @param null|\DateTime $completedAt
      */
     public function setCompletedAt(\DateTime $completedAt = null);
+
+    /**
+     * @return string
+     */
+    public function getNumber();
+
+    /**
+     * @param string
+     */
+    public function setNumber($number);
+
+    /**
+     * @return string
+     */
+    public function getNotes();
+
+    /**
+     * @param string $notes
+     */
+    public function setNotes($notes);
 
     /**
      * @return Collection|OrderItemInterface[] An array or collection of OrderItemInterface
@@ -112,38 +126,6 @@ interface OrderInterface extends
      * @param string $state
      */
     public function setState($state);
-
-    /**
-     * Add an identity to this order. Eg. external identity to refer to an ebay order id.
-     *
-     * @param IdentityInterface $identity
-     */
-    public function addIdentity(IdentityInterface $identity);
-
-    /**
-     * @param IdentityInterface $identity
-     */
-    public function removeIdentity(IdentityInterface $identity);
-
-    /**
-     * @param IdentityInterface $identity
-     */
-    public function hasIdentity(IdentityInterface $identity);
-
-    /**
-     * @return Collection|IdentityInterface[]
-     */
-    public function getIdentities();
-
-    /**
-     * @return string
-     */
-    public function getAdditionalInformation();
-
-    /**
-     * @param string $information
-     */
-    public function setAdditionalInformation($information);
 
     /**
      * @param string|null $type

@@ -14,10 +14,12 @@ namespace Sylius\Bundle\GridBundle\Renderer;
 use Sylius\Component\Grid\Definition\Action;
 use Sylius\Component\Grid\Definition\Field;
 use Sylius\Component\Grid\Definition\Filter;
+use Sylius\Component\Grid\FieldTypes\FieldTypeInterface;
 use Sylius\Component\Grid\Renderer\GridRendererInterface;
 use Sylius\Component\Grid\View\GridView;
 use Sylius\Component\Registry\ServiceRegistryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @author Paweł Jędrzejewski <pawel@sylius.org>
@@ -92,7 +94,13 @@ class TwigGridRenderer implements GridRendererInterface
      */
     public function renderField(GridView $gridView, Field $field, $data)
     {
-        return $this->fieldsRegistry->get($field->getType())->render($field, $data);
+        /** @var FieldTypeInterface $fieldType */
+        $fieldType = $this->fieldsRegistry->get($field->getType());
+        $resolver = new OptionsResolver();
+        $fieldType->configureOptions($resolver);
+        $options = $resolver->resolve($field->getOptions());
+
+        return $fieldType->render($field, $data, $options);
     }
 
     /**

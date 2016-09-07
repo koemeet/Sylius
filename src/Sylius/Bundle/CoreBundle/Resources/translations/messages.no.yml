@@ -28,6 +28,7 @@ sylius:
             currency_default: Standard valuta
             shipping_methods: Fraktalternativ
             payment_methods: Betalingsmetoder
+            tax_zone_default: Standard skattesone
         image:
             file: Bilde
         locale:
@@ -49,6 +50,7 @@ sylius:
             shipping_category: Fraktkategori
             short_description: Kort beskrivelse
             variant_selection_method: Metode for valg av variant
+            enabled: Aktivert
         product_filter:
             name: Navn
             code: Kode
@@ -91,7 +93,6 @@ sylius:
         user_filter:
             query: Søk
         variant:
-            available_on_demand: Tilgjengelig på forespørsel
             depth: Dybde
             height: Høyde
             images: Bilder

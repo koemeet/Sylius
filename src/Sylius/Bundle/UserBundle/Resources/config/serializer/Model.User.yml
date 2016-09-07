@@ -9,8 +9,16 @@ Sylius\Component\User\Model\User:
         username:
             expose: true
             type: string
-            groups: [Default, Detailed]
+            groups: [Default, Detailed, Secured]
         usernameCanonical:
+            expose: true
+            type: string
+            groups: [Detailed]
+        email:
+            expose: true
+            type: string
+            groups: [Default, Detailed]
+        emailCanonical:
             expose: true
             type: string
             groups: [Detailed]

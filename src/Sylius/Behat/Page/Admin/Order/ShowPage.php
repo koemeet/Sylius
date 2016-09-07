@@ -234,9 +234,7 @@ class ShowPage extends SymfonyPage implements ShowPageInterface
     }
 
     /**
-     * @param string $itemName
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getItemUnitPrice($itemName)
     {
@@ -244,9 +242,7 @@ class ShowPage extends SymfonyPage implements ShowPageInterface
     }
 
     /**
-     * @param string $itemName
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getItemDiscountedUnitPrice($itemName)
     {
@@ -254,9 +250,7 @@ class ShowPage extends SymfonyPage implements ShowPageInterface
     }
 
     /**
-     * @param string $itemName
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getItemQuantity($itemName)
     {
@@ -264,9 +258,7 @@ class ShowPage extends SymfonyPage implements ShowPageInterface
     }
 
     /**
-     * @param string $itemName
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getItemSubtotal($itemName)
     {
@@ -274,9 +266,7 @@ class ShowPage extends SymfonyPage implements ShowPageInterface
     }
 
     /**
-     * @param string $itemName
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getItemDiscount($itemName)
     {
@@ -284,9 +274,7 @@ class ShowPage extends SymfonyPage implements ShowPageInterface
     }
 
     /**
-     * @param string $itemName
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getItemTax($itemName)
     {
@@ -294,15 +282,33 @@ class ShowPage extends SymfonyPage implements ShowPageInterface
     }
 
     /**
-     * @param string $itemName
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getItemTotal($itemName)
     {
         return $this->getItemProperty($itemName, 'total');
     }
-    
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPaymentAmount()
+    {
+        $paymentsPrice = $this->getElement('payments')->find('css', '.description');
+
+        return $paymentsPrice->getText();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPaymentsCount()
+    {
+        $payments = $this->getElement('payments')->findAll('css', '.item');
+
+        return count($payments);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -327,6 +333,16 @@ class ShowPage extends SymfonyPage implements ShowPageInterface
     public function deleteOrder()
     {
         $this->getDocument()->pressButton('Delete');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasNote($note)
+    {
+        $orderNotesElement = $this->getElement('order_notes');
+
+        return $orderNotesElement->getText() === $note;
     }
 
     /**
@@ -358,6 +374,7 @@ class ShowPage extends SymfonyPage implements ShowPageInterface
             'taxes' => '#taxes',
             'total' => '#total',
             'order_state' => 'div.sub.header > span.ui.label',
+            'order_notes' => '#sylius-order-notes',
         ]);
     }
 

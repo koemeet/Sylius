@@ -5,23 +5,31 @@ The Book
     :hidden:
 
     introduction
+    requirements
     environments
     installation
     architecture
+    resource_layer
     state_machine
     channels
-    products
+    locales
+    currencies
+    countries
+    zones
     addresses
+    customer_and_shopuser
+    adminuser
+    products
+    attributes
+    taxons
     inventory
     orders
+    checkout
     shipments
     payments
     taxation
     pricing
     promotions
-    users_and_groups
-    currencies
-    locales
     content
     emails
     settings

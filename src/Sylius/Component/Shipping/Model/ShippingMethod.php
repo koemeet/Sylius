@@ -60,11 +60,6 @@ class ShippingMethod implements ShippingMethodInterface
      */
     protected $configuration = [];
 
-    /**
-     * @var Collection|RuleInterface[]
-     */
-    protected $rules;
-
     public function __construct()
     {
         $this->initializeTranslationsCollection();
@@ -210,42 +205,6 @@ class ShippingMethod implements ShippingMethodInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getRules()
-    {
-        return $this->rules;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasRule(RuleInterface $rule)
-    {
-        return $this->rules->contains($rule);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addRule(RuleInterface $rule)
-    {
-        if (!$this->hasRule($rule)) {
-            $rule->setMethod($this);
-            $this->rules->add($rule);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function removeRule(RuleInterface $rule)
-    {
-        $rule->setMethod(null);
-        $this->rules->removeElement($rule);
-    }
-
-    /**
      * @return array
      */
     public static function getCategoryRequirementLabels()
@@ -255,15 +214,5 @@ class ShippingMethod implements ShippingMethodInterface
             ShippingMethodInterface::CATEGORY_REQUIREMENT_MATCH_ANY => 'At least 1 unit has to match the method category',
             ShippingMethodInterface::CATEGORY_REQUIREMENT_MATCH_ALL => 'All units has to match the method category',
         ];
-    }
-
-    public function enable()
-    {
-        $this->enabled = true;
-    }
-
-    public function disable()
-    {
-        $this->enabled = false;
     }
 }

@@ -11,34 +11,33 @@
 
 namespace spec\Sylius\Component\Core\Model;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use PhpSpec\ObjectBehavior;
 use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\AdjustmentInterface;
+use Sylius\Component\Core\Model\Order;
 use Sylius\Component\Core\Model\OrderItemInterface;
-use Sylius\Component\Core\Model\OrderShippingStates;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\PromotionInterface;
 use Sylius\Component\Core\Model\ShipmentInterface;
 use Sylius\Component\Core\OrderCheckoutStates;
-use Sylius\Component\Inventory\Model\InventoryUnitInterface;
-use Sylius\Component\Order\Model\Order;
+use Sylius\Component\Core\OrderShippingStates;
+use Sylius\Component\Order\Model\Order as BaseOrder;
 use Sylius\Component\Order\Model\OrderInterface;
 use Sylius\Component\Promotion\Model\CouponInterface;
-use Sylius\Component\User\Model\CustomerInterface;
+use Sylius\Component\Customer\Model\CustomerInterface;
 
 /**
- * @mixin \Sylius\Component\Core\Model\Order
+ * @mixin Order
  *
  * @author Paweł Jędrzejewski <pawel@sylius.org>
  */
-class OrderSpec extends ObjectBehavior
+final class OrderSpec extends ObjectBehavior
 {
     function it_is_initializable()
     {
-        $this->shouldHaveType('Sylius\Component\Core\Model\Order');
+        $this->shouldHaveType(Order::class);
     }
 
     function it_should_implement_Sylius_order_interface()
@@ -48,7 +47,7 @@ class OrderSpec extends ObjectBehavior
 
     function it_should_extend_Sylius_order_mapped_superclass()
     {
-        $this->shouldHaveType(Order::class);
+        $this->shouldHaveType(BaseOrder::class);
     }
 
     function it_should_not_have_customer_defined_by_default()
@@ -133,6 +132,16 @@ class OrderSpec extends ObjectBehavior
         $this->removeShipment($shipment);
 
         $this->shouldNotHaveShipment($shipment);
+    }
+
+    function it_removes_shipments(ShipmentInterface $shipment)
+    {
+        $this->addShipment($shipment);
+        $this->hasShipment($shipment)->shouldReturn(true);
+
+        $this->removeShipments();
+
+        $this->hasShipment($shipment)->shouldReturn(false);
     }
 
     function it_should_return_shipping_adjustments(
@@ -229,15 +238,15 @@ class OrderSpec extends ObjectBehavior
         $this->getAdjustments(AdjustmentInterface::TAX_ADJUSTMENT)->count()->shouldReturn(0); //tax adjustment has been removed
     }
 
-    function it_should_not_have_currency_defined_by_default()
+    function it_should_not_have_currency_code_defined_by_default()
     {
-        $this->getCurrency()->shouldReturn(null);
+        $this->getCurrencyCode()->shouldReturn(null);
     }
 
-    function it_should_allow_defining_currency()
+    function it_should_allow_defining_currency_code()
     {
-        $this->setCurrency('PLN');
-        $this->getCurrency()->shouldReturn('PLN');
+        $this->setCurrencyCode('PLN');
+        $this->getCurrencyCode()->shouldReturn('PLN');
     }
 
     function it_has_default_exchange_rate_equal_to_1()
@@ -251,54 +260,31 @@ class OrderSpec extends ObjectBehavior
         $this->getExchangeRate()->shouldReturn(1.25);
     }
 
-    function it_has_checkout_shipping_state_by_default()
+    function it_has_no_default_locale_code()
     {
-        $this->getShippingState()->shouldReturn(OrderShippingStates::CHECKOUT);
+        $this->getLocaleCode()->shouldReturn(null);
+    }
+
+    function its_locale_code_is_mutable()
+    {
+        $this->setLocaleCode('en');
+        $this->getLocaleCode()->shouldReturn('en');
+    }
+
+    function it_has_cart_shipping_state_by_default()
+    {
+        $this->getShippingState()->shouldReturn(OrderShippingStates::STATE_CART);
     }
 
     function its_shipping_state_is_mutable()
     {
-        $this->setShippingState(OrderShippingStates::SHIPPED);
-        $this->getShippingState()->shouldReturn(OrderShippingStates::SHIPPED);
-    }
-
-    function it_is_a_backorder_if_contains_at_least_one_backordered_unit(
-        InventoryUnitInterface $unit1,
-        InventoryUnitInterface $unit2,
-        OrderItemInterface $item
-    ) {
-        $unit1->getInventoryState()->willReturn(InventoryUnitInterface::STATE_BACKORDERED);
-        $unit2->getInventoryState()->willReturn(InventoryUnitInterface::STATE_SOLD);
-
-        $item->getUnits()->willReturn([$unit1, $unit2]);
-        $item->getTotal()->willReturn(4000);
-
-        $item->setOrder($this)->shouldBeCalled();
-        $this->addItem($item);
-
-        $this->shouldBeBackorder();
-    }
-
-    function it_not_a_backorder_if_contains_no_backordered_units(
-        InventoryUnitInterface $unit1,
-        InventoryUnitInterface $unit2,
-        OrderItemInterface $item
-    ) {
-        $unit1->getInventoryState()->willReturn(InventoryUnitInterface::STATE_SOLD);
-        $unit2->getInventoryState()->willReturn(InventoryUnitInterface::STATE_SOLD);
-
-        $item->getUnits()->willReturn([$unit1, $unit2]);
-        $item->getTotal()->willReturn(4000);
-
-        $item->setOrder($this)->shouldBeCalled();
-        $this->addItem($item);
-
-        $this->shouldNotBeBackorder();
+        $this->setShippingState(OrderShippingStates::STATE_SHIPPED);
+        $this->getShippingState()->shouldReturn(OrderShippingStates::STATE_SHIPPED);
     }
 
     function it_adds_and_removes_payments(PaymentInterface $payment)
     {
-        $payment->getState()->willReturn(PaymentInterface::STATE_PENDING);
+        $payment->getState()->willReturn(PaymentInterface::STATE_NEW);
         $payment->setOrder($this)->shouldBeCalled();
 
         $this->addPayment($payment);

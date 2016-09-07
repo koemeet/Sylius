@@ -12,7 +12,7 @@
 namespace Sylius\Behat\Page\Shop\Cart;
 
 use Sylius\Behat\Page\PageInterface;
-use Sylius\Component\Product\Model\ProductInterface;
+use Sylius\Component\Core\Model\ProductInterface;
 
 /**
  * @author Łukasz Chruściel <lukasz.chrusciel@lakion.com>
@@ -52,7 +52,14 @@ interface SummaryPageInterface extends PageInterface
      *
      * @return string
      */
-    public function getItemDiscountedTotal($productName);
+    public function getItemUnitRegularPrice($productName);
+
+    /**
+     * @param string $productName
+     *
+     * @return string
+     */
+    public function getItemUnitPrice($productName);
 
     /**
      * @param string $productName
@@ -71,6 +78,11 @@ interface SummaryPageInterface extends PageInterface
      * @param int $quantity
      */
     public function changeQuantity($productName, $quantity);
+
+    /**
+     * @param string $couponCode
+     */
+    public function applyCoupon($couponCode);
 
     /**
      * @return bool
@@ -101,6 +113,13 @@ interface SummaryPageInterface extends PageInterface
     public function hasItemWithOptionValue($productName, $optionName, $optionValue);
 
     /**
+     * @param ProductInterface $product
+     *
+     * @return bool
+     */
+    public function hasProductOutOfStockValidationMessage(ProductInterface $product);
+
+    /**
      * @return bool
      */
     public function isEmpty();
@@ -112,5 +131,12 @@ interface SummaryPageInterface extends PageInterface
      */
     public function getQuantity($productName);
 
+    /**
+     * @return string
+     */
+    public function getCartTotal();
+
     public function clearCart();
+
+    public function updateCart();
 }

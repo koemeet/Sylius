@@ -13,6 +13,7 @@ namespace Sylius\Behat\Page\Shop\Cart;
 
 use Behat\Mink\Exception\ElementNotFoundException;
 use Sylius\Behat\Page\SymfonyPage;
+use Sylius\Component\Core\Model\ProductInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -76,17 +77,27 @@ class SummaryPage extends SymfonyPage implements SummaryPageInterface
     {
         $itemTotalElement = $this->getElement('product_total', ['%name%' => $productName]);
 
-        return $this->getPriceFromString(trim($itemTotalElement->getText()));
+        return  $itemTotalElement->getText();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getItemDiscountedTotal($productName)
+    public function getItemUnitRegularPrice($productName)
     {
-        $discountedItemTotalElement = $this->getElement('product_discounted_total', ['%name%' => $productName]);
+        $regularUnitPrice = $this->getElement('product_unit_regular_price', ['%name%' => $productName]);
 
-        return $this->getPriceFromString(trim($discountedItemTotalElement->getText()));
+        return $this->getPriceFromString(trim($regularUnitPrice->getText()));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getItemUnitPrice($productName)
+    {
+        $unitPrice = $this->getElement('product_unit_price', ['%name%' => $productName]);
+
+        return $this->getPriceFromString(trim($unitPrice->getText()));
     }
 
     /**
@@ -94,7 +105,7 @@ class SummaryPage extends SymfonyPage implements SummaryPageInterface
      */
     public function isItemDiscounted($productName)
     {
-        return $this->hasElement('product_discounted_total', ['%name%' => $productName]);
+        return $this->hasElement('product_unit_regular_price', ['%name%' => $productName]);
     }
 
     /**
@@ -104,6 +115,15 @@ class SummaryPage extends SymfonyPage implements SummaryPageInterface
     {
         $itemElement = $this->getElement('product_row', ['%name%' => $productName]);
         $itemElement->find('css', 'a.sylius-cart-remove-button')->click();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function applyCoupon($couponCode)
+    {
+        $this->getElement('coupon_field')->setValue($couponCode);
+        $this->getElement('apply_coupon_button')->press();
     }
 
     /**
@@ -161,6 +181,20 @@ class SummaryPage extends SymfonyPage implements SummaryPageInterface
     }
 
     /**
+     * {@inheritdoc]
+     */
+    public function hasProductOutOfStockValidationMessage(ProductInterface $product)
+    {
+        $message = sprintf('%s does not have sufficient stock.', $product->getName());
+
+        try {
+            return $this->getElement('validation_errors')->getText() === $message;
+        } catch (ElementNotFoundException $exception) {
+            return false;
+        }
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function isEmpty()
@@ -178,9 +212,28 @@ class SummaryPage extends SymfonyPage implements SummaryPageInterface
         return (int) $itemElement->find('css', 'input[type=number]')->getValue();
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getCartTotal()
+    {
+        $cartTotalText = $this->getElement('cart_total')->getText();
+
+        if (strpos($cartTotalText, ',') !== false ) {
+            return strstr($cartTotalText, ',', true);
+        }
+
+        return $cartTotalText;
+    }
+
     public function clearCart()
     {
         $this->getElement('clear_button')->click();
+    }
+
+    public function updateCart()
+    {
+        $this->getElement('update_button')->click();
     }
 
     /**
@@ -189,16 +242,23 @@ class SummaryPage extends SymfonyPage implements SummaryPageInterface
     protected function getDefinedElements()
     {
         return array_merge(parent::getDefinedElements(), [
+            'apply_coupon_button' => 'button:contains("Apply coupon")',
+            'cart_items' => '#sylius-cart-items',
+            'cart_total' => '#sylius-cart-button',
+            'clear_button' => '#sylius-cart-clear',
+            'coupon_field' => '#sylius_cart_promotionCoupon',
             'grand_total' => '#sylius-cart-grand-total',
-            'promotion_total' => '#sylius-cart-promotion-total',
-            'shipping_total' => '#sylius-cart-shipping-total',
-            'tax_total' => '#sylius-cart-tax-total',
+            'product_discounted_total' => '#sylius-cart-items tr:contains("%name%") .sylius-discounted-total',
             'product_row' => '#sylius-cart-items tbody tr:contains("%name%")',
             'product_total' => '#sylius-cart-items tr:contains("%name%") .sylius-total',
-            'product_discounted_total' => '#sylius-cart-items tr:contains("%name%") .sylius-discounted-total',
-            'cart_items' => '#sylius-cart-items',
-            'clear_button' => '#sylius-cart-clear',
+            'product_unit_price' => '#sylius-cart-items tr:contains("%name%") .sylius-unit-price',
+            'product_unit_regular_price' => '#sylius-cart-items tr:contains("%name%") .sylius-regular-unit-price',
+            'promotion_total' => '#sylius-cart-promotion-total',
             'save_button' => '#sylius-save',
+            'shipping_total' => '#sylius-cart-shipping-total',
+            'tax_total' => '#sylius-cart-tax-total',
+            'update_button' => '#sylius-cart-update',
+            'validation_errors' => '.sylius-validation-error',
         ]);
     }
 

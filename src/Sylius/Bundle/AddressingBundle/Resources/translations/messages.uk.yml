@@ -9,7 +9,7 @@ sylius:
             country: Країна
             first_name: Iм’я
             last_name: Прізвище
-            phone_number: Номер Телефону
+            phone_number: Номер телефону
             postcode: Iндекс
             street: Вулиця
             province: Область
@@ -21,6 +21,7 @@ sylius:
             enabled: Увімкнено
         province:
             name: Ім’я
+            abbreviation: Абревіатура
             select: Виберіть
         zone:
             add_member: Додати члена групи

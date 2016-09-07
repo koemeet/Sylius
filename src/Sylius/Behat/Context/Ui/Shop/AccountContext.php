@@ -16,9 +16,12 @@ use Sylius\Behat\NotificationType;
 use Sylius\Behat\Page\PageInterface;
 use Sylius\Behat\Page\Shop\Account\ChangePasswordPageInterface;
 use Sylius\Behat\Page\Shop\Account\DashboardPageInterface;
+use Sylius\Behat\Page\Shop\Account\Order\IndexPageInterface;
+use Sylius\Behat\Page\Shop\Account\Order\ShowPageInterface;
 use Sylius\Behat\Page\Shop\Account\ProfileUpdatePageInterface;
 use Sylius\Behat\Service\NotificationCheckerInterface;
 use Sylius\Component\Core\Formatter\StringInflector;
+use Sylius\Component\Core\Model\OrderInterface;
 use Webmozart\Assert\Assert;
 
 /**
@@ -35,11 +38,21 @@ final class AccountContext implements Context
      * @var ProfileUpdatePageInterface
      */
     private $profileUpdatePage;
-    
+
     /**
      * @var ChangePasswordPageInterface
      */
     private $changePasswordPage;
+
+    /**
+     * @var IndexPageInterface
+     */
+    private $orderIndexPage;
+
+    /**
+     * @var ShowPageInterface
+     */
+    private $orderShowPage;
 
     /**
      * @var NotificationCheckerInterface
@@ -50,17 +63,23 @@ final class AccountContext implements Context
      * @param DashboardPageInterface $dashboardPage
      * @param ProfileUpdatePageInterface $profileUpdatePage
      * @param ChangePasswordPageInterface $changePasswordPage
+     * @param IndexPageInterface $orderIndexPage
+     * @param ShowPageInterface $orderShowPage
      * @param NotificationCheckerInterface $notificationChecker
      */
     public function __construct(
         DashboardPageInterface $dashboardPage,
         ProfileUpdatePageInterface $profileUpdatePage,
         ChangePasswordPageInterface $changePasswordPage,
+        IndexPageInterface $orderIndexPage,
+        ShowPageInterface $orderShowPage,
         NotificationCheckerInterface $notificationChecker
     ) {
         $this->dashboardPage = $dashboardPage;
         $this->profileUpdatePage = $profileUpdatePage;
         $this->changePasswordPage = $changePasswordPage;
+        $this->orderIndexPage = $orderIndexPage;
+        $this->orderShowPage = $orderShowPage;
         $this->notificationChecker = $notificationChecker;
     }
 
@@ -243,6 +262,151 @@ final class AccountContext implements Context
     }
 
     /**
+     * @When I browse my orders
+     */
+    public function iBrowseMyOrders()
+    {
+        $this->orderIndexPage->open();
+    }
+
+    /**
+     * @Then I should see a single order in the list
+     */
+    public function iShouldSeeASingleOrderInTheList()
+    {
+        Assert::same(
+            1,
+            $this->orderIndexPage->countOrders(),
+            '%s rows with orders should appear on page, %s rows have been found.'
+        );
+    }
+
+    /**
+     * @Then this order should have :order number
+     */
+    public function thisOrderShouldHaveNumber(OrderInterface $order)
+    {
+        Assert::true(
+            $this->orderIndexPage->isOrderWithNumberInTheList($order->getNumber()),
+            sprintf('Cannot find order with number "%s" in the list.', $order->getNumber())
+        );
+    }
+
+    /**
+     * @When I view the summary of the order :order
+     */
+    public function iViewTheSummaryOfTheOrder(OrderInterface $order)
+    {
+        $this->orderShowPage->open(['number' => $order->getNumber()]);
+    }
+
+    /**
+     * @Then it should has number :orderNumber
+     */
+    public function itShouldHasNumber($orderNumber)
+    {
+        Assert::same(
+            $this->orderShowPage->getNumber(),
+            $orderNumber,
+            'The number of an order is %s, but should be %s.'
+        );
+    }
+
+    /**
+     * @Then I should see :customerName, :street, :postcode, :city, :countryName as shipping address
+     */
+    public function iShouldSeeAsShippingAddress($customerName, $street, $postcode, $city, $countryName)
+    {
+        Assert::true(
+            $this->orderShowPage->hasShippingAddress($customerName, $street, $postcode, $city, $countryName),
+            sprintf('Cannot find shipping address "%s, %s %s, %s".', $street, $postcode, $city, $countryName)
+        );
+    }
+
+    /**
+     * @Then I should see :customerName, :street, :postcode, :city, :countryName as billing address
+     */
+    public function itShouldBeShippedTo($customerName, $street, $postcode, $city, $countryName)
+    {
+        Assert::true(
+            $this->orderShowPage->hasBillingAddress($customerName, $street, $postcode, $city, $countryName),
+            sprintf('Cannot find shipping address "%s, %s %s, %s".', $street, $postcode, $city, $countryName)
+        );
+    }
+
+    /**
+     * @Then I should see :total as order's total
+     */
+    public function iShouldSeeAsOrderSTotal($total)
+    {
+        Assert::same(
+            $this->orderShowPage->getTotal(),
+            $total,
+            'Total is %s, but should be %s.'
+        );
+    }
+
+    /**
+     * @Then I should see :itemsTotal as order's subtotal
+     */
+    public function iShouldSeeAsOrderSSubtotal($subtotal)
+    {
+        Assert::same(
+            $this->orderShowPage->getSubtotal(),
+            $subtotal,
+            'Subtotal is %s, but should be %s.'
+        );
+    }
+
+    /**
+     * @Then I should see that I have to pay :paymentAmount for this order
+     * @Then I should see :paymentTotal as payment total
+     */
+    public function iShouldSeeIHaveToPayForThisOrder($paymentAmount)
+    {
+        Assert::same(
+            $this->orderShowPage->getPaymentPrice(),
+            $paymentAmount,
+            'Payment total is %s, but should be %s.'
+        );
+    }
+
+    /**
+     * @Then I should see :numberOfItems items in the list
+     */
+    public function iShouldSeeItemsInTheList($numberOfItems)
+    {
+        Assert::same(
+            $numberOfItems,
+            $this->orderShowPage->countItems(),
+            '%s items should appear on order page, but %s rows has been found'
+        );
+    }
+
+    /**
+     * @Then the product named :productName should be in the items list
+     */
+    public function theProductShouldBeInTheItemsList($productName)
+    {
+        Assert::true(
+            $this->orderShowPage->isProductInTheList($productName),
+            sprintf('Product %s is not in the item list.', $productName)
+        );
+    }
+
+    /**
+     * @Then I should see :itemPrice as item price
+     */
+    public function iShouldSeeAsItemPrice($itemPrice)
+    {
+        Assert::same(
+            $this->orderShowPage->getItemPrice(),
+            $itemPrice,
+            'Item price is %s, but should be %s.'
+        );
+    }
+
+    /**
      * @param PageInterface $page
      * @param string $element
      * @param string $expectedMessage
@@ -252,6 +416,25 @@ final class AccountContext implements Context
         Assert::true(
             $page->checkValidationMessageFor($element, $expectedMessage),
             sprintf('There should be a message: "%s".', $expectedMessage)
+        );
+    }
+
+    /**
+     * @When I subscribe to the newsletter
+     */
+    public function iSubscribeToTheNewsletter()
+    {
+        $this->profileUpdatePage->subscribeToTheNewsletter();
+    }
+
+    /**
+     * @Then I should be subscribed to the newsletter
+     */
+    public function iShouldBeSubscribedToTheNewsletter()
+    {
+        Assert::true(
+            $this->profileUpdatePage->isSubscribedToTheNewsletter(),
+            'I should be subscribed to the newsletter, but I am not'
         );
     }
 }

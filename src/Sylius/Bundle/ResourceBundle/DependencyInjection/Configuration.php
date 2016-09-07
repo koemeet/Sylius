@@ -26,7 +26,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  *
  * @author Paweł Jędrzejewski <pawel@sylius.org>
  */
-class Configuration implements ConfigurationInterface
+final class Configuration implements ConfigurationInterface
 {
     /**
      * {@inheritdoc}
@@ -39,6 +39,7 @@ class Configuration implements ConfigurationInterface
         $this->addResourcesSection($rootNode);
         $this->addSettingsSection($rootNode);
         $this->addTranslationsSection($rootNode);
+        $this->addDriversSection($rootNode);
 
         $rootNode
             ->children()
@@ -81,12 +82,10 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                             ->arrayNode('validation_groups')
-                                ->addDefaultsIfNotSet()
-                                ->children()
-                                    ->arrayNode('default')
-                                        ->prototype('scalar')->end()
-                                        ->defaultValue([])
-                                    ->end()
+                                ->useAttributeAsKey('name')
+                                ->prototype('array')
+                                    ->prototype('scalar')->end()
+                                    ->defaultValue([])
                                 ->end()
                             ->end()
                             ->arrayNode('translation')
@@ -107,12 +106,10 @@ class Configuration implements ConfigurationInterface
                                         ->end()
                                     ->end()
                                     ->arrayNode('validation_groups')
-                                        ->addDefaultsIfNotSet()
-                                        ->children()
-                                            ->arrayNode('default')
-                                                ->prototype('scalar')->end()
-                                                ->defaultValue([])
-                                            ->end()
+                                        ->useAttributeAsKey('name')
+                                        ->prototype('array')
+                                            ->prototype('scalar')->end()
+                                            ->defaultValue([])
                                         ->end()
                                     ->end()
                                     ->arrayNode('fields')
@@ -165,13 +162,41 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('translation')
                     ->canBeEnabled()
                     ->children()
-                        ->scalarNode('default_locale')->cannotBeEmpty()->end()
-                        ->scalarNode('locale_provider')->defaultValue('sylius.translation.locale_provider.request')->cannotBeEmpty()->end()
-                        ->scalarNode('available_locales_provider')->defaultValue('sylius.translation.locales_provider.array')->cannotBeEmpty()->end()
-                        ->arrayNode('available_locales') ->prototype('scalar')->end()
-                    ->end()
+                        ->scalarNode('locale_provider')->isRequired()->end()
+                        ->scalarNode('locale_context')->isRequired()->end()
                 ->end()
             ->end()
         ;
+    }
+
+    private function addDriversSection(ArrayNodeDefinition $node)
+    {
+        // determine which drivers are distributed with this bundle
+        $driverDir = __DIR__ . '/../Resources/config/driver';
+        $iterator = new \RecursiveDirectoryIterator($driverDir);
+        foreach (new \RecursiveIteratorIterator($iterator) as $file) {
+            if ($file->getExtension() !== 'xml') {
+                continue;
+            }
+
+            // we use the parent directory name in addition to the filename to
+            // determine the name of the driver (e.g. doctrine/orm)
+            $validDrivers[] = str_replace('\\','/',substr($file->getPathname(), 1 + strlen($driverDir), -4));
+        }
+
+        $node
+            ->children()
+                ->arrayNode('drivers')
+                    ->info('Enable drivers which are distributed with this bundle')
+                    ->validate()
+                    ->ifTrue(function ($value) use ($validDrivers) {
+                        return 0 !== count(array_diff($value, $validDrivers));
+                    })
+                        ->thenInvalid(sprintf('Invalid driver specified in %%s, valid drivers: ["%s"]', implode('", "', $validDrivers)))
+                    ->end()
+                    ->defaultValue(['doctrine/orm'])
+                    ->prototype('scalar')->end()
+                ->end()
+            ->end();
     }
 }

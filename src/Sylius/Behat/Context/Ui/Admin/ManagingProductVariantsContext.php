@@ -20,7 +20,7 @@ use Sylius\Behat\Service\NotificationCheckerInterface;
 use Sylius\Behat\Service\Resolver\CurrentPageResolverInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
-use Sylius\Component\Core\Test\Services\SharedStorageInterface;
+use Sylius\Behat\Service\SharedStorageInterface;
 use Webmozart\Assert\Assert;
 
 /**
@@ -146,7 +146,8 @@ final class ManagingProductVariantsContext implements Context
     }
 
     /**
-     * @When /^I want to view all variants of (this product)$/
+     * @When /^I (?:|want to )view all variants of (this product)$/
+     * @When /^I view all variants of the (product "[^"]+")$/
      */
     public function iWantToViewAllVariantsOfThisProduct(ProductInterface $product)
     {
@@ -187,8 +188,8 @@ final class ManagingProductVariantsContext implements Context
         $this->iWantToViewAllVariantsOfThisProduct($productVariant->getProduct());
 
         Assert::false(
-            $this->indexPage->isSingleResourceOnPage(['presentation' => $productVariant->getPresentation()]),
-            sprintf('Product variant with code %s exists but should not.', $productVariant->getPresentation())
+            $this->indexPage->isSingleResourceOnPage(['name' => $productVariant->getName()]),
+            sprintf('Product variant with code %s exists but should not.', $productVariant->getName())
         );
     }
 
@@ -265,32 +266,25 @@ final class ManagingProductVariantsContext implements Context
     }
 
     /**
-     * @param string $element
-     * @param string $value
+     * @Then /^the variant "([^"]+)" should have (\d+) items on hand$/
      */
-    private function assertElementValue($element, $value)
+    public function thisVariantShouldHaveItemsOnHand($productVariantName, $quantity)
     {
         Assert::true(
-            $this->updatePage->hasResourceValues(
-                [$element => $value]
-            ),
-            sprintf('Product should have %s with %s value.', $element, $value)
+            $this->indexPage->isSingleResourceWithSpecificElementOnPage(['name' => $productVariantName], sprintf('td > div.ui.label:contains("%s")', $quantity)),
+            sprintf('The product variant %s should have %s items on hand, but it does not.',$productVariantName, $quantity)
         );
     }
 
     /**
      * @param string $element
+     * @param $message
      */
     private function assertValidationMessage($element, $message)
     {
-        $currentPage = $this->currentPageResolver->getCurrentPageWithForm([
-            $this->createPage,
-            $this->updatePage,
-        ]);
+        /** @var CreatePageInterface|UpdatePageInterface $currentPage */
+        $currentPage = $this->currentPageResolver->getCurrentPageWithForm([$this->createPage, $this->updatePage]);
 
-        Assert::true(
-            $currentPage->checkValidationMessageFor($element, $message),
-            sprintf('Product %s should be required.', $element)
-        );
+        Assert::same($currentPage->getValidationMessage($element), $message);
     }
 }

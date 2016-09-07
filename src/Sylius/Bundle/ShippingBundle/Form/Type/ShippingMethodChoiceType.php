@@ -11,13 +11,11 @@
 
 namespace Sylius\Bundle\ShippingBundle\Form\Type;
 
-use Sylius\Component\Registry\PrioritizedServiceRegistryInterface;
 use Sylius\Component\Registry\ServiceRegistryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Sylius\Component\Shipping\Model\ShippingMethodInterface;
 use Sylius\Component\Shipping\Model\ShippingSubjectInterface;
-use Sylius\Component\Shipping\Resolver\CompositeMethodsResolverInterface;
-use Sylius\Component\Shipping\Resolver\MethodsResolverInterface;
+use Sylius\Component\Shipping\Resolver\ShippingMethodsResolverInterface;
 use Symfony\Bridge\Doctrine\Form\DataTransformer\CollectionToArrayTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
@@ -37,9 +35,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ShippingMethodChoiceType extends AbstractType
 {
     /**
-     * @var CompositeMethodsResolverInterface
+     * @var ShippingMethodsResolverInterface
      */
-    protected $compositeShippingMethodsResolver;
+    protected $shippingMethodsResolver;
 
     /**
      * @var ServiceRegistryInterface
@@ -52,16 +50,16 @@ class ShippingMethodChoiceType extends AbstractType
     protected $repository;
 
     /**
-     * @param CompositeMethodsResolverInterface $compositeShippingMethodsResolver
+     * @param ShippingMethodsResolverInterface $shippingMethodsResolver
      * @param ServiceRegistryInterface $calculators
      * @param RepositoryInterface $repository
      */
     public function __construct(
-        CompositeMethodsResolverInterface $compositeShippingMethodsResolver,
+        ShippingMethodsResolverInterface $shippingMethodsResolver,
         ServiceRegistryInterface $calculators,
         RepositoryInterface $repository
     ) {
-        $this->compositeShippingMethodsResolver = $compositeShippingMethodsResolver;
+        $this->shippingMethodsResolver = $shippingMethodsResolver;
         $this->calculators = $calculators;
         $this->repository = $repository;
     }
@@ -82,8 +80,8 @@ class ShippingMethodChoiceType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $choiceList = function (Options $options) {
-            if (isset($options['subject'])) {
-                $methods = $this->compositeShippingMethodsResolver->getSupportedMethods($options['subject']);
+            if (isset($options['subject']) && $this->shippingMethodsResolver->supports($options['subject'])) {
+                $methods = $this->shippingMethodsResolver->getSupportedMethods($options['subject']);
             } else {
                 $methods = $this->repository->findAll();
             }

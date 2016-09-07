@@ -17,7 +17,7 @@ use Sylius\Component\Shipping\Model\ShippingSubjectInterface;
 /**
  * @author Mateusz Zalewski <mateusz.zalewski@lakion.com>
  */
-class CompositeMethodsResolver implements CompositeMethodsResolverInterface
+class CompositeMethodsResolver implements ShippingMethodsResolverInterface
 {
     /**
      * @var PrioritizedServiceRegistryInterface
@@ -37,6 +37,7 @@ class CompositeMethodsResolver implements CompositeMethodsResolverInterface
      */
     public function getSupportedMethods(ShippingSubjectInterface $shippingSubject)
     {
+        /** @var ShippingMethodsResolverInterface $resolver */
         foreach ($this->resolversRegistry->all() as $resolver) {
             if ($resolver->supports($shippingSubject)) {
                 return $resolver->getSupportedMethods($shippingSubject);
@@ -44,5 +45,20 @@ class CompositeMethodsResolver implements CompositeMethodsResolverInterface
         }
 
         return [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supports(ShippingSubjectInterface $subject)
+    {
+        /** @var ShippingMethodsResolverInterface $resolver */
+        foreach ($this->resolversRegistry->all() as $resolver) {
+            if ($resolver->supports($subject)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

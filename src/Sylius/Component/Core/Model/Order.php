@@ -16,11 +16,13 @@ use Doctrine\Common\Collections\Collection;
 use Sylius\Component\Cart\Model\Cart;
 use Sylius\Component\Channel\Model\ChannelInterface as BaseChannelInterface;
 use Sylius\Component\Core\OrderCheckoutStates;
-use Sylius\Component\Inventory\Model\InventoryUnitInterface;
+use Sylius\Component\Core\OrderPaymentStates;
+use Sylius\Component\Core\OrderShippingStates;
 use Sylius\Component\Payment\Model\PaymentInterface as BasePaymentInterface;
 use Sylius\Component\Promotion\Model\CouponInterface as BaseCouponInterface;
 use Sylius\Component\Promotion\Model\PromotionInterface as BasePromotionInterface;
-use Sylius\Component\User\Model\CustomerInterface as BaseCustomerInterface;
+use Sylius\Component\Customer\Model\CustomerInterface as BaseCustomerInterface;
+use Webmozart\Assert\Assert;
 
 /**
  * @author Paweł Jędrzejewski <pawel@sylius.org>
@@ -61,12 +63,17 @@ class Order extends Cart implements OrderInterface
     /**
      * @var string
      */
-    protected $currency;
+    protected $currencyCode;
 
     /**
      * @var float
      */
     protected $exchangeRate = 1.0;
+
+    /**
+     * @var string
+     */
+    protected $localeCode;
 
     /**
      * @var BaseCouponInterface
@@ -81,14 +88,14 @@ class Order extends Cart implements OrderInterface
     /**
      * @var string
      */
-    protected $paymentState = BasePaymentInterface::STATE_NEW;
+    protected $paymentState = OrderPaymentStates::STATE_CART;
 
     /**
      * It depends on the status of all order shipments.
      *
      * @var string
      */
-    protected $shippingState = OrderShippingStates::CHECKOUT;
+    protected $shippingState = OrderShippingStates::STATE_CART;
 
     /**
      * @var Collection|BasePromotionInterface[]
@@ -264,8 +271,6 @@ class Order extends Cart implements OrderInterface
         if (!$this->hasPayment($payment)) {
             $this->payments->add($payment);
             $payment->setOrder($this);
-
-            $this->setPaymentState($payment->getState());
         }
     }
 
@@ -346,6 +351,14 @@ class Order extends Cart implements OrderInterface
     /**
      * {@inheritdoc}
      */
+    public function removeShipments()
+    {
+        $this->shipments->clear();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function hasShipment(ShipmentInterface $shipment)
     {
         return $this->shipments->contains($shipment);
@@ -386,17 +399,19 @@ class Order extends Cart implements OrderInterface
     /**
      * {@inheritdoc}
      */
-    public function getCurrency()
+    public function getCurrencyCode()
     {
-        return $this->currency;
+        return $this->currencyCode;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setCurrency($currency)
+    public function setCurrencyCode($currencyCode)
     {
-        $this->currency = $currency;
+        Assert::string($currencyCode);
+
+        $this->currencyCode = $currencyCode;
     }
 
     /**
@@ -418,6 +433,24 @@ class Order extends Cart implements OrderInterface
     /**
      * {@inheritdoc}
      */
+    public function getLocaleCode()
+    {
+        return $this->localeCode;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLocaleCode($localeCode)
+    {
+        Assert::string($localeCode);
+
+        $this->localeCode = $localeCode;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getShippingState()
     {
         return $this->shippingState;
@@ -429,20 +462,6 @@ class Order extends Cart implements OrderInterface
     public function setShippingState($state)
     {
         $this->shippingState = $state;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isBackorder()
-    {
-        foreach ($this->getItemUnits() as $itemUnit) {
-            if (InventoryUnitInterface::STATE_BACKORDERED === $itemUnit->getInventoryState()) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**

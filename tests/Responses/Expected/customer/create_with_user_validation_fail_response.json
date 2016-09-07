@@ -17,6 +17,7 @@
                 ]
             },
             "phoneNumber": {},
+            "subscribedToNewsletter": {},
             "groups": {},
             "user": {
                 "children": {
@@ -25,8 +26,7 @@
                             "Please enter your password."
                         ]
                     },
-                    "enabled": {},
-                    "authorizationRoles": {}
+                    "enabled": {}
                 }
             }
         }

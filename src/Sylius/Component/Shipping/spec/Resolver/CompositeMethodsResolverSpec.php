@@ -16,15 +16,14 @@ use Sylius\Component\Registry\PrioritizedServiceRegistryInterface;
 use Sylius\Component\Shipping\Model\ShippingMethodInterface;
 use Sylius\Component\Shipping\Model\ShippingSubjectInterface;
 use Sylius\Component\Shipping\Resolver\CompositeMethodsResolver;
-use Sylius\Component\Shipping\Resolver\CompositeMethodsResolverInterface;
-use Sylius\Component\Shipping\Resolver\MethodsResolverInterface;
+use Sylius\Component\Shipping\Resolver\ShippingMethodsResolverInterface;
 
 /**
  * @mixin CompositeMethodsResolver
  *
  * @author Mateusz Zalewski <mateusz.zalewski@lakion.com>
  */
-class CompositeMethodsResolverSpec extends ObjectBehavior
+final class CompositeMethodsResolverSpec extends ObjectBehavior
 {
     function let(PrioritizedServiceRegistryInterface $resolversRegistry)
     {
@@ -36,14 +35,14 @@ class CompositeMethodsResolverSpec extends ObjectBehavior
         $this->shouldHaveType('Sylius\Component\Shipping\Resolver\CompositeMethodsResolver');
     }
 
-    function it_implements_composite_methods_resolver_interface()
+    function it_implements_methods_resolver_interface()
     {
-        $this->shouldImplement(CompositeMethodsResolverInterface::class);
+        $this->shouldImplement(ShippingMethodsResolverInterface::class);
     }
     
     function it_uses_registry_to_provide_shipping_methods_for_shipping_subject(
-        MethodsResolverInterface $firstMethodsResolver,
-        MethodsResolverInterface $secondMethodsResolver,
+        ShippingMethodsResolverInterface $firstMethodsResolver,
+        ShippingMethodsResolverInterface $secondMethodsResolver,
         PrioritizedServiceRegistryInterface $resolversRegistry,
         ShippingMethodInterface $shippingMethod,
         ShippingSubjectInterface $shippingSubject
@@ -59,8 +58,8 @@ class CompositeMethodsResolverSpec extends ObjectBehavior
     }
 
     function it_returns_empty_array_if_none_of_registered_resolvers_support_passed_shipping_subject(
-        MethodsResolverInterface $firstMethodsResolver,
-        MethodsResolverInterface $secondMethodsResolver,
+        ShippingMethodsResolverInterface $firstMethodsResolver,
+        ShippingMethodsResolverInterface $secondMethodsResolver,
         PrioritizedServiceRegistryInterface $resolversRegistry,
         ShippingSubjectInterface $shippingSubject
     ) {
@@ -70,5 +69,33 @@ class CompositeMethodsResolverSpec extends ObjectBehavior
         $secondMethodsResolver->supports($shippingSubject)->willReturn(false);
 
         $this->getSupportedMethods($shippingSubject)->shouldReturn([]);
+    }
+
+    function it_supports_subject_if_any_resolver_from_registry_supports_it(
+        ShippingMethodsResolverInterface $firstMethodsResolver,
+        ShippingMethodsResolverInterface $secondMethodsResolver,
+        PrioritizedServiceRegistryInterface $resolversRegistry,
+        ShippingSubjectInterface $shippingSubject
+    ) {
+        $resolversRegistry->all()->willReturn([$firstMethodsResolver, $secondMethodsResolver]);
+
+        $firstMethodsResolver->supports($shippingSubject)->willReturn(false);
+        $firstMethodsResolver->supports($shippingSubject)->willReturn(true);
+
+        $this->supports($shippingSubject)->shouldReturn(true);
+    }
+
+    function it_does_not_support_subject_if_none_of_resolvers_from_registry_supports_it(
+        ShippingMethodsResolverInterface $firstMethodsResolver,
+        ShippingMethodsResolverInterface $secondMethodsResolver,
+        PrioritizedServiceRegistryInterface $resolversRegistry,
+        ShippingSubjectInterface $shippingSubject
+    ) {
+        $resolversRegistry->all()->willReturn([$firstMethodsResolver, $secondMethodsResolver]);
+
+        $firstMethodsResolver->supports($shippingSubject)->willReturn(false);
+        $firstMethodsResolver->supports($shippingSubject)->willReturn(false);
+
+        $this->supports($shippingSubject)->shouldReturn(false);
     }
 }

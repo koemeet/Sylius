@@ -5,6 +5,12 @@ sylius:
     checkout:
         shipping_method:
             not_blank: Kérjük, válassza ki a szállítási formát.
+    customer:
+        currency_code:
+            not_valid: A megadott pénznem érvénytelen.
+    order:
+        currency_code:
+            not_valid: A megadott pénznem érvénytelen.
     locale:
         code:
             not_blank: Kérjük, írja be a hely kódját.
@@ -21,3 +27,9 @@ sylius:
     product_translation:
         short_description:
             max: 'Rövid leírás nem lehet hosszabb mint {{ limit }} karakterek.'
+    user:
+        email:
+            unique: Ez az e-mail cím már használatban van.
+        username:
+            unique: Ez a felhasználónév már használatban van.
+            not_blank: Kérjük, add meg a neved.

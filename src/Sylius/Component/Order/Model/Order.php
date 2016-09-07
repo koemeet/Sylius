@@ -40,7 +40,7 @@ class Order implements OrderInterface
     /**
      * @var string
      */
-    protected $additionalInformation;
+    protected $notes;
 
     /**
      * @var Collection|OrderItemInterface[]
@@ -61,11 +61,6 @@ class Order implements OrderInterface
      * @var Collection|CommentInterface[]
      */
     protected $comments;
-
-    /**
-     * @var Collection|IdentityInterface[]
-     */
-    protected $identities;
 
     /**
      * @var int
@@ -90,7 +85,6 @@ class Order implements OrderInterface
         $this->items = new ArrayCollection();
         $this->adjustments = new ArrayCollection();
         $this->comments = new ArrayCollection();
-        $this->identities = new ArrayCollection();
         $this->createdAt = new \DateTime();
     }
 
@@ -153,9 +147,17 @@ class Order implements OrderInterface
     /**
      * {@inheritdoc}
      */
-    public function getSequenceType()
+    public function getNotes()
     {
-        return 'order';
+        return $this->notes;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
     }
 
     /**
@@ -316,45 +318,6 @@ class Order implements OrderInterface
     public function isEmpty()
     {
         return $this->items->isEmpty();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addIdentity(IdentityInterface $identity)
-    {
-        if (!$this->hasIdentity($identity)) {
-            $this->identities->add($identity);
-
-            $identity->setOrder($this);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasIdentity(IdentityInterface $identity)
-    {
-        return $this->identities->contains($identity);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIdentities()
-    {
-        return $this->identities;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function removeIdentity(IdentityInterface $identity)
-    {
-        if ($this->hasIdentity($identity)) {
-            $identity->setOrder(null);
-            $this->identities->removeElement($identity);
-        }
     }
 
     /**
@@ -524,21 +487,5 @@ class Order implements OrderInterface
             $this->adjustmentsTotal -= $adjustment->getAmount();
             $this->recalculateTotal();
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAdditionalInformation()
-    {
-        return $this->additionalInformation;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setAdditionalInformation($information)
-    {
-        $this->additionalInformation = $information;
     }
 }

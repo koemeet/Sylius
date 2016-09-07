@@ -17,7 +17,9 @@ use Sylius\Behat\NotificationType;
 use Sylius\Behat\Page\Shop\Cart\SummaryPageInterface;
 use Sylius\Behat\Page\Shop\Product\ShowPageInterface;
 use Sylius\Behat\Service\NotificationCheckerInterface;
-use Sylius\Component\Core\Test\Services\SharedStorageInterface;
+use Sylius\Behat\Service\SharedSecurityServiceInterface;
+use Sylius\Component\Core\Model\ShopUserInterface;
+use Sylius\Behat\Service\SharedStorageInterface;
 use Sylius\Component\Product\Model\OptionInterface;
 use Sylius\Component\Product\Model\ProductInterface;
 use Webmozart\Assert\Assert;
@@ -50,29 +52,46 @@ final class CartContext implements Context
     private $notificationChecker;
 
     /**
+     * @var SharedSecurityServiceInterface
+     */
+    private $sharedSecurityService;
+
+    /**
      * @param SharedStorageInterface $sharedStorage
      * @param SummaryPageInterface $summaryPage
      * @param ShowPageInterface $productShowPage
      * @param NotificationCheckerInterface $notificationChecker
+     * @param SharedSecurityServiceInterface $sharedSecurityService
      */
     public function __construct(
         SharedStorageInterface $sharedStorage,
         SummaryPageInterface $summaryPage,
         ShowPageInterface $productShowPage,
-        NotificationCheckerInterface $notificationChecker
+        NotificationCheckerInterface $notificationChecker,
+        SharedSecurityServiceInterface $sharedSecurityService
     ) {
         $this->sharedStorage = $sharedStorage;
         $this->summaryPage = $summaryPage;
         $this->productShowPage = $productShowPage;
         $this->notificationChecker = $notificationChecker;
+        $this->sharedSecurityService = $sharedSecurityService;
     }
 
     /**
+     * @Given I am at the summary of my cart
      * @When I see the summary of my cart
      */
     public function iOpenCartSummaryPage()
     {
         $this->summaryPage->open();
+    }
+
+    /**
+     * @When I save my changes
+     */
+    public function iSaveMyChanges()
+    {
+        $this->summaryPage->updateCart();
     }
 
     /**
@@ -141,7 +160,7 @@ final class CartContext implements Context
      * @Then my cart shipping total should be :shippingTotal
      * @Then my cart shipping should be for free
      */
-    public function myCartShippingFeeShouldBe($shippingTotal = '€0.00')
+    public function myCartShippingFeeShouldBe($shippingTotal = '$0.00')
     {
         $this->summaryPage->open();
 
@@ -174,7 +193,13 @@ final class CartContext implements Context
     {
         $this->summaryPage->open();
 
-        expect($this->summaryPage)->toThrow(ElementNotFoundException::class)->during('getShippingTotal', []);
+        try {
+            $this->summaryPage->getShippingTotal();
+        } catch (ElementNotFoundException $exception) {
+            return;
+        }
+
+        throw new \DomainException('Get shipping total should throw an exception!');
     }
 
     /**
@@ -184,7 +209,13 @@ final class CartContext implements Context
     {
         $this->summaryPage->open();
 
-        expect($this->summaryPage)->toThrow(ElementNotFoundException::class)->during('getPromotionTotal', []);
+        try {
+            $this->summaryPage->getPromotionTotal();
+        } catch (ElementNotFoundException $exception) {
+            return;
+        }
+
+        throw new \DomainException('Get promotion total should throw an exception!');
     }
 
     /**
@@ -195,18 +226,20 @@ final class CartContext implements Context
     {
         $this->summaryPage->open();
 
-        $discountedTotal = $this->summaryPage->getItemDiscountedTotal($product->getName());
-        $total = $this->summaryPage->getItemTotal($product->getName());
+        $quantity = $this->summaryPage->getQuantity($product->getName());
+        $unitPrice = $this->summaryPage->getItemUnitPrice($product->getName());
+        $regularUnitPrice = $this->summaryPage->getItemUnitRegularPrice($product->getName());
 
         Assert::same(
-            $discountedTotal,
-            ($total - $amount),
-            'Price after discount should be %2$s, but it is %s.'
+            $quantity * $unitPrice,
+            ($quantity * $regularUnitPrice) - $amount,
+            'Price after discount should be %s, but it is %2$s.'
         );
     }
 
     /**
-     * @Given /^(product "[^"]+") price should not be decreased$/
+     * @Then /^(product "[^"]+") price should not be decreased$/
+     * @Then /^(its|theirs) price should not be decreased$/
      */
     public function productPriceShouldNotBeDecreased(ProductInterface $product)
     {
@@ -218,11 +251,10 @@ final class CartContext implements Context
         );
     }
 
-
     /**
-     * @Given /^I add (this product) to the cart$/
+     * @Given /^I (?:add|added) (this product) to the cart$/
      * @Given I added product :product to the cart
-     * @Given /^I (?:have|had) (product "([^"]+)") in the cart$/
+     * @Given /^I (?:have|had) (product "[^"]+") in the cart$/
      * @When I add product :product to the cart
      */
     public function iAddProductToTheCart(ProductInterface $product)
@@ -231,6 +263,16 @@ final class CartContext implements Context
         $this->productShowPage->addToCart();
 
         $this->sharedStorage->set('product', $product);
+    }
+
+    /**
+     * @Given /^(this user) has ("[^"]+" product) in the cart$/
+     */
+    public function thisUserHasProductInTheCart(ShopUserInterface $user, ProductInterface $product)
+    {
+        $this->sharedSecurityService->performActionAsShopUser($user, function () use ($product) {
+            $this->iAddProductToTheCart($product);
+        });
     }
 
     /**
@@ -247,24 +289,33 @@ final class CartContext implements Context
     }
 
     /**
-     * @Given I added :variant variant of product :product to the cart
-     * @When I add :variant variant of product :product to the cart
-     * @When I have :variant variant of product :product in the cart
+     * @Given I added :variantName variant of product :product to the cart
+     * @When I add :variantName variant of product :product to the cart
+     * @When I have :variantName variant of product :product in the cart
      * @When /^I add "([^"]+)" variant of (this product) to the cart$/
      */
-    public function iAddProductToTheCartSelectingVariant($variant, ProductInterface $product)
+    public function iAddProductToTheCartSelectingVariant($variantName, ProductInterface $product)
     {
         $this->productShowPage->open(['slug' => $product->getSlug()]);
-        $this->productShowPage->addToCartWithVariant($variant);
+        $this->productShowPage->addToCartWithVariant($variantName);
 
         $this->sharedStorage->set('product', $product);
     }
 
     /**
-     * @Given I have :quantity products :product in the cart
-     * @When I add :quantity products :product to the cart
+     * @When /^I add (\d+) of (them) to (?:the|my) cart$/
      */
-    public function iAddProductsToTheCart(ProductInterface $product, $quantity)
+    public function iAddQuantityOfProductsToTheCart($quantity, ProductInterface $product)
+    {
+        $this->productShowPage->open(['slug' => $product->getSlug()]);
+        $this->productShowPage->addToCartWithQuantity($quantity);
+    }
+
+    /**
+     * @Given /^I have(?:| added) (\d+) (products "([^"]+)") (?:to|in) the cart$/
+     * @When /^I add(?:|ed) (\d+) (products "([^"]+)") to the cart$/
+     */
+    public function iAddProductsToTheCart($quantity, ProductInterface $product)
     {
         $this->productShowPage->open(['slug' => $product->getSlug()]);
         $this->productShowPage->addToCartWithQuantity($quantity);
@@ -362,6 +413,83 @@ final class CartContext implements Context
             $this->summaryPage->getQuantity($productName),
             $quantity,
             'The quantity of product should be %2$s, but it is %s'
+        );
+    }
+
+    /**
+     * @Given I use coupon with code :couponCode
+     */
+    public function iUseCouponWithCode($couponCode)
+    {
+        $this->summaryPage->applyCoupon($couponCode);
+    }
+
+    /**
+     * @Then I should be notified that promotion coupon has been added to the cart
+     */
+    public function iShouldBeNotifiedThatPromotionCouponHasBeenAddedToTheCart()
+    {
+        $this->notificationChecker->checkNotification(
+            'Your promotion coupon has been added to the cart.',
+            NotificationType::success()
+        );
+    }
+
+    /**
+     * @Then I should be notified that promotion coupon is not valid
+     */
+    public function iShouldBeNotifiedThatPromotionCouponIsNotValid()
+    {
+        $this->notificationChecker->checkNotification(
+            'Your promotion coupon is not valid.',
+            NotificationType::failure()
+        );
+    }
+
+    /**
+     * @Then total price of :productName item should be :productPrice
+     */
+    public function thisItemPriceShouldBe($productName, $productPrice)
+    {
+        $this->summaryPage->open();
+
+        Assert::same(
+            $this->summaryPage->getItemTotal($productName),
+            $productPrice
+        );
+    }
+
+    /**
+     * @Then /^I should be notified that (this product) cannot be updated$/
+     */
+    public function iShouldBeNotifiedThatThisProductDoesNotHaveSufficientStock(ProductInterface $product)
+    {
+        Assert::true(
+            $this->summaryPage->hasProductOutOfStockValidationMessage($product),
+            sprintf('I should see validation message for %s product', $product->getName())
+        );
+    }
+
+    /**
+     * @Then /^I should not be notified that (this product) cannot be updated$/
+     */
+    public function iShouldNotBeNotifiedThatThisProductCannotBeUpdated(ProductInterface $product)
+    {
+        Assert::false(
+            $this->summaryPage->hasProductOutOfStockValidationMessage($product),
+            sprintf('I should see validation message for %s product', $product->getName())
+        );
+    }
+
+    /**
+     * @Then my cart's total should be :total
+     */
+    public function myCartSTotalShouldBe($total)
+    {
+        Assert::same(
+            $total,
+            $this->summaryPage->getCartTotal(),
+            'Cart should have %s total, but it has %2$s.'
         );
     }
 }

@@ -14,7 +14,6 @@ namespace spec\Sylius\Bundle\ReviewBundle\Form\Type;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
-use Sylius\Bundle\UserBundle\Form\EventSubscriber\AddCustomerGuestTypeFormSubscriber;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -22,7 +21,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * @author Mateusz Zalewski <mateusz.zalewski@lakion.com>
  * @author Grzegorz Sadowski <grzegorz.sadowski@lakion.com>
  */
-class ReviewTypeSpec extends ObjectBehavior
+final class ReviewTypeSpec extends ObjectBehavior
 {
     function let()
     {
