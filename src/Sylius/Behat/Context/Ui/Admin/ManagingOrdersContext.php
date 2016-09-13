@@ -76,6 +76,7 @@ final class ManagingOrdersContext implements Context
     }
 
     /**
+     * @Given I am browsing orders
      * @When I browse orders
      */
     public function iBrowseOrders()
@@ -114,6 +115,14 @@ final class ManagingOrdersContext implements Context
     public function iShipThisOrder(OrderInterface $order)
     {
         $this->showPage->shipOrder($order);
+    }
+
+    /**
+     * @When I switch the way orders are sorted by :fieldName
+     */
+    public function iSwitchSortingBy($fieldName)
+    {
+        $this->indexPage->sortBy($fieldName);
     }
 
     /**
@@ -576,6 +585,20 @@ final class ManagingOrdersContext implements Context
     }
 
     /**
+     * @Then the first order should have number :number
+     */
+    public function theFirstOrderShouldHaveNumber($number)
+    {
+        $actualNumber = $this->indexPage->getColumnFields('Number')[0];
+
+        Assert::eq(
+            $actualNumber,
+            $number,
+            sprintf('Expected first order\'s number to be %s, but it is %s.', $number, $actualNumber)
+        );
+    }
+
+    /**
      * @Then it should have shipment in state :shipmentState
      */
     public function itShouldHaveShipmentState($shipmentState)
@@ -618,5 +641,16 @@ final class ManagingOrdersContext implements Context
         $actualNumberOfPayments = $this->showPage->getPaymentsCount();
 
         Assert::eq($number, $actualNumberOfPayments);
+    }
+
+    /**
+     * @Then I should see the order :orderNumber with total :total
+     */
+    public function iShouldSeeTheOrderWithTotal($orderNumber, $total)
+    {
+        Assert::true(
+            $this->indexPage->isSingleResourceOnPage(['Total' => $total]),
+            sprintf('The total of order "%s" is not "%s".', $orderNumber, $total)
+        );
     }
 }

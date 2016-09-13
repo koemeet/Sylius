@@ -7,6 +7,8 @@ sylius:
         option:
             name: Name
         notes: Extra notes
+        variant:
+            tracked: Tracked
     ui:
         abandoned: Abandoned
         about: About
@@ -87,6 +89,7 @@ sylius:
         category: Category
         category_requirements: Category requirements
         change_address: Change address
+        change_file: Change file
         change_password: Change password
         change_payment_method: Change payment method
         change_shipping_method: Change shipping method
@@ -482,6 +485,7 @@ sylius:
         not_empty: Not empty
         not_in: Not in
         not_verified: Not verified
+        not_tracked: Not tracked
         notes: Notes
         notify_customer: 'Notify Customer'
         number: Number
@@ -560,6 +564,7 @@ sylius:
         promotion_configuration: Promotion configuration
         promotion_coupons: Coupons
         promotion_details: 'Promotion details'
+        promotion_discount: Promotion discount
         promotion_information: Promotion information
         promotion_total: 'Promotion total'
         promotions: Promotions
