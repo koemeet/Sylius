@@ -53,6 +53,7 @@
         "payum/payum-bundle": "~2.1",
         "php-http/guzzle6-adapter": "~1.1",
         "polishsymfonycommunity/symfony-mocker-container": "^1.0",
+        "ramsey/uuid": "^3.5",
         "sensio/distribution-bundle": "~3.0",
         "sonata-project/intl-bundle": "^2.2",
         "stof/doctrine-extensions-bundle": "~1.1",
