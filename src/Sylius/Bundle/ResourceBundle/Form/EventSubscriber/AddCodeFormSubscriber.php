@@ -11,6 +11,7 @@
 
 namespace Sylius\Bundle\ResourceBundle\Form\EventSubscriber;
 
+use Ramsey\Uuid\Uuid;
 use Sylius\Component\Resource\Exception\UnexpectedTypeException;
 use Sylius\Component\Resource\Model\CodeAwareInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -67,6 +68,10 @@ class AddCodeFormSubscriber implements EventSubscriberInterface
         }
 
         $form = $event->getForm();
-        $form->add('code', $this->type, ['label' => $this->label, 'disabled' => $disabled]);
+        $form->add('code', $this->type, [
+            'label' => $this->label,
+            'disabled' => $disabled,
+            'empty_data' => Uuid::uuid4()->toString(),
+        ]);
     }
 }
