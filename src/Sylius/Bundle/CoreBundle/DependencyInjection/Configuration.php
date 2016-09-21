@@ -15,6 +15,8 @@ use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
 use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
 use Sylius\Component\Core\Model\ProductVariantImage;
 use Sylius\Component\Core\Model\ProductVariantImageInterface;
+use Sylius\Component\Core\Model\TaxonProduct;
+use Sylius\Component\Core\Model\TaxonProductInterface;
 use Sylius\Component\Resource\Factory\Factory;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
@@ -72,6 +74,21 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                         ->end()
+                        ->arrayNode('taxon_product')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->variableNode('options')->end()
+                                ->arrayNode('classes')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->scalarNode('model')->defaultValue(TaxonProduct::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('interface')->defaultValue(TaxonProductInterface::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('factory')->defaultValue(Factory::class)->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
                     ->end()
                 ->end()
             ->end()
