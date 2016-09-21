@@ -41,7 +41,17 @@ class TaxonProduct implements TaxonProductInterface, ProductInterface
     /**
      * @var integer
      */
-    protected $position;
+    protected $position = -1;
+
+    /**
+     * @param TaxonInterface $taxon
+     * @param ProductInterface $product
+     */
+    public function __construct(TaxonInterface $taxon, ProductInterface $product)
+    {
+        $this->taxon = $taxon;
+        $this->product = $product;
+    }
 
     /**
      * {@inheritdoc}

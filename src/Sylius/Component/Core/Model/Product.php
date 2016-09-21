@@ -33,7 +33,7 @@ class Product extends BaseProduct implements ProductInterface, ReviewableProduct
     protected $variantSelectionMethod;
 
     /**
-     * @var Collection|BaseTaxonInterface[]
+     * @var Collection|TaxonProductInterface[]
      */
     protected $taxons;
 
@@ -146,6 +146,10 @@ class Product extends BaseProduct implements ProductInterface, ReviewableProduct
      */
     public function setTaxons(Collection $taxons)
     {
+        $taxons = $taxons->map(function($taxon)  {
+           return new TaxonProduct($taxon, $this);
+        });
+
         $this->taxons = $taxons;
     }
 
@@ -154,6 +158,8 @@ class Product extends BaseProduct implements ProductInterface, ReviewableProduct
      */
     public function addTaxon(BaseTaxonInterface $taxon)
     {
+        $taxon = new TaxonProduct($taxon, $this);
+
         if (!$this->hasTaxon($taxon)) {
             $this->taxons->add($taxon);
         }
