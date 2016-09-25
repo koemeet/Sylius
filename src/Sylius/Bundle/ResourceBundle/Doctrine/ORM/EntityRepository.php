@@ -152,6 +152,7 @@ class EntityRepository extends BaseEntityRepository implements RepositoryInterfa
     public function findOneBy(array $criteria, array $orderBy = null)
     {
         $qb = $this->createQueryBuilder('o');
+        $qb->setMaxResults(1);
 
         $this->applyCriteria($qb, $criteria);
 
@@ -159,6 +160,6 @@ class EntityRepository extends BaseEntityRepository implements RepositoryInterfa
             $this->applySorting($qb, $orderBy);
         }
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getOneOrNullResult();
     }
 }
