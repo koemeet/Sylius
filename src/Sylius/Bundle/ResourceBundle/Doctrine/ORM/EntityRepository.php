@@ -126,4 +126,33 @@ class EntityRepository extends BaseEntityRepository implements RepositoryInterfa
 
         return $name;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+    {
+        $qb = $this->createQueryBuilder('o');
+
+        $this->applyCriteria($qb, $criteria);
+        $this->applySorting($qb, $orderBy);
+
+        $qb->setMaxResults($limit);
+        $qb->setFirstResult($offset);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findOneBy(array $criteria, array $orderBy = null)
+    {
+        $qb = $this->createQueryBuilder('o');
+
+        $this->applyCriteria($criteria);
+        $this->applySorting($orderBy);
+
+        return $qb->getQuery()->getResult();
+    }
 }
