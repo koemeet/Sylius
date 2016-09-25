@@ -150,8 +150,8 @@ class EntityRepository extends BaseEntityRepository implements RepositoryInterfa
     {
         $qb = $this->createQueryBuilder('o');
 
-        $this->applyCriteria($criteria);
-        $this->applySorting($orderBy);
+        $this->applyCriteria($qb, $criteria);
+        $this->applySorting($qb, $orderBy);
 
         return $qb->getQuery()->getResult();
     }
