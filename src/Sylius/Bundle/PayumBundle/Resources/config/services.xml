@@ -28,7 +28,7 @@
         <service id="sylius.payum.extension.update_payment_state" class="Sylius\Bundle\PayumBundle\Extension\UpdatePaymentStateExtension">
             <argument type="service" id="sm.factory" />
 
-            <tag name="payum.extension" all="true" />
+            <tag name="payum.extension" all="true" prepend="true" />
         </service>
 
         <service id="sylius.payum.http_client" class="Payum\Core\HttpClientInterface">
