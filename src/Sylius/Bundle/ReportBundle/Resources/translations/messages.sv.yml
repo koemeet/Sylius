@@ -5,3 +5,12 @@ sylius:
     form:
         report:
             name: Namn
+            description: Beskrivning
+            renderer:
+                template: Mall
+            chart:
+                type: Typ
+            user_registration:
+                start: Startdatum
+                end: Slutdatum
+                period: Tidsperiod

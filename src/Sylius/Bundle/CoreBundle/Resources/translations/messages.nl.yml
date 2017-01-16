@@ -35,6 +35,7 @@ sylius:
             currencies: "Valuta's"
             shipping_methods: Verzendmethodes
             payment_methods: Betaalmethodes
+            tax_zone_default: Standaard belastingzone
             theme: Thema
             hostname: Hostnaam
         image:
@@ -60,6 +61,8 @@ sylius:
             short_description: Korte omschrijving
             variant_selection_method: Variant selectie methode
             main_taxon: Hoofdcategorie
+            channels: Kanalen
+            enabled: Toegestaan
         product_filter:
             name: Naam
             code: Code
@@ -149,5 +152,6 @@ sylius:
             name: Bevestiging van de verzending
         user_confirmation:
             name: Bevestiging van de gebruiker
+            subject: Welkom in jouw winkel
         password_reset:
             name: Wachtwoord opnieuw instellen

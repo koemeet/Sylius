@@ -7,7 +7,7 @@ sylius:
             username: Nume de utilizator
             password: Parolă
         option:
-            presentation: Prezentare
+            name: Nume
     ui:
         actions: Acțiuni
         add_coupon: Adaugă cod promoțional
@@ -16,11 +16,17 @@ sylius:
         cancelled: Anulată
         change_your_password: Modificare parolă
         checkout: Trimite comanda
+        your_cart_is_empty: Coșul este gol
+        image: Imagine
+        qty: Cantitate
+        clear_cart: Golește coșul
         color: Culoare
         countries: Țări
         coupon_based: Bazat pe cod promoțional
         coupons: Coduri promoționale
         create: Creează
+        my_account: Contul meu
+        home: Pagina principală
         dashboard: Panou de administrare
         default_currency: Moneda implicită
         delete: Șterge
@@ -30,6 +36,7 @@ sylius:
         filter: Filtrează
         generate_coupons: Generare coduri promoționale
         item: Produs
+        inventory: Inventar
         list_coupons: Listare coduri promoționale
         locales: Setări regionale
         new: Nouă
@@ -39,6 +46,7 @@ sylius:
         no_promotion: Fără reduceri
         no_shipping_charges: Nu se aplică taxe pentru livrare
         no_taxes: Nu se aplică taxe
+        order_details: Detaliile comenzii dumneavoastră
         price: Preț
         quantity: Cantitate
         ready: Gata

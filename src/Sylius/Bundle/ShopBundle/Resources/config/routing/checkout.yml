@@ -13,7 +13,6 @@ sylius_shop_checkout_addressing:
     defaults:
         _controller: sylius.controller.order:updateAction
         _sylius:
-            permission: false
             template: SyliusShopBundle:Checkout:addressing.html.twig
             form:
                 type: sylius_shop_checkout_addressing
@@ -30,6 +29,22 @@ sylius_shop_checkout_addressing:
                 route: sylius_shop_checkout_shipping
                 parameters: []
 
+sylius_shop_checkout_readdressing:
+    path: /readdress
+    methods: [PUT]
+    defaults:
+        _controller: sylius.controller.order:applyStateMachineTransitionAction
+        _sylius:
+            repository:
+                method: find
+                arguments: [expr:service('sylius.cart_provider').getCart()]
+            state_machine:
+                graph: sylius_order_checkout
+                transition: readdress
+            redirect:
+                route: sylius_shop_checkout_addressing
+                parameters: []
+
 sylius_shop_checkout_shipping:
     path: /shipping
     methods: [GET, PUT]
@@ -44,4 +59,73 @@ sylius_shop_checkout_shipping:
             state_machine:
                 graph: sylius_order_checkout
                 transition: select_shipping
+            redirect:
+                route: sylius_shop_checkout_payment
+                parameters: []
+
+sylius_shop_checkout_reselecting_shipping:
+    path: /reselect-shipping
+    methods: [PUT]
+    defaults:
+        _controller: sylius.controller.order:applyStateMachineTransitionAction
+        _sylius:
+            repository:
+                method: find
+                arguments: [expr:service('sylius.cart_provider').getCart()]
+            state_machine:
+                graph: sylius_order_checkout
+                transition: reselect_shipping
+            redirect:
+                route: sylius_shop_checkout_shipping
+                parameters: []
+
+sylius_shop_checkout_payment:
+    path: /payment
+    methods: [GET, PUT]
+    defaults:
+        _controller: sylius.controller.order:updateAction
+        _sylius:
+            template: SyliusShopBundle:Checkout:payment.html.twig
+            form: sylius_checkout_payment_step
+            repository:
+                method: find
+                arguments: [expr:service('sylius.cart_provider').getCart()]
+            state_machine:
+                graph: sylius_order_checkout
+                transition: select_payment
+            redirect:
+                route: sylius_shop_checkout_summary
+                parameters: []
+
+sylius_shop_checkout_reselecting_payment:
+    path: /reselect-payment
+    methods: [PUT]
+    defaults:
+        _controller: sylius.controller.order:applyStateMachineTransitionAction
+        _sylius:
+            repository:
+                method: find
+                arguments: [expr:service('sylius.cart_provider').getCart()]
+            state_machine:
+                graph: sylius_order_checkout
+                transition: reselect_payment
+            redirect:
+                route: sylius_shop_checkout_payment
+                parameters: []
+
+sylius_shop_checkout_summary:
+    path: /summary
+    methods: [GET, PUT]
+    defaults:
+        _controller: sylius.controller.order:updateAction
+        _sylius:
+            template: SyliusShopBundle:Checkout:summary.html.twig
+            repository:
+                method: find
+                arguments: [expr:service('sylius.cart_provider').getCart()]
+            state_machine:
+                graph: sylius_order
+                transition: create
             redirect: sylius_shop_homepage
+            form:
+                type: sylius_checkout_summary

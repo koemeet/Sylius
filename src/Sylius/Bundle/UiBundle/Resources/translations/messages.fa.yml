@@ -8,7 +8,7 @@ sylius:
             password: کلمه عبور
             remember_me: مرا به خاطر بسپار
         option:
-            presentation: عنوان برای مشتری
+            name: نام
     ui:
         actions: طریقه اعمال
         add_coupon: ایجاد کد تخفیف
@@ -23,7 +23,13 @@ sylius:
         change_your_password: تغییر کلمه عبور
         charges_and_taxes: هزینه و مالیات
         checkout: پرداخت نشده
+        forgot_password: فراموشی کلمه عبور
+        your_cart_is_empty: سبد خرید شما خالی است
         clear_filters: پاک کردن فیلترها
+        image: عکس
+        qty: تعداد
+        clear_cart: خالی کردن سبد خرید
+        summary: خلاصه
         color: رنگ
         configure_channels_available_in_your_store: کانال های در دسترس در فروشگاه های خود را پیکربندی کنید
         confirm_your_action: عملیات را تایید کنید
@@ -33,6 +39,8 @@ sylius:
         coupons: کدهای تخفیف
         create: ایجاد
         currencies: واحدهای پول
+        my_account: حساب کاربری من
+        home: خانه
         dashboard: داشبورد
         date: تاریخ
         default_currency: واحد پولی پیش‌فرض
@@ -58,9 +66,11 @@ sylius:
         expires_at: انقضا در تاریخ
         filter: فیلتر
         generate_coupons: ایجاد کد تخفیف
+        guest_customer: مشتری مهمان
         in: در
         info: اطلاعات
         item: کالا
+        inventory: موجودی کالا
         last_updated: آخرین بروز رسانی
         list_coupons: لیست کدهای تخفیف
         locales: زبان ها
@@ -85,6 +95,7 @@ sylius:
         not_empty: خالی نیست
         not_in: وجود ندارد در
         or: یا
+        order_details: جزئیات سفارش شما
         powered_by: قدرت گرفته از
         price: قیمت
         promotion_configuration: تنظیمات فروش ویژه

@@ -8,7 +8,7 @@ sylius:
             password: Heslo
             remember_me: Zapamätať si ma
         option:
-            presentation: Verejný názov
+            name: Názov
     ui:
         account_credentials: Prihlasovacie údaje
         actions: Akcie
@@ -26,7 +26,13 @@ sylius:
         change_your_password: Zmena hesla
         charges_and_taxes: Poplatky a dane
         checkout: Košík
+        forgot_password: Zabudli ste heslo
+        your_cart_is_empty: Váš košík je prázdny
         clear_filters: Vymazať filter
+        image: Obrázok
+        qty: Množstvo
+        clear_cart: Vyprázdniť košík
+        summary: Zhrnutie
         color: Farba
         configure_channels_available_in_your_store: Nastavte dostupné kanály vo vašom obchode
         confirm_your_action: Potvrďte vašu akciu
@@ -37,6 +43,8 @@ sylius:
         create: Vytvoriť
         currencies: Meny
         customer_can_login_to_the_store: Zákazník sa môže prihlásiť do obchodu
+        my_account: Môj účet
+        home: Úvod
         dashboard: Administračný panel
         date: Dátum
         default_currency: Predvolená mena
@@ -70,9 +78,11 @@ sylius:
         filter: Filter
         go: Pokračovať
         generate_coupons: Vygenerovať kupóny
+        guest_customer: Návšetvník
         in: V
         info: Info
         item: Položka
+        inventory: Skladové zásoby
         jump_to_page: Prejsť na stranu
         last_updated: Posledná aktualizácia
         list_coupons: Zoznam kupónov
@@ -110,6 +120,7 @@ sylius:
         not_in: Nie je v
         onhold: Pozastavené
         or: alebo
+        order_details: Detaily Vašej objednávky
         partially_shipped: Čiastočne dodané
         per_customer_usage_limit: Obmedzenie použitia pre zákazníka
         powered_by: Vytvorené v systéme

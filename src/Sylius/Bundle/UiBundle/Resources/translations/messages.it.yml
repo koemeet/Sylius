@@ -8,12 +8,13 @@ sylius:
             password: Password
             remember_me: Ricordami
         option:
-            presentation: Presentazione
+            name: Nome
     ui:
         account_credentials: "Credenziali dell'account"
         actions: Azioni
         add_coupon: Aggiungi coupon
         add_to_cart: Aggiungi al carrello
+        addressing: Indirizzamento
         administration_panel_login: Login del pannello di amministrazione
         all: Tutti
         an_error_occurred: Si è verificato un errore
@@ -25,7 +26,13 @@ sylius:
         change_your_password: Modifica la password
         charges_and_taxes: Spese e tasse
         checkout: Checkout
+        forgot_password: Hai dimenticato la password
+        your_cart_is_empty: Il tuo carrello è vuoto
         clear_filters: Cancella filtri
+        image: Immagine
+        qty: Q.tà
+        clear_cart: Svuota carrello
+        summary: Riepilogo
         color: Colore
         configure_channels_available_in_your_store: Configura i canali disponibili nel tuo negozio
         confirm_your_action: "Confermare l'azione"
@@ -36,6 +43,8 @@ sylius:
         create: Crea
         currencies: Monete
         customer_can_login_to_the_store: "Cliente può accedere all'archivio"
+        my_account: Il mio account
+        home: Home
         dashboard: Pannello amministrazione
         date: Data
         default_currency: Valuta predefinita
@@ -67,9 +76,11 @@ sylius:
         filter: Filtri
         go: Vai
         generate_coupons: Genera coupon
+        guest_customer: Cliente ospite
         in: In
         info: Info
         item: Articolo
+        inventory: Magazzino
         jump_to_page: Vai alla pagina
         last_updated: Ultimo aggiornamento
         list_coupons: Lista coupon
@@ -104,6 +115,7 @@ sylius:
         not_empty: Non è vuoto
         not_in: Non in
         or: oppure
+        order_details: "Dettagli dell'ordine"
         powered_by: Promosso da
         price: Prezzo
         promotion_configuration: Configurazione della promozione

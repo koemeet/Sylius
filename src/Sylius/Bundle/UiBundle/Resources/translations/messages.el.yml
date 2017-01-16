@@ -7,14 +7,19 @@ sylius:
             username: Όνομα χρήστη
             password: Κωδικός πρόσβασης
         option:
-            presentation: Παρουσίαση
+            name: Ονομασία
     ui:
         actions: Ενέργειες
         add_to_cart: Προσθήκη στο καλάθι
         cancel: Άκυρο
         checkout: Ολοκλήρωση αγορών
+        your_cart_is_empty: Το καλάθι είναι άδειο
+        image: Εικόνα
+        qty: Ποσότητα
+        clear_cart: Καθαρισμός καλαθιού
         countries: Χώρες
         create: Δημιουργία
+        home: Αρχική
         default_currency: Προεπιλεγμένο νόμισμα
         description: Περιγραφή
         enabled: Ενεργοποιημένο

@@ -8,7 +8,7 @@ sylius:
             password: Hasło
             remember_me: Zapamiętaj mnie
         option:
-            presentation: Nazwa publiczna
+            name: Nazwa
     ui:
         actions: Akcje
         add_coupon: Dodaj kupon promocyjny
@@ -21,7 +21,12 @@ sylius:
         change_your_password: Zmiana hasła
         charges_and_taxes: Opłaty i podatki
         checkout: Koszyk
+        your_cart_is_empty: Twój koszyk jest pusty
         clear_filters: Wyczyść filtry
+        image: Zdjęcie
+        qty: Ilość
+        clear_cart: Wyczyść koszyk
+        summary: Podsumowanie
         color: Kolor
         configure_channels_available_in_your_store: Skonfiguruj kanały dostępne w twoim sklepie
         confirm_your_action: Potwierdź akcję
@@ -32,6 +37,8 @@ sylius:
         coupons: Kupony
         create: Utwórz
         currencies: Waluty
+        my_account: Moje konto
+        home: Panel
         dashboard: Panel
         date: Data
         default_currency: Domyślna waluta
@@ -65,8 +72,10 @@ sylius:
         extra_information: Dodatkowe informacje
         filter: Filtruj
         generate_coupons: Wygeneruj kupony promocyjne
+        guest_customer: Gość
         info: Info
         item: Element
+        inventory: Zapasy
         jump_to_page: Przejdź na stronę
         last_updated: Ostatnia aktualizacja
         list_coupons: Lista kuponów promocyjnych
@@ -109,6 +118,7 @@ sylius:
         not_in: Nie w
         onhold: Oczekujące
         or: lub
+        order_details: 'Szczegóły  Twojego zamówienia'
         partially_shipped: Częściowo wysłane
         per_customer_usage_limit: Limit użycia na klienta
         price: Cena

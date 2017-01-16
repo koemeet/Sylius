@@ -83,8 +83,9 @@ final class UserContext implements Context
     /**
      * @Given there is user :email identified by :password
      * @Given there was account of :email with password :password
+     * @Given there is a user :email
      */
-    public function thereIsUserIdentifiedBy($email, $password)
+    public function thereIsUserIdentifiedBy($email, $password = 'sylius')
     {
         $user = $this->userFactory->create($email, $password);
 
@@ -132,6 +133,28 @@ final class UserContext implements Context
     }
 
     /**
+     * @Given his account was deleted
+     */
+    public function hisAccountWasDeleted()
+    {
+        $user = $this->sharedStorage->get('user');
+
+        $this->userRepository->remove($user);
+    }
+
+    /**
+     * @Given there is an administrator identified by :email
+     */
+    public function thereIsAnAdministratorIdentifiedBy($email)
+    {
+        $administrator = $this->userFactory->createDefaultAdmin();
+        $administrator->setEmail($email);
+
+        $this->sharedStorage->set('administrator', $administrator);
+        $this->userRepository->add($administrator);
+    }
+
+    /**
      * @param string $firstName
      * @param string $lastName
      * @param string $country
@@ -158,15 +181,5 @@ final class UserContext implements Context
         $address->setCountryCode($this->countryCodeConverter->convertToCode($country));
 
         return $address;
-    }
-
-    /**
-     * @Given his account was deleted
-     */
-    public function hisAccountWasDeleted()
-    {
-        $user = $this->sharedStorage->get('user');
-
-        $this->userRepository->remove($user);
     }
 }

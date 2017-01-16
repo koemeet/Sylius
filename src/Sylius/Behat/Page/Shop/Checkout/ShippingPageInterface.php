@@ -35,5 +35,17 @@ interface ShippingPageInterface extends SymfonyPageInterface
      */
     public function hasNoShippingMethodsMessage();
 
+    /**
+     * @param string $shippingMethodName
+     * @param string $fee
+     * 
+     * @return bool
+     */
+    public function hasShippingMethodFee($shippingMethodName, $fee);
+
     public function nextStep();
+
+    public function changeAddress();
+
+    public function changeAddressByStepLabel();
 }

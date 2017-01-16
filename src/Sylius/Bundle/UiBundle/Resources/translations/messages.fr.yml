@@ -8,7 +8,8 @@ sylius:
             password: Mot de passe
             remember_me: Rester connecté
         option:
-            presentation: Présentation
+            name: Nom
+        notes: Notes supplémentaires
     ui:
         about: À propos
         account_credentials: "Informations d'intentification"
@@ -20,8 +21,10 @@ sylius:
         an_error_occurred: "Une erreur s'est produite"
         are_your_sure_you_want_to_perform_this_action: Êtes-vous sûr de vouloir effectuer cette action ?
         available_for_channels: Disponible pour le canal
+        reserved: Réservé
         average_order_value: Panier moyen
         backordered: Rupture de stock
+        back_to_store: Retour à la boutique
         cancel: Annuler
         cancelled: Annulé
         category_requirements: Exigences de la catégorie
@@ -29,7 +32,14 @@ sylius:
         change_your_password: Modifier votre mot de passe
         charges_and_taxes: Taxes et frais
         checkout: Paiement
+        forgot_password: Mot de passe oublié
+        your_cart_is_empty: Votre panier est vide
         clear_filters: Réinitialiser les filtres
+        image: Image
+        qty: Quantité
+        clear_cart: Vider le panier
+        extra_notes: Notes supplémentaires
+        summary: Résumé
         color: Couleur
         configurable_product: Produit configurable
         configure_channels_available_in_your_store: Configurer les canaux de distribution disponibles dans votre boutique
@@ -42,6 +52,8 @@ sylius:
         create: Créer
         currencies: Devises
         customer_can_login_to_the_store: Le client peut se connecter au magasin
+        my_account: Mon compte
+        home: Accueil
         customer_care: Service clients
         dashboard: Tableau de bord
         date: Date
@@ -81,9 +93,11 @@ sylius:
         filter: Filtrer
         go: Envoyer
         generate_coupons: Générer des coupons
+        guest_customer: Client invité
         in: Dans
         info: Info
         item: Élément
+        inventory: Stock
         jump_to_page: Aller à la page
         last_updated: Dernière mise à jour
         list_coupons: Liste des coupons
@@ -126,6 +140,7 @@ sylius:
         not_in: Pas dans
         onhold: En attente
         or: ou
+        order_details: Détails de votre commande
         partially_shipped: Partiellement expédiée
         per_customer_usage_limit: "Limite d'utilisation par client"
         powered_by: Propulsé par

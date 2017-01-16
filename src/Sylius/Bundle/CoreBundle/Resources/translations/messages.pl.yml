@@ -35,6 +35,7 @@ sylius:
             currencies: Waluty
             shipping_methods: Metody wysyłki
             payment_methods: Metody płatności
+            tax_zone_default: Domyślna strefa podatkowa
             theme: Motyw
             hostname: Nazwa hosta
         image:
@@ -60,6 +61,8 @@ sylius:
             short_description: Krótki opis
             variant_selection_method: Metody wyboru wariantu
             main_taxon: Główne grupy
+            channels: Kanały
+            enabled: Włączone
         product_filter:
             name: Nazwa
             code: Kod

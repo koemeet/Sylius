@@ -187,8 +187,8 @@ final class ManagingProductVariantsContext implements Context
         $this->iWantToViewAllVariantsOfThisProduct($productVariant->getProduct());
 
         Assert::false(
-            $this->indexPage->isSingleResourceOnPage(['presentation' => $productVariant->getPresentation()]),
-            sprintf('Product variant with code %s exists but should not.', $productVariant->getPresentation())
+            $this->indexPage->isSingleResourceOnPage(['name' => $productVariant->getName()]),
+            sprintf('Product variant with code %s exists but should not.', $productVariant->getName())
         );
     }
 
@@ -266,31 +266,13 @@ final class ManagingProductVariantsContext implements Context
 
     /**
      * @param string $element
-     * @param string $value
-     */
-    private function assertElementValue($element, $value)
-    {
-        Assert::true(
-            $this->updatePage->hasResourceValues(
-                [$element => $value]
-            ),
-            sprintf('Product should have %s with %s value.', $element, $value)
-        );
-    }
-
-    /**
-     * @param string $element
+     * @param $message
      */
     private function assertValidationMessage($element, $message)
     {
-        $currentPage = $this->currentPageResolver->getCurrentPageWithForm([
-            $this->createPage,
-            $this->updatePage,
-        ]);
+        /** @var CreatePageInterface|UpdatePageInterface $currentPage */
+        $currentPage = $this->currentPageResolver->getCurrentPageWithForm([$this->createPage, $this->updatePage]);
 
-        Assert::true(
-            $currentPage->checkValidationMessageFor($element, $message),
-            sprintf('Product %s should be required.', $element)
-        );
+        Assert::same($currentPage->getValidationMessage($element), $message);
     }
 }

@@ -6,8 +6,9 @@ sylius:
         login:
             password: Kata sandi
         option:
-            presentation: Presentasi
+            name: Nama
     ui:
+        image: Gambar
         default_currency: Mata uang default
         enabled: Diaktifkan
         "no": false

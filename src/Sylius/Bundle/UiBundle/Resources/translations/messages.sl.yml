@@ -8,7 +8,7 @@ sylius:
             password: Geslo
             remember_me: Zapomni si me
         option:
-            presentation: Predstavitev
+            name: Ime
     ui:
         actions: Dejanja
         add_coupon: Dodaj kupon
@@ -17,12 +17,20 @@ sylius:
         cancelled: Preklicano
         change_your_password: Spremenite vaše geslo
         checkout: Plačilo
+        forgot_password: Pozabljeno geslo
+        your_cart_is_empty: Vaša košarica je prazna
+        image: Slika
+        qty: Količina
+        clear_cart: Spraznite košarico
+        summary: Povzetek
         color: Barva
         countries: Države
         coupon_based: Kupon, ki temelji
         coupons: Kuponi
         create: Ustvarite
         currencies: Valute
+        my_account: Moj račun
+        home: Domov
         dashboard: Nadzorna plošča
         date: Datum
         default_currency: Privzeta valuta
@@ -36,7 +44,9 @@ sylius:
         expires_at: Poteče dne
         filter: Filter
         generate_coupons: Generirajte kupone
+        guest_customer: Kupec gost
         item: Izdelek
+        inventory: Inventar
         list_coupons: Seznam kuponov
         locales: Področne nastavitve
         new: Novo
@@ -47,6 +57,7 @@ sylius:
         no_promotion: Uporabljene ni nobene promocije
         no_shipping_charges: Stroški pošiljanja niso uporabljeni
         no_taxes: Davki niso uporabljeni
+        order_details: Podrobnosti vašega naročila
         powered_by: Poganja
         price: Cena
         quantity: Količina

@@ -7,7 +7,7 @@ sylius:
             username: Brukernavn
             password: Passord
         option:
-            presentation: Presentasjon
+            name: Navn
     ui:
         actions: Handlinger
         add_coupon: Legg til rabattkupong
@@ -16,10 +16,16 @@ sylius:
         cancelled: Avbrutt
         change_your_password: Endre passord
         checkout: Gå til kassen
+        your_cart_is_empty: Handlevognen er tom
+        image: Bilde
+        qty: Antall
+        clear_cart: Tøm handlevogn
         countries: Land
         coupon_based: Kupongbasert
         coupons: Kuponger
         create: Opprett
+        my_account: Min konto
+        home: Hjem
         dashboard: Panel
         default_currency: Standard valuta
         delete: Slett
@@ -29,6 +35,7 @@ sylius:
         filter: Filtrer
         generate_coupons: Generer kuponger
         item: Produkt
+        inventory: Lager
         list_coupons: List ut kuponger
         locales: Nasjonale innstillinger
         new: Ny
@@ -38,6 +45,7 @@ sylius:
         no_promotion: Ingen tilbudskode
         no_shipping_charges: Ingen fraktkostnader lagt til
         no_taxes: Ingen mva lagt til
+        order_details: Nærmere opplysninger om bestillingen
         price: Pris
         quantity: Antall
         ready: Klar

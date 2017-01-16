@@ -11,6 +11,7 @@
 
 namespace Sylius\Behat\Page\Shop\Checkout;
 
+use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Sylius\Behat\Page\SymfonyPage;
@@ -36,6 +37,13 @@ class AddressingPage extends SymfonyPage implements AddressingPageInterface
      */
     public function chooseDifferentBillingAddress()
     {
+        $driver = $this->getDriver();
+        if ($driver instanceof Selenium2Driver) {
+            $this->getElement('different_billing_address_label')->click();
+
+            return;
+        }
+
         $billingAddressSwitch = $this->getElement('different_billing_address');
         Assert::false(
             $billingAddressSwitch->isChecked(),
@@ -43,6 +51,23 @@ class AddressingPage extends SymfonyPage implements AddressingPageInterface
         );
 
         $billingAddressSwitch->check();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function checkInvalidCredentialsValidation()
+    {
+        $this->getElement('login_password')->waitFor(5, function () {
+            $validationElement = $this->getElement('login_password')->getParent()->find('css', '.red.label');
+            if (null === $validationElement) {
+                return false;
+            }
+
+            return $validationElement->isVisible();
+        });
+
+        return $this->checkValidationMessageFor('login_password', 'Invalid credentials.');
     }
 
     /**
@@ -81,6 +106,15 @@ class AddressingPage extends SymfonyPage implements AddressingPageInterface
     /**
      * {@inheritdoc}
      */
+    public function specifyShippingAddressProvince($province)
+    {
+        $this->waitForShippingProvinceSelector();
+        $this->getElement('shipping_country_province')->selectOption($province);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function specifyBillingAddress(AddressInterface $billingAddress)
     {
         $this->getElement('billing_first_name')->setValue($billingAddress->getFirstName());
@@ -94,14 +128,63 @@ class AddressingPage extends SymfonyPage implements AddressingPageInterface
     /**
      * {@inheritdoc}
      */
+    public function specifyBillingAddressProvince($province)
+    {
+        $this->waitForBillingProvinceSelector();
+        $this->getElement('billing_country_province')->selectOption($province);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function specifyEmail($email)
     {
         $this->getElement('customer_email')->setValue($email);
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function canSignIn()
+    {
+        return $this->isSignInActionAvailable();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function signIn()
+    {
+        $this->isSignInActionAvailable();
+        try {
+            $this->getElement('login_button')->press();
+        } catch (ElementNotFoundException $elementNotFoundException) {
+            $this->getElement('login_button')->click();
+        }
+
+        $this->waitForLoginAction();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function specifyPassword($password)
+    {
+        $this->getDocument()->waitFor(5, function () {
+            return $this->getElement('login_password')->isVisible();
+        });
+
+        $this->getElement('login_password')->setValue($password);
+    }
+
     public function nextStep()
     {
         $this->getDocument()->pressButton('Next');
+    }
+
+    public function backToStore()
+    {
+        $this->getDocument()->clickLink('Back to store');
     }
 
     /**
@@ -114,16 +197,21 @@ class AddressingPage extends SymfonyPage implements AddressingPageInterface
             'billing_last_name' => '#sylius_shop_checkout_addressing_billingAddress_lastName',
             'billing_street' => '#sylius_shop_checkout_addressing_billingAddress_street',
             'billing_country' => '#sylius_shop_checkout_addressing_billingAddress_countryCode',
+            'billing_country_province' => '[name="sylius_shop_checkout_addressing[billingAddress][provinceCode]"]',
             'billing_city' => '#sylius_shop_checkout_addressing_billingAddress_city',
             'billing_postcode' => '#sylius_shop_checkout_addressing_billingAddress_postcode',
             'customer_email' => '#sylius_shop_checkout_addressing_customer_email',
             'different_billing_address' => '#sylius_shop_checkout_addressing_differentBillingAddress',
+            'different_billing_address_label' => '#sylius_shop_checkout_addressing_differentBillingAddress ~ label',
             'shipping_first_name' => '#sylius_shop_checkout_addressing_shippingAddress_firstName',
             'shipping_last_name' => '#sylius_shop_checkout_addressing_shippingAddress_lastName',
             'shipping_street' => '#sylius_shop_checkout_addressing_shippingAddress_street',
             'shipping_country' => '#sylius_shop_checkout_addressing_shippingAddress_countryCode',
+            'shipping_country_province' => '[name="sylius_shop_checkout_addressing[shippingAddress][provinceCode]"]',
             'shipping_city' => '#sylius_shop_checkout_addressing_shippingAddress_city',
             'shipping_postcode' => '#sylius_shop_checkout_addressing_shippingAddress_postcode',
+            'login_password' => 'input[type=\'password\']',
+            'login_button' => '#sylius-api-login-submit',
         ]);
     }
 
@@ -154,5 +242,36 @@ class AddressingPage extends SymfonyPage implements AddressingPageInterface
         }
 
         return $element;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isSignInActionAvailable()
+    {
+        return $this->getDocument()->waitFor(5, function () {
+            return $this->hasElement('login_button');
+        });
+    }
+
+    private function waitForLoginAction()
+    {
+        $this->getDocument()->waitFor(5, function () {
+            return !$this->hasElement('login_password');
+        });
+    }
+
+    private function waitForShippingProvinceSelector()
+    {
+        return $this->getDocument()->waitFor(5, function () {
+            return $this->hasElement('shipping_country_province');
+        });
+    }
+
+    private function waitForBillingProvinceSelector()
+    {
+        return $this->getDocument()->waitFor(5, function () {
+            return $this->hasElement('billing_country_province');
+        });
     }
 }

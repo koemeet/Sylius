@@ -17,7 +17,6 @@ use SM\Factory\FactoryInterface as StateMachineFactoryInterface;
 use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Model\CouponInterface;
 use Sylius\Component\Core\OrderProcessing\OrderRecalculatorInterface;
-use Sylius\Component\Currency\Model\CurrencyInterface;
 use Sylius\Component\Order\Modifier\OrderItemQuantityModifierInterface;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\OrderInterface;
@@ -148,6 +147,9 @@ final class OrderContext implements Context
 
     /**
      * @Given there is a customer :customer that placed an order :orderNumber
+     * @Given there is another customer :customer that placed an order :orderNumber
+     * @Given a customer :customer placed an order :orderNumber
+     * @Given the customer :customer has already placed an order :orderNumber
      */
     public function thereIsCustomerThatPlacedOrder(CustomerInterface $customer, $orderNumber)
     {
@@ -159,7 +161,21 @@ final class OrderContext implements Context
     }
 
     /**
+     * @Given /^(I) placed (an order "[^"]+")$/
+     */
+    public function iPlacedAnOrder(UserInterface $user, $orderNumber)
+    {
+        $customer = $user->getCustomer();
+        $order = $this->createOrder($customer, $orderNumber);
+
+        $this->sharedStorage->set('order', $order);
+
+        $this->orderRepository->add($order);
+    }
+
+    /**
      * @Given /^the customer ("[^"]+" addressed it to "[^"]+", "[^"]+" "[^"]+" in the "[^"]+")$/
+     * @Given /^I (addressed it to "[^"]+", "[^"]+", "[^"]+" "[^"]+" in the "[^"]+")$/
      */
     public function theCustomerAddressedItTo(AddressInterface $address)
     {
@@ -197,7 +213,7 @@ final class OrderContext implements Context
         $this->orderShipmentFactory->processOrderShipment($order);
         $order->getShipments()->first()->setMethod($shippingMethod);
 
-        $payment = $this->paymentFactory->createWithAmountAndCurrency($order->getTotal(), $order->getCurrency());
+        $payment = $this->paymentFactory->createWithAmountAndCurrencyCode($order->getTotal(), $order->getCurrencyCode());
         $payment->setMethod($paymentMethod);
 
         $order->addPayment($payment);
@@ -212,6 +228,7 @@ final class OrderContext implements Context
 
     /**
      * @Given /^the customer chose ("[^"]+" shipping method) with ("[^"]+" payment)$/
+     * @Given /^I chose ("[^"]+" shipping method) with ("[^"]+" payment)$/
      */
     public function theCustomerChoseShippingWithPayment(
         ShippingMethodInterface $shippingMethod,
@@ -225,7 +242,7 @@ final class OrderContext implements Context
 
         $this->orderRecalculator->recalculate($order);
 
-        $payment = $this->paymentFactory->createWithAmountAndCurrency($order->getTotal(), $order->getCurrency());
+        $payment = $this->paymentFactory->createWithAmountAndCurrencyCode($order->getTotal(), $order->getCurrencyCode());
         $payment->setMethod($paymentMethod);
 
         $order->addPayment($payment);
@@ -235,6 +252,7 @@ final class OrderContext implements Context
 
     /**
      * @Given the customer bought a single :product
+     * @Given I bought a single :product
      */
     public function theCustomerBoughtSingleProduct(ProductInterface $product)
     {
@@ -245,6 +263,7 @@ final class OrderContext implements Context
 
     /**
      * @Given /^the customer bought ((?:a|an) "[^"]+") and ((?:a|an) "[^"]+")$/
+     * @Given /^I bought ((?:a|an) "[^"]+") and ((?:a|an) "[^"]+")$/
      */
     public function theCustomerBoughtProductAndProduct(ProductInterface $product, ProductInterface $secondProduct)
     {
@@ -465,7 +484,7 @@ final class OrderContext implements Context
         $order->setCustomer($customer);
         $order->setNumber($number);
         $order->setChannel((null !== $channel) ? $channel : $this->sharedStorage->get('channel'));
-        $order->setCurrency((null !== $currencyCode) ? $currencyCode : $this->sharedStorage->get('currency')->getCode());
+        $order->setCurrencyCode((null !== $currencyCode) ? $currencyCode : $this->sharedStorage->get('currency')->getCode());
         $order->complete();
 
         return $order;

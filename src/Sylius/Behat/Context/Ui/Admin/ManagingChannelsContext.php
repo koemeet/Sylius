@@ -178,12 +178,10 @@ final class ManagingChannelsContext implements Context
      */
     public function iShouldBeNotifiedThatAtLeastOneChannelHasToBeDefinedIsRequired()
     {
+        /** @var CreatePageInterface|UpdatePageInterface $currentPage */
         $currentPage = $this->currentPageResolver->getCurrentPageWithForm([$this->createPage, $this->updatePage]);
 
-        Assert::true(
-            $currentPage->checkValidationMessageFor('enabled', 'Must have at least one enabled entity'),
-            sprintf('Channels enabled field should be required.')
-        );
+        Assert::same($currentPage->getValidationMessage('enabled'), 'Must have at least one enabled entity');
     }
 
     /**
@@ -204,12 +202,10 @@ final class ManagingChannelsContext implements Context
      */
     public function iShouldBeNotifiedThatIsRequired($element)
     {
+        /** @var CreatePageInterface|UpdatePageInterface $currentPage */
         $currentPage = $this->currentPageResolver->getCurrentPageWithForm([$this->createPage, $this->updatePage]);
 
-        Assert::true(
-            $currentPage->checkValidationMessageFor($element, sprintf('Please enter channel %s.', $element)),
-            sprintf('Tax category %s should be required.', $element)
-        );
+        Assert::same($currentPage->getValidationMessage($element), sprintf('Please enter channel %s.', $element));
     }
 
     /**
@@ -254,10 +250,7 @@ final class ManagingChannelsContext implements Context
      */
     public function iShouldBeNotifiedThatChannelWithThisCodeAlreadyExists()
     {
-        Assert::true(
-            $this->createPage->checkValidationMessageFor('code', 'Channel code has to be unique.'),
-            'Unique code violation message should appear on page, but it does not.'
-        );
+        Assert::same($this->createPage->getValidationMessage('code'), 'Channel code has to be unique.');
     }
 
     /**
@@ -349,7 +342,7 @@ final class ManagingChannelsContext implements Context
     public function iShouldBeNotifiedThatItCannotBeDeleted()
     {
         $this->notificationChecker->checkNotification(
-            "The channel cannot be deleted. At least one enabled channel is required.", 
+            "The channel cannot be deleted. At least one enabled channel is required.",
             NotificationType::failure()
         );
     }
@@ -378,25 +371,25 @@ final class ManagingChannelsContext implements Context
     }
 
     /**
-     * @When I allow for paying in :currency
+     * @When I allow for paying in :currencyCode
      */
-    public function iAllowToPayingForThisChannel($currency)
+    public function iAllowToPayingForThisChannel($currencyCode)
     {
         $currentPage = $this->currentPageResolver->getCurrentPageWithForm([$this->createPage, $this->updatePage]);
 
-        $currentPage->chooseCurrency($currency);
+        $currentPage->chooseCurrency($currencyCode);
     }
 
     /**
-     * @Then paying in :currency should be possible for the :channel channel
+     * @Then paying in :currencyCode should be possible for the :channel channel
      */
-    public function payingInEuroShouldBePossibleForTheChannel($currency, ChannelInterface $channel)
+    public function payingInEuroShouldBePossibleForTheChannel($currencyCode, ChannelInterface $channel)
     {
         $this->updatePage->open(['id' => $channel->getId()]);
 
         Assert::true(
-            $this->updatePage->isCurrencyChosen($currency),
-            sprintf('Currency %s should be selected but it is not', $currency)
+            $this->updatePage->isCurrencyChosen($currencyCode),
+            sprintf('Currency %s should be selected but it is not', $currencyCode)
         );
     }
 
@@ -434,6 +427,26 @@ final class ManagingChannelsContext implements Context
     }
 
     /**
+     * @When I select the :taxZone as default tax zone
+     */
+    public function iSelectDefaultTaxZone($taxZone)
+    {
+        $currentPage = $this->currentPageResolver->getCurrentPageWithForm([$this->createPage, $this->updatePage]);
+
+        $currentPage->chooseDefaultTaxZone($taxZone);
+    }
+
+    /**
+     * @When I select the :taxCalculationStrategy as tax calculation strategy
+     */
+    public function iSelectTaxCalculationStrategy($taxCalculationStrategy)
+    {
+        $currentPage = $this->currentPageResolver->getCurrentPageWithForm([$this->createPage, $this->updatePage]);
+
+        $currentPage->chooseTaxCalculationStrategy($taxCalculationStrategy);
+    }
+
+    /**
      * @Then the :paymentMethodName payment method should be available for the :channel channel
      */
     public function thePaymentMethodShouldBeAvailableForTheChannel($paymentMethodName, ChannelInterface $channel)
@@ -442,7 +455,33 @@ final class ManagingChannelsContext implements Context
 
         Assert::true(
             $this->updatePage->isPaymentMethodChosen($paymentMethodName),
-            sprintf('Payment method %s should be selected but it is not', $paymentMethodName)
+            sprintf('Payment method %s should be selected, but it is not', $paymentMethodName)
+        );
+    }
+
+    /**
+     * @Then the default tax zone for the :channel channel should be :taxZone
+     */
+    public function theDefaultTaxZoneForTheChannelShouldBe(ChannelInterface $channel, $taxZone)
+    {
+        $this->updatePage->open(['id' => $channel->getId()]);
+
+        Assert::true(
+            $this->updatePage->isDefaultTaxZoneChosen($taxZone),
+            sprintf('Default tax zone %s should be selected, but it is not', $taxZone)
+        );
+    }
+
+    /**
+     * @Then the tax calculation strategy for the :channel channel should be :taxCalculationStrategy
+     */
+    public function theTaxCalculationStrategyForTheChannelShouldBe(ChannelInterface $channel, $taxCalculationStrategy)
+    {
+        $this->updatePage->open(['id' => $channel->getId()]);
+
+        Assert::true(
+            $this->updatePage->isTaxCalculationStrategyChosen($taxCalculationStrategy),
+            sprintf('Tax calculation strategy %s should be selected, but it is not', $taxCalculationStrategy)
         );
     }
 

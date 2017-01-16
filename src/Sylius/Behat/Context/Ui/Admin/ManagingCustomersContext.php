@@ -15,6 +15,7 @@ use Behat\Behat\Context\Context;
 use Sylius\Behat\Page\Admin\Crud\UpdatePageInterface;
 use Sylius\Behat\Page\Admin\Crud\IndexPageInterface;
 use Sylius\Behat\Page\Admin\Customer\CreatePageInterface;
+use Sylius\Behat\Page\Admin\Customer\ShowPageInterface;
 use Sylius\Component\User\Model\CustomerInterface;
 use Webmozart\Assert\Assert;
 
@@ -39,18 +40,26 @@ final class ManagingCustomersContext implements Context
     private $updatePage;
 
     /**
+     * @var ShowPageInterface
+     */
+    private $showPage;
+
+    /**
      * @param CreatePageInterface $createPage
      * @param IndexPageInterface $indexPage
      * @param UpdatePageInterface $updatePage
+     * @param ShowPageInterface $showPage
      */
     public function __construct(
         CreatePageInterface $createPage,
         IndexPageInterface $indexPage,
-        UpdatePageInterface $updatePage
+        UpdatePageInterface $updatePage,
+        ShowPageInterface $showPage
     ) {
         $this->createPage = $createPage;
         $this->indexPage = $indexPage;
         $this->updatePage = $updatePage;
+        $this->showPage = $showPage;
     }
 
     /**
@@ -193,10 +202,7 @@ final class ManagingCustomersContext implements Context
      */
     public function iShouldBeNotifiedThatFirstNameIsRequired($elementName)
     {
-        Assert::true(
-            $this->createPage->checkValidationMessageFor($elementName, sprintf('Please enter your %s.', $elementName)),
-            sprintf('Customer %s should be required.', $elementName)
-        );
+        Assert::same($this->createPage->getValidationMessage($elementName), sprintf('Please enter your %s.', $elementName));
     }
 
     /**
@@ -204,12 +210,9 @@ final class ManagingCustomersContext implements Context
      */
     public function iShouldBeNotifiedThatTheElementShouldBe($elementName, $validationMessage)
     {
-        Assert::true(
-            $this->updatePage->checkValidationMessageFor(
-                $elementName,
-                sprintf('%s must be %s.', ucfirst($elementName), $validationMessage)
-            ),
-            sprintf('Customer %s should be %s.', $elementName, $validationMessage)
+        Assert::same(
+            $this->updatePage->getValidationMessage($elementName),
+            sprintf('%s must be %s.', ucfirst($elementName), $validationMessage)
         );
     }
 
@@ -285,10 +288,7 @@ final class ManagingCustomersContext implements Context
      */
     public function iShouldBeNotifiedThatEmailIsNotValid()
     {
-        Assert::true(
-            $this->createPage->checkValidationMessageFor('email', 'This email is invalid.'),
-            sprintf('Customer should have required form of email.')
-        );
+        Assert::same($this->createPage->getValidationMessage('email'), 'This email is invalid.');
     }
 
     /**
@@ -296,10 +296,7 @@ final class ManagingCustomersContext implements Context
      */
     public function iShouldBeNotifiedThatEmailMustBeUnique()
     {
-        Assert::true(
-            $this->createPage->checkValidationMessageFor('email', 'This email is already used.'),
-            sprintf('Unique email violation message should appear on page, but it does not.')
-        );
+        Assert::same($this->createPage->getValidationMessage('email'), 'This email is already used.');
     }
 
     /**
@@ -393,6 +390,74 @@ final class ManagingCustomersContext implements Context
         Assert::notNull(
             $customer->getUser()->getPassword(),
             'Customer should have an account, but they do not.'
+        );
+    }
+
+    /**
+     * @When I view details of the customer :customer
+     */
+    public function iViewDetailsOfTheCustomer(CustomerInterface $customer)
+    {
+        $this->showPage->open(['id' => $customer->getId()]);
+    }
+
+    /**
+     * @Then his name should be :name
+     */
+    public function hisNameShouldBe($name)
+    {
+        Assert::same(
+            $name,
+            $this->showPage->getCustomerName(),
+            'Customer name should be "%s", but it is not.'
+        );
+    }
+
+    /**
+     * @Given he should be registered since :registrationDate
+     */
+    public function hisRegistrationDateShouldBe($registrationDate)
+    {
+        Assert::eq(
+            new \DateTime($registrationDate),
+            $this->showPage->getRegistrationDate(),
+            'Customer registration date should be "%s", but it is not.'
+        );
+    }
+
+    /**
+     * @Given his email should be :email
+     */
+    public function hisEmailShouldBe($email)
+    {
+        Assert::same(
+            $email,
+            $this->showPage->getCustomerEmail(),
+            'Customer email should be "%s", but it is not'
+        );
+    }
+
+    /**
+     * @Then his shipping address should be :shippingAddress
+     */
+    public function hisShippingAddressShouldBe($shippingAddress)
+    {
+        Assert::same(
+            str_replace(',', '', $shippingAddress),
+            $this->showPage->getShippingAddress(),
+            'Customer shipping address should be "%s", but it is not.'
+        );
+    }
+
+    /**
+     * @Then his billing address should be :billingAddress
+     */
+    public function hisBillingAddressShouldBe($billingAddress)
+    {
+        Assert::same(
+            str_replace(',', '', $billingAddress),
+            $this->showPage->getBillingAddress(),
+            'Customer billing address should be "%s", but it is not.'
         );
     }
 }

@@ -8,7 +8,7 @@ sylius:
             password: Wachtwoord
             remember_me: Onthoud mijn gegevens
         option:
-            presentation: Weergave
+            name: Naam
     ui:
         account_credentials: Logingegevens
         actions: Acties
@@ -25,7 +25,13 @@ sylius:
         change_your_password: Verander uw wachtwoord
         charges_and_taxes: Heffingen en belastingen
         checkout: Afrekenen
+        forgot_password: Wachtwoord vergeten
+        your_cart_is_empty: Uw winkelwagen is leeg
         clear_filters: Wis filters
+        image: Afbeelding
+        qty: Hoeveelheid
+        clear_cart: Winkelwagen leeg maken
+        summary: Samenvatting
         color: Kleur
         configure_channels_available_in_your_store: Configureer beschikbare kanalen in uw winkel
         confirm_your_action: Bevestigen uw actie
@@ -36,6 +42,8 @@ sylius:
         create: Creëer
         currencies: "Valuta's"
         customer_can_login_to_the_store: Klant kan inloggen op de winkel
+        my_account: Mijn account
+        home: Home
         dashboard: Dashboard
         date: Datum
         default_currency: Standaard valuta
@@ -67,9 +75,11 @@ sylius:
         filter: Filter
         go: Ga
         generate_coupons: Coupons genereren
+        guest_customer: Gast klant
         in: In
         info: Info
         item: Artikel
+        inventory: Locaties
         jump_to_page: Ga naar pagina
         last_updated: Laatst bijgewerkt
         list_coupons: Lijst van coupons
@@ -104,6 +114,7 @@ sylius:
         not_empty: Niet leeg
         not_in: Niet in
         or: of
+        order_details: Details van uw bestelling
         powered_by: Mogelijk gemaakt door
         price: Prijs
         promotion_configuration: Promotie configuratie

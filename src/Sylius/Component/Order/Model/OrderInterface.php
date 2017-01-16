@@ -26,6 +26,7 @@ interface OrderInterface extends
     SequenceSubjectInterface,
     TimestampableInterface
 {
+    const STATE_NEW = 'new';
     const STATE_CART = 'cart';
     const STATE_CART_LOCKED = 'cart_locked';
     const STATE_PENDING = 'pending';
@@ -51,6 +52,16 @@ interface OrderInterface extends
      * @param null|\DateTime $completedAt
      */
     public function setCompletedAt(\DateTime $completedAt = null);
+
+    /**
+     * @return string
+     */
+    public function getNotes();
+
+    /**
+     * @param string $notes
+     */
+    public function setNotes($notes);
 
     /**
      * @return Collection|OrderItemInterface[] An array or collection of OrderItemInterface
@@ -134,16 +145,6 @@ interface OrderInterface extends
      * @return Collection|IdentityInterface[]
      */
     public function getIdentities();
-
-    /**
-     * @return string
-     */
-    public function getAdditionalInformation();
-
-    /**
-     * @param string $information
-     */
-    public function setAdditionalInformation($information);
 
     /**
      * @param string|null $type

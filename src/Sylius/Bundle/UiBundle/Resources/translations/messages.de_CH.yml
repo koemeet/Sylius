@@ -4,8 +4,9 @@
 sylius:
     form:
         option:
-            presentation: Präsentation
+            name: Name
     ui:
+        image: Bild
         default_currency: Standardwährung
         enabled: Aktiviert
         "no": false

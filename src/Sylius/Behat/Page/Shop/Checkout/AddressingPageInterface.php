@@ -25,6 +25,11 @@ interface AddressingPageInterface extends SymfonyPageInterface
     public function chooseDifferentBillingAddress();
 
     /**
+     * @return bool
+     */
+    public function checkInvalidCredentialsValidation();
+
+    /**
      * @param string $element
      * @param string $message
      * 
@@ -38,14 +43,38 @@ interface AddressingPageInterface extends SymfonyPageInterface
     public function specifyBillingAddress(AddressInterface $billingAddress);
 
     /**
+     * @param string $province
+     */
+    public function specifyBillingAddressProvince($province);
+
+    /**
      * @param AddressInterface $shippingAddress
      */
     public function specifyShippingAddress(AddressInterface $shippingAddress);
+
+    /**
+     * @param string $province
+     */
+    public function specifyShippingAddressProvince($province);
+
+    /**
+     * @return bool
+     */
+    public function canSignIn();
+
+    public function signIn();
 
     /**
      * @param string $email
      */
     public function specifyEmail($email);
 
+    /**
+     * @param string $password
+     */
+    public function specifyPassword($password);
+
     public function nextStep();
+
+    public function backToStore();
 }

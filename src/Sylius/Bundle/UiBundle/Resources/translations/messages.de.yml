@@ -8,7 +8,7 @@ sylius:
             password: Passwort
             remember_me: Eingeloggt bleiben
         option:
-            presentation: Präsentation
+            name: Name
     ui:
         actions: Aktionen
         add_coupon: Erstellt
@@ -21,7 +21,13 @@ sylius:
         cancelled: Abgebrochen
         change_your_password: Passwort ändern
         checkout: Zur Kasse
+        forgot_password: Passwort vergessen
+        your_cart_is_empty: Ihr Warenkorb ist leer
         clear_filters: Filter löschen
+        image: Foto
+        qty: Anzahl
+        clear_cart: Warenkorb leeren
+        summary: Zusammenfassung
         color: Farbe
         confirm_your_action: Aktion bestätigen
         contains: Enthält
@@ -30,6 +36,8 @@ sylius:
         coupons: Gutscheine
         create: Erstellen
         currencies: Währungen
+        my_account: Mein Account
+        home: Startseite
         dashboard: Dashboard
         date: Datum
         default_currency: Standardwährung
@@ -48,9 +56,11 @@ sylius:
         expires_at: Verfällt am
         filter: Filtern
         generate_coupons: Generieren
+        guest_customer: Gast Kunde
         in: In
         info: Info
         item: Produkt
+        inventory: Lagerbestände
         last_updated: Letzte Aktualisierung
         list_coupons: Gutscheine
         locales: Gebietsschemata
@@ -69,6 +79,7 @@ sylius:
         not_empty: Nicht leer
         not_in: Nicht in
         or: oder
+        order_details: Bestelldetails
         powered_by: Powered by
         price: Preis
         quantity: Anzahl

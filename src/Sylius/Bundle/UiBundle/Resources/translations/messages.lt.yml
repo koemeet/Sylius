@@ -8,7 +8,7 @@ sylius:
             password: Slaptažodis
             remember_me: Prisiminti mane
         option:
-            presentation: Prezentacija
+            name: Pavadinimas
     ui:
         actions: Veiksmai
         add_coupon: Pridėti kuponą
@@ -17,12 +17,18 @@ sylius:
         cancelled: Atšaukta
         change_your_password: Pakeisti savo slaptažodį
         checkout: Apmokėjimas
+        your_cart_is_empty: Jūsų krepšelis yra tuščias
+        image: Paveikslėlis
+        qty: Kiekis
+        clear_cart: Ištuštinti krepšelį
         color: Spalva
         countries: Šalys
         coupon_based: Pagal kuponą
         coupons: Kuponai
         create: Sukurti
         currencies: Valiutos
+        my_account: Mano paskyra
+        home: Pagrindinis puslapis
         dashboard: Skydelis
         default_currency: Numatytoji valiuta
         delete: Šalinti
@@ -34,7 +40,9 @@ sylius:
         expires_at: Nustoja galioti
         filter: Filtruoti
         generate_coupons: Generuoti kuponus
+        guest_customer: Svečias klientas
         item: Produktas
+        inventory: Atsargos
         list_coupons: Kuponų sąrašas
         locales: Lokalės
         new: Naujas
@@ -45,6 +53,7 @@ sylius:
         no_promotion: Nepritaikyta jokių nuolaidų
         no_shipping_charges: Nepritaikyta jokių pristatymo mokesčių
         no_taxes: Nepritaikyta jokių mokesčių
+        order_details: Jūsų užsakymo detalės
         powered_by: Sukurta
         price: Kaina
         quantity: Kiekis

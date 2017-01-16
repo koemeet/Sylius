@@ -7,7 +7,7 @@ sylius:
             username: Юзернэйм
             password: Пароль
         option:
-            presentation: Выгляд
+            name: Імя
     ui:
         actions: Дзеянні
         add_coupon: Дадаць купон
@@ -16,10 +16,16 @@ sylius:
         cancelled: Адменена
         change_your_password: Змяніць пароль
         checkout: Афрмленне замовы
+        your_cart_is_empty: Ваш кошык пусты
+        image: малюнак
+        qty: Колькасць
+        clear_cart: Ачысціць кошык
         countries: Краіны
         coupon_based: Заснавана на купонах
         coupons: Купоны
         create: Стварыць
+        my_account: Мой рахунак
+        home: На галоўную
         dashboard: Прыборная панэль
         default_currency: Галоўная валюта
         delete: Выдаліць
@@ -29,6 +35,7 @@ sylius:
         filter: Фільтр
         generate_coupons: Генераваць купоны
         item: Тавар
+        inventory: Інвентар
         list_coupons: Стварыць спіс купонаў
         locales: Месцы размяшчэння
         new: Новы
@@ -38,6 +45,7 @@ sylius:
         no_promotion: Прамоцыя не дададзеная
         no_shipping_charges: Без платы за дастаўку
         no_taxes: Без падаткаў
+        order_details: Звесткі аб вашай замове
         price: Кошт
         quantity: Колькасць
         ready: Гатова

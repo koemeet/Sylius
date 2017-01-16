@@ -4,30 +4,33 @@
 
 <tr>
     <td class="single line">
-        <span class="ui small header">
-            <a href="{{ path('sylius_shop_product_show', {'slug': product.slug}) }}" class="sylius-product-name">{{ product.name }}</a>
-            <span class="sub header">
-                {{ product.code }}
-            </span>
-        </span>
+        <div class="ui header">
+            {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': product, 'filter': 'sylius_shop_product_tiny_thumbnail'} %}
+            <div class="content">
+                <a href="{{ path('sylius_shop_product_show', {'slug': product.slug}) }}" class="sylius-product-name">{{ product.name }}</a>
+                <span class="sub header">
+                    {{ product.code }}
+                </span>
+            </div>
+        </div>
         {% if product.hasOptions() %}
             <div class="ui horizontal divided list sylius-product-options">
                 {% for option in variant.options %}
-                    <div class="item" data-sylius-option-name="{{ option.presentation }}">
+                    <div class="item" data-sylius-option-name="{{ option.name }}">
                         {{ option.value }}
                     </div>
                 {% endfor %}
             </div>
-        {% elseif variant.presentation is not null %}
+        {% elseif variant.name is not null %}
             <div class="ui horizontal divided list">
                 <div class="item sylius-product-variant-name">
-                    {{ variant.presentation }}
+                    {{ variant.name }}
                 </div>
             </div>
         {% endif %}
     </td>
     <td class="right aligned">
-        <span class="sylius-unit-price">{{ item.unitPrice|sylius_price(cart.currency) }}</span>
+        <span class="sylius-unit-price">{{ item.unitPrice|sylius_price(cart.currencyCode) }}</span>
     </td>
     <td class="center aligned">
         {{ form_widget(item_form.quantity) }}

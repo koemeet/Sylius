@@ -1,7 +1,7 @@
 # This file is a part of the Sylius package.
 # (c) Paweł Jędrzejewski
 
-sylius_show_account_root:
+sylius_shop_account_root:
     path: /
     defaults:
         _controller: FrameworkBundle:Redirect:redirect
@@ -40,3 +40,7 @@ sylius_shop_account_change_password:
         _sylius:
             template: SyliusShopBundle:Account:changePassword.html.twig
             redirect: sylius_shop_account_dashboard
+
+sylius_shop_account_order:
+    resource: "@SyliusShopBundle/Resources/config/routing/account/order.yml"
+    prefix: /orders

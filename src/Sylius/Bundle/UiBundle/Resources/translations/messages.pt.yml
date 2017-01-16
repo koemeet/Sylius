@@ -5,16 +5,20 @@ sylius:
     form:
         login:
             username: Login
-        option:
-            presentation: Apresentação
+            password: Palavra passe
     ui:
         add_coupon: Adicionar cupom
         add_to_cart: Adicionar ao carrinho
         cancel: Cancelar
         cancelled: Cancelado
         checkout: Finalizar compra
+        your_cart_is_empty: Seu carrinho está vazio
+        qty: Quantidade
+        clear_cart: Esvaziar carrinho
+        summary: Sumário
         countries: Países
         create: Criar
+        home: Home
         dashboard: Painel de Instrumentos
         delete: Apagar
         description: Descrição
@@ -22,6 +26,7 @@ sylius:
         filter: Filtrar
         generate_coupons: Gerar cupons
         list_coupons: Cupons
+        locales: Linguagens
         new: Novo
         new_country: Novo país
         new_tax_category: Nova categoria de imposto
@@ -29,6 +34,7 @@ sylius:
         no_promotion: Sem promoções
         no_shipping_charges: Nenhuma taxa de entrega foi aplicada
         no_taxes: Nenhuma taxa foi aplicada
+        order_details: Detalhes da sua encomenda
         quantity: Quantidade
         save_changes: Salvar modificações
         shipping_methods: Métodos de envio

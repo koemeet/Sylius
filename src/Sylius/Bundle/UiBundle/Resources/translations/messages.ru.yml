@@ -8,7 +8,7 @@ sylius:
             password: Пароль
             remember_me: Запомнить меня
         option:
-            presentation: Публичное название
+            name: Название
     ui:
         actions: Действия
         add_coupon: Добавить купон
@@ -17,12 +17,19 @@ sylius:
         cancelled: Отменён
         change_your_password: Change my password
         checkout: Сверка
+        your_cart_is_empty: Ваша корзина пуста
+        image: Изображение
+        qty: Количество
+        clear_cart: Очистка корзины
+        summary: Резюме
         color: Цвет
         countries: Страны
         coupon_based: Основана на купонах
         coupons: sylius.breadcrumb.promotion_coupon.index
         create: Добавить
         currencies: Валюты
+        my_account: Моя учетная запись
+        home: Домой
         dashboard: Приборная панель
         date: Дата
         default_currency: Валюта по умолчанию
@@ -35,7 +42,9 @@ sylius:
         expires_at: Истекает
         filter: Фильтр
         generate_coupons: Генерировать купоны
+        guest_customer: Гость
         item: Товар
+        inventory: Запасы
         list_coupons: Список купонов
         locales: Языки
         new: Новый
@@ -46,6 +55,7 @@ sylius:
         no_promotion: Без скидки
         no_shipping_charges: Без оплаты за пересылку
         no_taxes: Без НДС
+        order_details: Детали вашего заказа
         price: Цена
         quantity: Количество
         ready: Готов
